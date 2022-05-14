@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace Antomi.Models.Configurations
 {
-    public class SubCategoryConfiguration:IEntityTypeConfiguration<SubCategory>
+    public class MarkaConfiguration:IEntityTypeConfiguration<Marka>
     {
-        public void Configure(EntityTypeBuilder<SubCategory> builder)
+        public void Configure(EntityTypeBuilder<Marka> builder)
         {
-            builder.Property(x => x.Name).IsRequired().HasMaxLength(150);
+            builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
             builder.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("GETUTCDATE()");
             builder.Property(x => x.ModifiedAt).IsRequired().HasDefaultValueSql("GETUTCDATE()");
             builder.Property(x => x.IsDeleted).HasDefaultValue(false);
-            builder.Property(x => x.CategoryId).IsRequired();
+            builder.Property(x => x.SubCategoryId).IsRequired();
         }
     }
 }

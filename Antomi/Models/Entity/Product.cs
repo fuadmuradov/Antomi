@@ -8,8 +8,15 @@ namespace Antomi.Models.Entity
     public class Product:BaseEntity
     {
         public string Model { get; set; }
-        public string Marka { get; set; }
+        public string Description { get; set; }
         public int SubCategoryId { get; set; }
+        public int MarkaId { get; set; }
+        public Marka Marka { get; set; }
         public SubCategory SubCategory { get; set; }
-    }
+        public List<Specification> Specifications { get; set; }
+        public List<ProductColor> ProductColors { get; set; }
+        public List<Discount> Discounts { get; set; }
+        public List<PhoneSpecification> PhoneSpecifications { get; set; }
+        public List<NotebookSpecification> NotebookSpecifications { get; set; }
+    }   
 }

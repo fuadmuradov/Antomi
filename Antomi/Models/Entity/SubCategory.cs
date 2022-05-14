@@ -9,6 +9,9 @@ namespace Antomi.Models.Entity
     public class SubCategory:BaseEntity
     {
         public string Name { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+        public List<Marka> Markas { get; set; }
     }
 
     public class SubCategoryValidation : AbstractValidator<SubCategory>
