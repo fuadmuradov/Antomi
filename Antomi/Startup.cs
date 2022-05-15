@@ -1,8 +1,11 @@
+using Antomi.DataAccsessLayer;
 using Antomi.Models.Entity;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +30,22 @@ namespace Antomi
         {
             services.AddControllersWithViews();
             services.AddControllers().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Category>());
+            services.AddDbContext<AntomiDbContext>(options =>
+           options.UseSqlServer(Configuration.GetConnectionString("AntomiDefault"))
+           );
+            services.AddIdentity<AppUser, IdentityRole>(option => {
+                option.SignIn.RequireConfirmedEmail = true;
+                option.Password.RequireDigit = true;
+                option.Password.RequiredLength = 8;
+                option.Password.RequireNonAlphanumeric = false;
+                option.Password.RequireUppercase = false;
+                option.Password.RequireLowercase = false;
+
+                option.Lockout.MaxFailedAccessAttempts = 5;
+                option.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                option.Lockout.AllowedForNewUsers = false;
+            }).AddDefaultTokenProviders().AddEntityFrameworkStores<AntomiDbContext>();
+            services.AddHttpContextAccessor();
 
         }
 

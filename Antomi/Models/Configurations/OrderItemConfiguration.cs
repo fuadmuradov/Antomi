@@ -8,15 +8,13 @@ using System.Threading.Tasks;
 
 namespace Antomi.Models.Configurations
 {
-    public class CartConfiguration : IEntityTypeConfiguration<Cart>
+    public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
     {
-        public void Configure(EntityTypeBuilder<Cart> builder)
+        public void Configure(EntityTypeBuilder<OrderItem> builder)
         {
-            builder.Property(x => x.AppUserId).IsRequired();
+            builder.Property(x => x.OrderId).IsRequired();
             builder.Property(x => x.ProductId).IsRequired();
             builder.Property(x => x.Quantity).IsRequired();
-            builder.Property(x => x.Total).IsRequired();
-            builder.Property(x => x.IsDeleted).HasDefaultValue(false);
-    }
+        }
     }
 }

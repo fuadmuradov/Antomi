@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Antomi.Models.Configurations
 {
-    public class ProductColorSpecification : IEntityTypeConfiguration<ProductColor>
+    public class ProductColorConfiguration : IEntityTypeConfiguration<ProductColor>
     {
         public void Configure(EntityTypeBuilder<ProductColor> builder)
         {
