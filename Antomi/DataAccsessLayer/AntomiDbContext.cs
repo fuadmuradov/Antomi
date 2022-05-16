@@ -46,7 +46,19 @@ namespace Antomi.DataAccsessLayer
             modelBuilder.ApplyConfiguration(new ProductColorConfiguration());
             modelBuilder.ApplyConfiguration(new SpecificationConfiguration());
             modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
+
+            modelBuilder.Entity<Marka>()
+               .HasMany(c => c.Products)
+               .WithOne(e => e.Marka)
+               .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(c => c.Order)
+                .WithOne(c => c.Payment)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
             base.OnModelCreating(modelBuilder);
+
         }
     }
 }
