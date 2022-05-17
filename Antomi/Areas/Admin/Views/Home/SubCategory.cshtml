@@ -1,4 +1,4 @@
-﻿@model List<Category>
+﻿@model List<SubCategory>
 <div class="body-content">
     <div class="row">
         <div class="col-md-12 col-lg-12">
@@ -6,40 +6,42 @@
             <div class="card-body">
                 <div class=table-responsive>
                     <!--<table class="table table-sm table-nowrap card-table">-->
-                    <label class="font-weight-600">Categories</label>
+                    <label class="font-weight-600">SubCategories</label>
                     <table class="table display table-bordered table-striped table-hover bg-white m-0 card-table">
                         <thead>
                             <tr>
 
-                                <th>Category Name</th>
+                                <th>SubCategory Name</th>
                                 <th>Created Time</th>
+                                <th>Category</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
+                            <tr>
 
-                                    <td>@item.Name</td>
-                                    <td>
-                                        @item.CreatedAt.ToString("dd.MMMM.yyyy")
-                                    </td>
+                                <td>@item.Name</td>
+                                <td>
+                                    @item.CreatedAt.ToString("dd.MMMM.yyyy")
+                                </td>
+                                <td>
+                                    @item.Category.Name
+                                </td>
+                                <td>
+                                    <a asp-controller="Home" asp-action="DeleteSubCategory" asp-route-id="@item.Id" class="btn btn-danger-soft btn-sm" onclick="return confirm('Are you sure you want to delete?')"><i class="far fa-trash-alt"></i></a>
+                                    <a data-id="@item.Id" class="btn btn-success-soft btn-sm ml-1 btnEdit" data-bs-toggle="modal" data-bs-target="#editModal"><i class="far fa-edit"></i></a>
 
-                                    <td>
-                                        <a href="Delete/@item.Id" class="btn btn-danger-soft btn-sm" onclick="return confirm('Are you sure you want to delete?')"><i class="far fa-trash-alt"></i></a>
-                                        <a data-id="@item.Id" class="btn btn-success-soft btn-sm ml-1 btnEdit" data-bs-toggle="modal" data-bs-target="#editModal"><i class="far fa-edit"></i></a>
-
-                                      
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
                     @*<a href="SliderCreate"> <button type="button" class="btn btn-secondary"> Add New Slider Image</button></a>*@
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                        Add New Category
+                        Add New SubCategory
                     </button>
                 </div>
             </div>
@@ -50,34 +52,39 @@
     </div>
 </div>
 
+
 <!--Modal-->
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Create SubCategory</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" asp-area="admin" asp-action="Category" asp-controller="Home" id="CategoryCreate">
+                <form method="post" enctype="multipart/form-data" asp-area="admin" asp-action="SubCategory" asp-controller="Home" id="SubCategoryCreate">
                     <div class="card-body">
                         <div class="form-group">
-                            <label class="font-weight-600"> Category Name:</label>
-                            <input class="form-control" name="cName" required><br />
+                            <label class="font-weight-600">Choose Category</label>
+                            <select name="sId" class="form-select" asp-items="@(new SelectList(ViewBag.Category, "Id", "Name"))" required>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-600"> SubCategory Name:</label>
+                            <input class="form-control" name="Name" required><br />
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="CategoryCreate" class="btn btn-primary">Create</button>
+                <button type="submit" form="SubCategoryCreate" class="btn btn-primary">Create</button>
             </div>
         </div>
     </div>
 </div>
 <!--Modal End-->
-
 
 
 <!--Modal Edit-->
@@ -90,23 +97,27 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editCategoryForm" method="post">
+                <form id="editSubCategoryForm" method="post">
                     <input type="hidden" id="editId" />
-                    <div class="mb-3">
+                    <div class="form-group">
+                        <label class="font-weight-600">Choose Category</label>
+                        <select id="CategoryId" name="CId" class="form-select" asp-items="@(new SelectList(ViewBag.Category, "Id", "Name"))" required>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">Name</label>
-                        <input type="text" class="form-control" id="editCategoryName">
+                        <input type="text" class="form-control" id="editSubCategoryName">
 
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="editCategoryForm" class="btn btn-primary">Update</button>
+                <button type="submit" form="editSubCategoryForm" class="btn btn-primary">Update</button>
             </div>
         </div>
     </div>
 </div>
-
 
 @section Script{
 
@@ -119,34 +130,40 @@
 
             $(document).on('click', '.btnEdit', (e) => {
                 const id = $(e.currentTarget).data('id');
+             
                 $.ajax({
-                    url: `/Admin/Home/EditCategory/${id}`,
+                    url: `/Admin/Home/EditSubCategory/${id}`,
                     type: 'GET',
                     success: (response) => {
                         if (response.hasOwnProperty('status') && response.status === 404) {
                             alert('tapilmadi')
                         } else {
                             console.log(response);
-                            $('#editCategoryName').val(response.name);
+                            $('#editSubCategoryName').val(response.name);
                             $('#editId').val(response.id);
+                            $('#CategoryId').val(response.categoryId);
                         }
                         //
                     }
                 });
             });
-            $('#editCategoryForm').submit((e) => {
+            $('#editSubCategoryForm').submit((e) => {
                 e.preventDefault();
                 $.ajax({
-                    url: `/Admin/Home/EditCategory`,
+                    url: `/Admin/Home/EditSubCategory`,
                     headers: {
                         'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  //validateantiforgeredtokene gondermek ucun isdifade olnur
                     },
                     type: 'POST',
-                    data: { id: $('#editId').val(), name: $('#editCategoryName').val() },
+                    data: {
+                        id: $('#editId').val(),
+                        CId: $('#CategoryId').val(),
+                        name: $('#editSubCategoryName').val()
+                    },
                     success: (response) => {
                         if (response.hasOwnProperty('status')) {
                             if (response.status == 200) {
-                                location.href = '/Admin/Home/Category';
+                                location.href = '/Admin/Home/SubCategory';
                             } else if (response.status == 400) {
                                 alert('Not Successfully');
                             }
@@ -159,4 +176,3 @@
     </script>
 
 }
-
