@@ -12,6 +12,9 @@ namespace Antomi.Models.Entity
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         public List<Marka> Markas { get; set; }
+
+        public List<Product> Products { get; set; }
+
     }
 
     public class SubCategoryValidation : AbstractValidator<SubCategory>

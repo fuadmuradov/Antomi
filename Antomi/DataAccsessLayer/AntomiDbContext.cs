@@ -52,6 +52,11 @@ namespace Antomi.DataAccsessLayer
                .WithOne(e => e.Marka)
                .OnDelete(DeleteBehavior.ClientSetNull);
 
+            modelBuilder.Entity<SubCategory>()
+           .HasMany(c => c.Products)
+           .WithOne(e => e.SubCategory)
+           .OnDelete(DeleteBehavior.ClientSetNull);
+
             modelBuilder.Entity<Payment>()
                 .HasOne(c => c.Order)
                 .WithOne(c => c.Payment)

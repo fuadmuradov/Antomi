@@ -13,6 +13,9 @@ namespace Antomi.Models.Entity
         public int MarkaId { get; set; }
         public Marka Marka { get; set; }
 
+        public int? SubCategoryId { get; set; }
+        public SubCategory SubCategory { get; set; }
+
         public List<Specification> Specifications { get; set; }
         public List<ProductColor> ProductColors { get; set; }
         public List<Discount> Discounts { get; set; }

@@ -1,0 +1,42 @@
+﻿@model Antomi.ViewModel.ColorImageVM
+
+<div class="card center-block mb-5" style="width:50rem;">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="ColorName" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="ColorName"><br />
+                    <span asp-validation-for="ColorName"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="Price"><br />
+                    <span asp-validation-for="Price"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Quantity" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="Quantity"><br />
+                    <span asp-validation-for="Quantity"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ColorImages" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="ColorImages"><br />
+                    <span asp-validation-for="ColorImages"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="hidden" class="form-control" asp-for="ProductId"><br />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success ml-4">Add new Color</button>
+            <a asp-action="Product" class="btn btn-primary ml-4" asp-controller="Product" asp-route-id="@Model.ProductId">Next</a>
+
+        </form>
+    </div>
+</div>
+
+
+

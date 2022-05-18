@@ -1,0 +1,42 @@
+﻿
+@model NotebookSpecification
+
+<div class="card center-block mb-5" style="width:50rem;">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="RAM" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="RAM"><br />
+                    <span asp-validation-for="RAM"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Storage" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="Storage"><br />
+                    <span asp-validation-for="Storage"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Graphics" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="Graphics"><br />
+                    <span asp-validation-for="Graphics"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="OS" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="OS"><br />
+                    <span asp-validation-for="OS"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Processor" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="Processor"><br />
+                    <span asp-validation-for="Processor"></span>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" asp-for="ProductId"><br />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success ml-4">Next</button>
+        </form>
+    </div>
+</div>
+

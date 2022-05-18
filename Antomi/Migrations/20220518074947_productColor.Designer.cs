@@ -4,14 +4,16 @@ using Antomi.DataAccsessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Antomi.Migrations
 {
     [DbContext(typeof(AntomiDbContext))]
-    partial class AntomiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220518074947_productColor")]
+    partial class productColor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -469,14 +471,9 @@ namespace Antomi.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<int?>("SubCategoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MarkaId");
-
-                    b.HasIndex("SubCategoryId");
 
                     b.ToTable("Products");
                 });
@@ -853,13 +850,7 @@ namespace Antomi.Migrations
                         .HasForeignKey("MarkaId")
                         .IsRequired();
 
-                    b.HasOne("Antomi.Models.Entity.SubCategory", "SubCategory")
-                        .WithMany("Products")
-                        .HasForeignKey("SubCategoryId");
-
                     b.Navigation("Marka");
-
-                    b.Navigation("SubCategory");
                 });
 
             modelBuilder.Entity("Antomi.Models.Entity.ProductColor", b =>
@@ -998,8 +989,6 @@ namespace Antomi.Migrations
             modelBuilder.Entity("Antomi.Models.Entity.SubCategory", b =>
                 {
                     b.Navigation("Markas");
-
-                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

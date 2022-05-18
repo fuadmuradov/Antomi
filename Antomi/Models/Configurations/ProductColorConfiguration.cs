@@ -15,7 +15,7 @@ namespace Antomi.Models.Configurations
         {
             builder.Property(x => x.Name).IsRequired().HasMaxLength(35);
             builder.Property(x => x.Price).IsRequired();
-            builder.Property(x => x.PrpductId).IsRequired();
+            builder.Property(x => x.ProductId).IsRequired();
             builder.Property(x => x.Count).IsRequired();
         }
     }

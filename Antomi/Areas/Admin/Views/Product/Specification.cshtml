@@ -1,0 +1,30 @@
+﻿
+@model Specification
+
+<div class="card center-block mb-5" style="width:50rem;">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="card-body">
+               
+                <div class="form-group">
+                    <label asp-for="Name" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="Name"><br />
+                    <span asp-validation-for="Name"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="Description"><br />
+                    <span asp-validation-for="Description"></span>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" class="form-control" asp-for="ProductId"><br />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success ml-4">Add Specification</button>
+            <a asp-action="AddProductColor" class="btn btn-primary ml-4"  asp-controller="Product" asp-route-id="@Model.ProductId">Next</a>
+        </form>
+    </div>
+</div>
+
+

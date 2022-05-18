@@ -1,0 +1,41 @@
+﻿
+@model Product
+
+<div class="card center-block mb-5" style="width:50rem;">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="Model" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="Model"><br />
+                    <span asp-validation-for="Model"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="Description"><br />
+                    <span asp-validation-for="Description"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SubCategoryId" class="font-weight-600">Select Marka</label>
+                    <select asp-for="SubCategoryId" class="form-select" asp-items="@(new SelectList(ViewBag.SubCategory, "Id", "Name"))">
+                    </select>
+                    <span asp-validation-for="SubCategoryId"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MarkaId" class="font-weight-600">Select Marka</label>
+                    <select asp-for="MarkaId" class="form-select" asp-items="@(new SelectList(ViewBag.Marka, "Id", "Name"))">
+                    </select>
+                    <span asp-validation-for="MarkaId"></span>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-success ml-4">Next</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+
