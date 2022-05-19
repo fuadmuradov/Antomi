@@ -11,9 +11,9 @@ namespace Antomi.Models.Entity
         public string Name { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
-        public List<Marka> Markas { get; set; }
-
         public List<Product> Products { get; set; }
+        public List<SubcategoryToMarka> SubcategoryToMarkas { get; set; }
+
 
     }
 

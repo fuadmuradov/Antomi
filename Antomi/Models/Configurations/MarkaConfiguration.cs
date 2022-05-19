@@ -16,7 +16,6 @@ namespace Antomi.Models.Configurations
             builder.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("GETUTCDATE()");
             builder.Property(x => x.ModifiedAt).IsRequired().HasDefaultValueSql("GETUTCDATE()");
             builder.Property(x => x.IsDeleted).HasDefaultValue(false);
-            builder.Property(x => x.SubCategoryId).IsRequired();
         }
     }
 }

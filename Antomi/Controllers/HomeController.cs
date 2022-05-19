@@ -1,4 +1,5 @@
-﻿using Antomi.Models;
+﻿using Antomi.DataAccsessLayer;
+using Antomi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,11 +12,11 @@ namespace Antomi.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly AntomiDbContext context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(AntomiDbContext context)
         {
-            _logger = logger;
+            this.context = context;
         }
 
         public IActionResult Index()
@@ -23,15 +24,15 @@ namespace Antomi.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Shop()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Details()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
         }
+
     }
 }

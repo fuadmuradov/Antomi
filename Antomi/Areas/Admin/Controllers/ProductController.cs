@@ -47,7 +47,7 @@ namespace Antomi.Areas.Admin.Controllers
             context.Products.Add(product);
             await context.SaveChangesAsync();
             if (product.SubCategoryId == 1) return LocalRedirect("/admin/Product/AddPhoneSpec?id=" + product.Id.ToString());
-            else if (product.SubCategoryId == 2) return LocalRedirect("/admin/Product/AddNotebookSpec?id=" + product.Id.ToString());
+            else if (product.SubCategoryId == 17) return LocalRedirect("/admin/Product/AddNotebookSpec?id=" + product.Id.ToString());
             else return LocalRedirect("/admin/Product/Specification?id=" + product.Id.ToString());
             // return LocalRedirect("/admin/Product/AddSkill?Tid=" + TempData["teacherId"].ToString());
             return View();

@@ -27,7 +27,7 @@ namespace Antomi.DataAccsessLayer
         public DbSet<ProductColorImage> ProductColorImages { get; set; }
         public DbSet<Specification> Specifications { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
-
+        public DbSet<SubcategoryToMarka> SubcategoryToMarkas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

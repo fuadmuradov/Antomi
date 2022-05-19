@@ -21,7 +21,7 @@ namespace Antomi.Areas.Admin.Controllers
         }
         //******************************
         #region Category CRUD
-       public IActionResult Category()
+        public IActionResult Category()
         {
             List<Antomi.Models.Entity.Category> categories = context.Categories.ToList();
             return View(categories);
@@ -41,7 +41,8 @@ namespace Antomi.Areas.Admin.Controllers
             await context.Categories.AddAsync(category);
             await context.SaveChangesAsync();
 
-            return View();
+            List<Antomi.Models.Entity.Category> categories = context.Categories.ToList();
+            return View(categories);
         }
         [HttpGet("{id}")]
         public async Task<JsonResult> EditCategory(int? id)
@@ -89,11 +90,11 @@ namespace Antomi.Areas.Admin.Controllers
 
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            Category category = await context.Categories.FirstOrDefaultAsync(x=>x.Id==id);
+            Category category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
             if (category == null) return NotFound();
             List<SubCategory> subCategories = await context.SubCategories.Where(x => x.CategoryId == id).ToListAsync();
-            if(subCategories != null)
-            context.SubCategories.RemoveRange(subCategories);
+            if (subCategories.Count != 0)
+                context.SubCategories.RemoveRange(subCategories);
 
             context.Categories.Remove(category);
             await context.SaveChangesAsync();
@@ -110,7 +111,7 @@ namespace Antomi.Areas.Admin.Controllers
         {
             ViewBag.Category = context.Categories.ToList();
 
-            List<SubCategory> subCategories = context.SubCategories.Include(x=>x.Category).ToList();
+            List<SubCategory> subCategories = context.SubCategories.Include(x => x.Category).ToList();
 
             return View(subCategories);
         }
@@ -124,9 +125,10 @@ namespace Antomi.Areas.Admin.Controllers
             if (category == null) return NotFound();
             if (Name == null) return BadRequest();
 
-            Models.Entity.SubCategory subcategory = new SubCategory() {
-            CategoryId = SId,
-            Name = Name
+            Models.Entity.SubCategory subcategory = new SubCategory()
+            {
+                CategoryId = SId,
+                Name = Name
             };
 
             context.SubCategories.Add(subcategory);
@@ -161,7 +163,7 @@ namespace Antomi.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> EditSubCategory(int id,  int CId ,string name)
+        public async Task<JsonResult> EditSubCategory(int id, int CId, string name)
         {
             SubCategory subCategory = await context.SubCategories.FirstOrDefaultAsync(p => p.Id == id);
             if (subCategory == null)
@@ -187,7 +189,7 @@ namespace Antomi.Areas.Admin.Controllers
             if (subCategory == null) return NotFound();
             context.SubCategories.Remove(subCategory);
             await context.SaveChangesAsync();
-            
+
             return LocalRedirect("/admin/home/subcategory/");
         }
 
@@ -199,28 +201,37 @@ namespace Antomi.Areas.Admin.Controllers
         public IActionResult Marka()
         {
             ViewBag.SubCategory = context.SubCategories.ToList();
-            List<Marka> markas = context.Markas.Include(x=>x.SubCategory).ToList(); 
-
+            List<Marka> markas = context.Markas.Include(x => x.SubcategoryToMarkas).ToList();
             return View(markas);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Marka(int SubId, string Name)
+        public async Task<IActionResult> Marka(List<int> SubIds, string Name)
         {
             ViewBag.SubCategory = context.SubCategories.ToList();
-            SubCategory subcategory = context.SubCategories.FirstOrDefault(x => x.Id == SubId);
-            if (subcategory == null) return NotFound();
+
             if (Name == null) return BadRequest();
 
             Models.Entity.Marka marka = new Marka()
             {
-                SubCategoryId = SubId,
                 Name = Name
             };
 
             context.Markas.Add(marka);
             await context.SaveChangesAsync();
+
+            foreach (var item in SubIds)
+            {
+                SubcategoryToMarka subcategoryToMarka = new SubcategoryToMarka()
+                {
+                    SubCategoryId = item,
+                    MarkaId = marka.Id
+                };
+                context.SubcategoryToMarkas.Add(subcategoryToMarka);
+                await context.SaveChangesAsync();
+            }
+
 
             return LocalRedirect("/admin/home/Marka/");
         }
@@ -230,6 +241,8 @@ namespace Antomi.Areas.Admin.Controllers
         [HttpGet("{id}")]
         public async Task<JsonResult> EditMarka(int? id)
         {
+           
+
             if (id == null)
             {
                 return Json(new
@@ -237,8 +250,7 @@ namespace Antomi.Areas.Admin.Controllers
                     status = 404
                 });
             }
-
-            var marka = await context.Markas.FindAsync(id);
+            var marka = context.Markas.Include(x => x.SubcategoryToMarkas).FirstOrDefault(x => x.Id == id);
             if (marka == null)
             {
                 return Json(new
@@ -252,7 +264,7 @@ namespace Antomi.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> EditMarka(int id, int SId, string name)
+        public async Task<JsonResult> EditMarka(int id, List<int> SId, string name)
         {
             Marka marka = await context.Markas.FirstOrDefaultAsync(p => p.Id == id);
             if (marka == null)
@@ -263,8 +275,21 @@ namespace Antomi.Areas.Admin.Controllers
                 });
             }
             marka.Name = name;
-            marka.SubCategoryId = SId;
             marka.ModifiedAt = DateTime.UtcNow;
+
+            List<SubcategoryToMarka> toMarkas = context.SubcategoryToMarkas.Where(x => x.MarkaId == id).ToList();
+            if (toMarkas.Count != 0)
+                context.SubcategoryToMarkas.RemoveRange(toMarkas);
+            foreach (var item in SId)
+            {
+                SubcategoryToMarka subcategoryToMarka = new SubcategoryToMarka()
+                {
+                    SubCategoryId = item,
+                    MarkaId = marka.Id
+                };
+                context.SubcategoryToMarkas.Add(subcategoryToMarka);
+                await context.SaveChangesAsync();
+            }
             await context.SaveChangesAsync();
             return Json(new
             {
