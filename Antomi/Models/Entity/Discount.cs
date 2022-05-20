@@ -12,7 +12,7 @@ namespace Antomi.Models.Entity
         public bool IsActive { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public int ProductId { get; set; }
-        public Product Product { get; set; }
+        public int ProductColorId { get; set; }
+        public ProductColor ProductColor { get; set; }
     }
 }

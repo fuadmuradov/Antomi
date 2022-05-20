@@ -18,7 +18,6 @@ namespace Antomi.Models.Entity
 
         public List<Specification> Specifications { get; set; }
         public List<ProductColor> ProductColors { get; set; }
-        public List<Discount> Discounts { get; set; }
         public List<PhoneSpecification> PhoneSpecifications { get; set; }
         public List<NotebookSpecification> NotebookSpecifications { get; set; }
     }   

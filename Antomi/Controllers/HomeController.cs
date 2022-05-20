@@ -1,7 +1,10 @@
 ﻿using Antomi.DataAccsessLayer;
 using Antomi.Models;
+using Antomi.Models.Entity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,11 +31,20 @@ namespace Antomi.Controllers
         {
             return View();
         }
-
-        public IActionResult Details()
+        public IActionResult Details(int id)
         {
-            return View();
+            Product product = context.Products.Include(x => x.PhoneSpecifications).Include(x => x.NotebookSpecifications).Include(x => x.Specifications).Include(x => x.ProductColors).ThenInclude(x=>x.Discounts).FirstOrDefault(x => x.Id == id);// ProductColorIMages
+            return View(product);
         }
 
+        public IActionResult ProductChangeColor(int ColorId)
+        {
+           ProductColor productColor = context.ProductColors.Include(x => x.ProductColorImages).FirstOrDefault(x => x.Id == ColorId);
+
+            return Json(JsonConvert.SerializeObject(productColor, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));
+        }
     }
 }

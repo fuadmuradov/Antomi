@@ -14,5 +14,6 @@ namespace Antomi.Models.Entity
         public int ProductId { get; set; }
         public Product Product { get; set; }
         public List<ProductColorImage> ProductColorImages { get; set; }
+        public List<Discount> Discounts { get; set; }
     }
 }

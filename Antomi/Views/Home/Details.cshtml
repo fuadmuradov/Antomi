@@ -1,4 +1,6 @@
-﻿<!--breadcrumbs area start-->
+﻿
+@model Product
+<!--breadcrumbs area start-->
 <div class="breadcrumbs_area">
     <div class="container">
         <div class="row">
@@ -24,36 +26,22 @@
                     <div class="col-lg-5 col-md-6">
                         <div class="product-details-tab">
                             <div id="img-1" class="zoomWrapper single-zoom">
-                                <a href="#">
-                                    <img id="zoom1" src="~/assets/img/product/productbig5.jpg" data-zoom-image="~/assets/img/product/productbig5.jpg" alt="big-1">
+                                <a href="">
+                                    <img id="zoom1" src="~/image/product/@Model.ProductColors.First().ProductColorImages.FirstOrDefault(x=>x.IsMain).Image" data-zoom-image="~/image/product/@Model.ProductColors.First().ProductColorImages.FirstOrDefault(x=>x.IsMain).Image">
                                 </a>
                             </div>
                             <div class="single-zoom-thumb">
                                 <ul class="s-tab-zoom owl-carousel single-product-active" id="gallery_01">
-                                    <li>
-                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/assets/img/product/productbig4.jpg" data-zoom-image="~/assets/img/product/productbig4.jpg">
-                                            <img src="~/assets/img/product/productbig4.jpg" alt="zo-th-1" />
-                                        </a>
+                                    @foreach (var item in Model.ProductColors.First().ProductColorImages.Where(x => !x.IsMain).ToList())
+                                    {
+                                        <li>
+                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/@item.Image" data-zoom-image="~/image/product/@item.Image">
+                                                <img src="~/image/product/@item.Image" alt="zo-th-1" />
+                                            </a>
 
-                                    </li>
-                                    <li>
-                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/assets/img/product/productbig1.jpg" data-zoom-image="~/assets/img/product/productbig1.jpg">
-                                            <img src="~/assets/img/product/productbig1.jpg" alt="zo-th-1" />
-                                        </a>
+                                        </li>
+                                    }
 
-                                    </li>
-                                    <li>
-                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/assets/img/product/productbig2.jpg" data-zoom-image="~/assets/img/product/productbig2.jpg">
-                                            <img src="~/assets/img/product/productbig2.jpg" alt="zo-th-1" />
-                                        </a>
-
-                                    </li>
-                                    <li>
-                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/assets/img/product/productbig3.jpg" data-zoom-image="~/assets/img/product/productbig3.jpg">
-                                            <img src="~/assets/img/product/productbig3.jpg" alt="zo-th-1" />
-                                        </a>
-
-                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -62,13 +50,7 @@
                         <div class="product_d_right">
                             <form action="#">
 
-                                <h3><a href="#">Nonstick Dishwasher PFOA</a></h3>
-                                <div class="product_nav">
-                                    <ul>
-                                        <li class="prev"><a href="product-details.html"><i class="fa fa-angle-left"></i></a></li>
-                                        <li class="next"><a href="variable-product.html"><i class="fa fa-angle-right"></i></a></li>
-                                    </ul>
-                                </div>
+                                <h3><a href="#">@Model.Model</a></h3>
                                 <div class="product_rating">
                                     <ul>
                                         <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
@@ -84,16 +66,16 @@
                                     <span class="current_price">$70.00</span>
                                 </div>
                                 <div class="product_desc">
-                                    <p>eget velit. Donec ac tempus ante. Fusce ultricies massa massa. Fusce aliquam, purus eget sagittis vulputate, sapien libero hendrerit est, sed commodo augue nisi non neque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor, lorem et placerat vestibulum, metus nisi posuere nisl, in </p>
+                                    <p>@(Model.Description.Length < 200? Model.Description:Model.Description.Substring(0, 200)+"...") </p>
                                 </div>
                                 <div class="product_variant color">
                                     <h3>Available Options</h3>
                                     <label>color</label>
                                     <ul>
-                                        <li class="color1"><a href="#"></a></li>
-                                        <li class="color2"><a href="#"></a></li>
-                                        <li class="color3"><a href="#"></a></li>
-                                        <li class="color4"><a href="#"></a></li>
+                                        @foreach (var item in Model.ProductColors)
+                                        {
+                                            <li class="color1"><a style="background:@item.Name" class="btn" onclick='getData(@item.Id)' href="#"></a></li>
+                                        }
                                     </ul>
                                 </div>
                                 <div class="product_variant quantity">
@@ -149,8 +131,7 @@
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="info" role="tabpanel">
                                     <div class="product_info_content">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est tristique auctor. Donec non est at libero vulputate rutrum. Morbi ornare lectus quis justo gravida semper. Nulla tellus mi, vulputate adipiscing cursus eu, suscipit id nulla.</p>
-                                        <p>Pellentesque aliquet, sem eget laoreet ultrices, ipsum metus feugiat sem, quis fermentum turpis eros eget velit. Donec ac tempus ante. Fusce ultricies massa massa. Fusce aliquam, purus eget sagittis vulputate, sapien libero hendrerit est, sed commodo augue nisi non neque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor, lorem et placerat vestibulum, metus nisi posuere nisl, in accumsan elit odio quis mi. Cras neque metus, consequat et blandit et, luctus a nunc. Etiam gravida vehicula tellus, in imperdiet ligula euismod eget.</p>
+                                        <p>@Model.Description</p>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="sheet" role="tabpanel">
@@ -158,18 +139,81 @@
                                         <form action="#">
                                             <table>
                                                 <tbody>
-                                                    <tr>
-                                                        <td class="first_child">Compositions</td>
-                                                        <td>Polyester</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="first_child">Styles</td>
-                                                        <td>Girly</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="first_child">Properties</td>
-                                                        <td>Short Dress</td>
-                                                    </tr>
+                                                    @if (Model.PhoneSpecifications.Count != 0)
+                                                    {
+                                                        foreach (var item in Model.PhoneSpecifications)
+                                                        {
+                                                            <tr>
+                                                                <td class="first_child">Processor</td>
+                                                                <td>@item.Processor</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="first_child">RAM</td>
+                                                                <td>@item.RAM</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="first_child">Operating System</td>
+                                                                <td>@item.OS</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="first_child">Storage</td>
+                                                                <td>@item.Storage</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="first_child">Display Type</td>
+                                                                <td>@item.DisplayType</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="first_child">Main Camera</td>
+                                                                <td>@item.MainCamera</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="first_child">Selfie Camera</td>
+                                                                <td>@item.SelfieCamera</td>
+                                                            </tr>
+                                                        }
+
+                                                    }
+                                                    @if (Model.NotebookSpecifications.Count != 0)
+                                                    {
+                                                        foreach (var item in Model.NotebookSpecifications)
+                                                        {
+                                                            <tr>
+                                                                <td class="first_child">Processor</td>
+                                                                <td>@item.Processor</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="first_child">RAM</td>
+                                                                <td>@item.RAM</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="first_child">Operating System</td>
+                                                                <td>@item.OS</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="first_child">Storage</td>
+                                                                <td>@item.Storage</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="first_child">Graphic</td>
+                                                                <td>@item.Graphics</td>
+                                                            </tr>
+
+                                                        }
+
+                                                    }
+
+                                                    @if (Model.NotebookSpecifications.Count != 0)
+                                                    {
+                                                        foreach (var item in Model.Specifications)
+                                                        {
+                                                            <tr>
+                                                                <td class="first_child">@item.Name</td>
+                                                                <td>@item.Description</td>
+                                                            </tr>
+                                                        }
+                                                    }
+
                                                 </tbody>
                                             </table>
                                         </form>
@@ -660,3 +704,95 @@
         <!--product area end-->
     </div>
 </div>
+
+@section Script{
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function getData(colorId) {
+            console.log(colorId)
+            $.ajax({
+                url: "/Home/ProductChangeColor",
+                type: "Get",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { ColorId: colorId },
+                success: function (data) {
+                    let resobject = jQuery.parseJSON(data);
+                    console.log(resobject)
+                    $('#gallery_01').empty();
+                    let ulmain;
+                    let count = 0;
+                    $.each(resobject.ProductColorImages, (index, value) => {
+                        console.log(value.Image)
+                        
+                        if (value.IsMain == false) {
+                            if (count == 0) {
+                                ulmain = `<div class="owl-stage-outer"><div class="owl-stage" style="transform: translate3d(-506px, 0px, 0px); transition: all 0s ease 0s; width: 1518px;"><div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+						                    <li>
+                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                            </a>
+
+                                        </li></div>`
+                            }
+                            else {
+                                ulmain +=`<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+						                <li>
+                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                            </a>
+
+                                        </li>
+						                    </div>`
+                            }
+                           // $('#gallery_01').append(li);
+                        }
+                        else {
+                            $("#img-1").empty();
+                            let mainimage = ` <a href="#">
+                                            <img id="zoom1" src="/image/product/${value.Image}" data-zoom-image="/image/product/${value.Image}" alt="big">
+                                        </a>`
+                            $("#img-1").append(mainimage);
+                        }
+                    });
+
+                    $.each(resobject.ProductColorImages, (index, value) => {
+                        if (value.IsMain == false) {
+                            ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+						                <li>
+                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                            </a>
+
+                                        </li>
+						                    </div>`
+                        }
+
+                    });
+                    $.each(resobject.ProductColorImages, (index, value) => {
+                        if (value.IsMain == false) {
+                            ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+						                <li>
+                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                            </a>
+
+                                        </li>
+						                    </div>`
+                        }
+
+                    });
+
+                    ulmain += `</div>`;
+                    $('#gallery_01').append(ulmain);
+                }
+            });
+
+        }
+
+    </script>
+
+
+}
