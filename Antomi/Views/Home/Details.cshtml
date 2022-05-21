@@ -61,9 +61,20 @@
                                         <li class="review"><a href="#">(1 customer review )</a></li>
                                     </ul>
                                 </div>
-                                <div class="price_box">
-                                    <span class="old_price">$80.00</span>
-                                    <span class="current_price">$70.00</span>
+                                <div id="divpriceId" class="price_box">
+                                    @if (Model.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive) != null)
+                                    {
+                                        double amount = Model.ProductColors.First().Price * (100 - Model.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive).Percent) / 100;
+
+                                        <span id="oldpriceId" class="old_price">$@Model.ProductColors.First().Price</span>
+                                        <span id="currentpriceId" class="current_price">$@Math.Round(amount, 2)</span>
+
+                                    }
+                                    else
+                                    {
+                                        <span id="oldpriceId" class="old_price"></span>
+                                        <span id="currentpriceId" class="current_price">$@Math.Round(Model.ProductColors.First().Price, 2)</span>
+                                    }
                                 </div>
                                 <div class="product_desc">
                                     <p>@(Model.Description.Length < 200? Model.Description:Model.Description.Substring(0, 200)+"...") </p>
@@ -80,7 +91,7 @@
                                 </div>
                                 <div class="product_variant quantity">
                                     <label>quantity</label>
-                                    <input min="1" max="100" value="1" type="number">
+                                    <input min="1" max="@Model.ProductColors.First().Count" value="1" type="number" id="quantityId">
                                     <button class="button" type="submit">add to cart</button>
 
                                 </div>
@@ -91,7 +102,7 @@
                                     </ul>
                                 </div>
                                 <div class="product_meta">
-                                    <span>Category: <a href="#">Clothing</a></span>
+                                    <span>Category: <a href="#">@Model.SubCategory.Category.Name</a></span>
                                 </div>
 
                             </form>
@@ -202,8 +213,7 @@
                                                         }
 
                                                     }
-
-                                                    @if (Model.NotebookSpecifications.Count != 0)
+                                                    @if (Model.Specifications.Count != 0)
                                                     {
                                                         foreach (var item in Model.Specifications)
                                                         {
@@ -219,7 +229,7 @@
                                         </form>
                                     </div>
                                     <div class="product_info_content">
-                                        <p>Fashion has been creating well-designed collections since 2010. The brand offers feminine designs delivering stylish separates and statement dresses which have since evolved into a full ready-to-wear collection in which every item is a vital part of a woman's wardrobe. The result? Cool, easy, chic looks with youthful elegance and unmistakable signature style. All the beautiful pieces are made in Italy and manufactured with the greatest attention. Now Fashion extends to a range of accessories including shoes, hats, belts and more!</p>
+                                        <p>@(Model.Description.Length < 300? Model.Description:Model.Description.Substring(0, 300)+"...")</p>
                                     </div>
                                 </div>
 
@@ -721,39 +731,57 @@
                 success: function (data) {
                     let resobject = jQuery.parseJSON(data);
                     console.log(resobject)
+
                     $('#gallery_01').empty();
+                    $('#quantityId').attr('max', resobject.Count);
+
+                    var checkdiscount = false;
+                    $.each(resobject.Discounts, (index, value) => {
+                        if (value.IsActive == true) {
+                            var currentprice = resobject.Price * (100 - value.Percent) / 100;
+                            // $('#oldpriceId').removeAttr(style);
+                            $('#oldpriceId').html("$" + resobject.Price.toFixed(2).toString())
+                            $('#currentpriceId').html("$" + currentprice.toFixed(2).toString())
+                            checkdiscount = true;
+                        }
+                    });
+                    if (checkdiscount == false) {
+                        $('#oldpriceId').html('');
+                        $('#currentpriceId').html("$" + resobject.Price.toFixed(2).toString())
+                    }
+
                     let ulmain;
                     let count = 0;
                     $.each(resobject.ProductColorImages, (index, value) => {
                         console.log(value.Image)
-                        
+
                         if (value.IsMain == false) {
                             if (count == 0) {
                                 ulmain = `<div class="owl-stage-outer"><div class="owl-stage" style="transform: translate3d(-506px, 0px, 0px); transition: all 0s ease 0s; width: 1518px;"><div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-						                    <li>
-                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                            </a>
+                                                    <li>
+                                                    <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                        <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                    </a>
 
-                                        </li></div>`
+                                                </li></div>`
                             }
                             else {
-                                ulmain +=`<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-						                <li>
-                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                            </a>
+                                ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+                                                <li>
+                                                    <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                        <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                    </a>
 
-                                        </li>
-						                    </div>`
+                                                </li>
+                                                    </div>`
                             }
-                           // $('#gallery_01').append(li);
+                            // $('#gallery_01').append(li);
                         }
                         else {
                             $("#img-1").empty();
                             let mainimage = ` <a href="#">
-                                            <img id="zoom1" src="/image/product/${value.Image}" data-zoom-image="/image/product/${value.Image}" alt="big">
-                                        </a>`
+                                                    <img id="zoom1" src="/image/product/${value.Image}" data-zoom-image="/image/product/${value.Image}" alt="big">
+                                                </a>`
                             $("#img-1").append(mainimage);
                         }
                     });
@@ -761,26 +789,26 @@
                     $.each(resobject.ProductColorImages, (index, value) => {
                         if (value.IsMain == false) {
                             ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-						                <li>
-                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                            </a>
+                                                <li>
+                                                    <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                        <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                    </a>
 
-                                        </li>
-						                    </div>`
+                                                </li>
+                                                    </div>`
                         }
 
                     });
                     $.each(resobject.ProductColorImages, (index, value) => {
                         if (value.IsMain == false) {
                             ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-						                <li>
-                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                            </a>
+                                                <li>
+                                                    <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                        <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                    </a>
 
-                                        </li>
-						                    </div>`
+                                                </li>
+                                                    </div>`
                         }
 
                     });

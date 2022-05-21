@@ -33,13 +33,13 @@ namespace Antomi.Controllers
         }
         public IActionResult Details(int id)
         {
-            Product product = context.Products.Include(x => x.PhoneSpecifications).Include(x => x.NotebookSpecifications).Include(x => x.Specifications).Include(x => x.ProductColors).ThenInclude(x=>x.Discounts).FirstOrDefault(x => x.Id == id);// ProductColorIMages
+            Product product = context.Products.Include(x=>x.SubCategory).ThenInclude(x=>x.Category).Include(x => x.PhoneSpecifications).Include(x => x.NotebookSpecifications).Include(x => x.Specifications).Include(x => x.ProductColors).ThenInclude(x=>x.Discounts).Include(x => x.ProductColors).ThenInclude(x=>x.ProductColorImages).FirstOrDefault(x => x.Id == id);// ProductColorIMages
             return View(product);
         }
 
         public IActionResult ProductChangeColor(int ColorId)
         {
-           ProductColor productColor = context.ProductColors.Include(x => x.ProductColorImages).FirstOrDefault(x => x.Id == ColorId);
+           ProductColor productColor = context.ProductColors.Include(x => x.ProductColorImages).Include(x=>x.Discounts).FirstOrDefault(x => x.Id == ColorId);
 
             return Json(JsonConvert.SerializeObject(productColor, new JsonSerializerSettings()
             {
