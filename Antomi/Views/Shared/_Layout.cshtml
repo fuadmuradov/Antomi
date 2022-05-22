@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿@inject Antomi.Services.LayoutServices layoutServices
+<!doctype html>
 <html class="no-js" lang="en">
 
 
@@ -248,67 +249,10 @@
                                         <span class="wishlist_count">3</span>
                                     </a>
                                 </div>
-                                <div class="mini_cart_wrapper">
-                                    <a href="javascript:void(0)">
-                                        <i class="fa fa-shopping-bag"></i>
-                                        <span class="cart_price">$152.00 <i class="ion-ios-arrow-down"></i></span>
-                                        <span class="cart_count">2</span>
+                                <div id="DivaddtocartId" class="mini_cart_wrapper">
 
-                                    </a>
                                     <!--mini cart-->
-                                    <div class="mini_cart">
-                                        <div class="cart_close">
-                                            <div class="cart_text">
-                                                <h3>cart</h3>
-                                            </div>
-                                            <div class="mini_cart_close">
-                                                <a href="javascript:void(0)"><i class="ion-android-close"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="cart_item">
-                                            <div class="cart_img">
-                                                <a href="#"><img src="~/assets/img/s-product/product.jpg" alt=""></a>
-                                            </div>
-                                            <div class="cart_info">
-                                                <a href="#">Primis In Faucibus</a>
-                                                <p>Qty: 1 X <span> $60.00 </span></p>
-                                            </div>
-                                            <div class="cart_remove">
-                                                <a href="#"><i class="ion-android-close"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="cart_item">
-                                            <div class="cart_img">
-                                                <a href="#"><img src="~/assets/img/s-product/product2.jpg" alt=""></a>
-                                            </div>
-                                            <div class="cart_info">
-                                                <a href="#">Letraset Sheets</a>
-                                                <p>Qty: 1 X <span> $60.00 </span></p>
-                                            </div>
-                                            <div class="cart_remove">
-                                                <a href="#"><i class="ion-android-close"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="mini_cart_table">
-                                            <div class="cart_total">
-                                                <span>Sub total:</span>
-                                                <span class="price">$138.00</span>
-                                            </div>
-                                            <div class="cart_total mt-10">
-                                                <span>total:</span>
-                                                <span class="price">$138.00</span>
-                                            </div>
-                                        </div>
-                                        <div class="mini_cart_footer">
-                                            <div class="cart_button">
-                                                <a href="cart.html">View cart</a>
-                                            </div>
-                                            <div class="cart_button">
-                                                <a class="active" href="checkout.html">Checkout</a>
-                                            </div>
-
-                                        </div>
-                                    </div>
+                                    @await Html.PartialAsync("_CartPartialView")
                                     <!--mini cart end-->
                                 </div>
                             </div>
@@ -416,13 +360,16 @@
                                         <span class="wishlist_count">3</span>
                                     </a>
                                 </div>
-                                <div class="mini_cart_wrapper">
-                                    <a href="javascript:void(0)">
-                                        <i class="fa fa-shopping-bag"></i>
-                                        <span class="cart_price">$152.00 <i class="ion-ios-arrow-down"></i></span>
-                                        <span class="cart_count">2</span>
+                                @*<div class="mini_cart_wrapper">
+                                        <a href="javascript:void(0)">
+                                            <i class="fa fa-shopping-bag"></i>
+                                            <span class="cart_price">$152.00 <i class="ion-ios-arrow-down"></i></span>
+                                            <span class="cart_count">2</span>
 
-                                    </a>
+                                        </a>
+                                    </div>*@
+                                <div class="mini_cart_wrapper">
+                                    @await Html.PartialAsync("_CartPartialView")
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,6 @@
 using Antomi.DataAccsessLayer;
 using Antomi.Models.Entity;
+using Antomi.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,7 +35,7 @@ namespace Antomi
             services.AddControllersWithViews();
             services.AddControllers().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Category>());
             services.AddDbContext<AntomiDbContext>(options =>
-           options.UseSqlServer(Configuration.GetConnectionString("AntomiDefault"))
+            options.UseSqlServer(Configuration.GetConnectionString("AntomiDefault"))
            );
             services.AddIdentity<AppUser, IdentityRole>(option => {
                 option.SignIn.RequireConfirmedEmail = true;
@@ -43,13 +44,12 @@ namespace Antomi
                 option.Password.RequireNonAlphanumeric = false;
                 option.Password.RequireUppercase = false;
                 option.Password.RequireLowercase = false;
-
                 option.Lockout.MaxFailedAccessAttempts = 5;
                 option.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 option.Lockout.AllowedForNewUsers = false;
             }).AddDefaultTokenProviders().AddEntityFrameworkStores<AntomiDbContext>();
             services.AddHttpContextAccessor();
-
+            services.AddScoped<LayoutServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

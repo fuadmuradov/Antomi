@@ -3,6 +3,7 @@ using Antomi.Models;
 using Antomi.Models.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Antomi.ViewModel;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -46,5 +47,75 @@ namespace Antomi.Controllers
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
         }
+        [HttpPost]
+        public IActionResult AddtoBasket(int ColorId, int Quantity)
+        {
+            ProductColor productColor = context.ProductColors.FirstOrDefault(x => x.Id == ColorId && x.Count>=Quantity);
+            if (productColor == null) return NotFound();
+
+            string basket = HttpContext.Request.Cookies["Basket"];
+           
+            List<BasketCookieItemVM> basketCookieItems;
+            if (basket == null)
+            {
+                basketCookieItems = new List<BasketCookieItemVM>();
+                BasketCookieItemVM basketCookieItem = new BasketCookieItemVM()
+                {
+                    Id = ColorId,
+                    Count = Quantity
+                };
+                basketCookieItems.Add(basketCookieItem);
+                
+            }
+            else
+            {
+                basketCookieItems = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basket);
+                
+                bool isExist = false;
+                foreach (var item in basketCookieItems)
+                {
+                    if (item.Id == ColorId)
+                    {
+                        if ((item.Count + Quantity) > productColor.Count) return NotFound();
+                        else
+                        {
+                           item.Count = item.Count + Quantity;
+                            isExist = true;
+                        }
+                    }
+                }
+                if (isExist == false)
+                {
+                    BasketCookieItemVM basketCookieItem = new BasketCookieItemVM()
+                    {
+                        Id = ColorId,
+                        Count = Quantity
+                    };
+                    basketCookieItems.Add(basketCookieItem);
+                }
+            }
+            string basketstr = JsonConvert.SerializeObject(basketCookieItems, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+
+            HttpContext.Response.Cookies.Append("Basket", basketstr);
+
+            return PartialView("_CartPartialView");
+        }
+
+        public IActionResult GetCartPartial()
+        {
+            return PartialView("_CartPartialView");
+        }
+
+        public IActionResult ShowBasket()
+        {
+            string basketstr = HttpContext.Request.Cookies["Basket"];
+            List<BasketCookieItemVM> basket = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basketstr);
+            return Json(basket);
+
+        }
+
     }
 }

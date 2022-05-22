@@ -92,7 +92,7 @@
                                 <div class="product_variant quantity">
                                     <label>quantity</label>
                                     <input min="1" max="@Model.ProductColors.First().Count" value="1" type="number" id="quantityId">
-                                    <button class="button" type="submit">add to cart</button>
+                                    <button id="addtocartId" data-id="@Model.ProductColors.First().Id" onclick="AddtoBasket()" class="button" type="button">add to cart</button>
 
                                 </div>
                                 <div class=" product_d_action">
@@ -720,106 +720,160 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function getData(colorId) {
-            console.log(colorId)
-            $.ajax({
-                url: "/Home/ProductChangeColor",
-                type: "Get",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: { ColorId: colorId },
-                success: function (data) {
-                    let resobject = jQuery.parseJSON(data);
-                    console.log(resobject)
 
-                    $('#gallery_01').empty();
-                    $('#quantityId').attr('max', resobject.Count);
+            function getData(colorId) {
+                console.log(colorId)
+                $.ajax({
+                    url: "/Home/ProductChangeColor",
+                    type: "Get",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: { ColorId: colorId },
+                    success: function (data) {
+                        let resobject = jQuery.parseJSON(data);
+                        console.log(resobject)
 
-                    var checkdiscount = false;
-                    $.each(resobject.Discounts, (index, value) => {
-                        if (value.IsActive == true) {
-                            var currentprice = resobject.Price * (100 - value.Percent) / 100;
-                            // $('#oldpriceId').removeAttr(style);
-                            $('#oldpriceId').html("$" + resobject.Price.toFixed(2).toString())
-                            $('#currentpriceId').html("$" + currentprice.toFixed(2).toString())
-                            checkdiscount = true;
+                        $('#gallery_01').empty();
+                        $('#quantityId').attr('max', resobject.Count);
+                        $('#addtocartId').attr('data-id', resobject.Id);
+                        var checkdiscount = false;
+                        $.each(resobject.Discounts, (index, value) => {
+                            if (value.IsActive == true) {
+                                var currentprice = resobject.Price * (100 - value.Percent) / 100;
+                                // $('#oldpriceId').removeAttr(style);
+                                $('#oldpriceId').html("$" + resobject.Price.toFixed(2).toString())
+                                $('#currentpriceId').html("$" + currentprice.toFixed(2).toString())
+                                checkdiscount = true;
+                            }
+                        });
+                        if (checkdiscount == false) {
+                            $('#oldpriceId').html('');
+                            $('#currentpriceId').html("$" + resobject.Price.toFixed(2).toString())
                         }
-                    });
-                    if (checkdiscount == false) {
-                        $('#oldpriceId').html('');
-                        $('#currentpriceId').html("$" + resobject.Price.toFixed(2).toString())
-                    }
 
-                    let ulmain;
-                    let count = 0;
-                    $.each(resobject.ProductColorImages, (index, value) => {
-                        console.log(value.Image)
+                        let ulmain;
+                        let count = 0;
+                        $.each(resobject.ProductColorImages, (index, value) => {
+                            console.log(value.Image)
 
-                        if (value.IsMain == false) {
-                            if (count == 0) {
-                                ulmain = `<div class="owl-stage-outer"><div class="owl-stage" style="transform: translate3d(-506px, 0px, 0px); transition: all 0s ease 0s; width: 1518px;"><div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+                            if (value.IsMain == false) {
+                                if (count == 0) {
+                                    ulmain = `<div class="owl-stage-outer"><div class="owl-stage" style="transform: translate3d(-506px, 0px, 0px); transition: all 0s ease 0s; width: 1518px;"><div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+                                                        <li>
+                                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                            <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                        </a>
+
+                                                    </li></div>`
+                                }
+                                else {
+                                    ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
                                                     <li>
-                                                    <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                        <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                    </a>
+                                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                            <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                        </a>
 
-                                                </li></div>`
+                                                    </li>
+                                                        </div>`
+                                }
+                                // $('#gallery_01').append(li);
                             }
                             else {
-                                ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                <li>
-                                                    <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                        <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                    </a>
-
-                                                </li>
-                                                    </div>`
+                                $("#img-1").empty();
+                                let mainimage = ` <a href="#">
+                                                        <img id="zoom1" src="/image/product/${value.Image}" data-zoom-image="/image/product/${value.Image}" alt="big">
+                                                    </a>`
+                                $("#img-1").append(mainimage);
                             }
-                            // $('#gallery_01').append(li);
-                        }
-                        else {
-                            $("#img-1").empty();
-                            let mainimage = ` <a href="#">
-                                                    <img id="zoom1" src="/image/product/${value.Image}" data-zoom-image="/image/product/${value.Image}" alt="big">
-                                                </a>`
-                            $("#img-1").append(mainimage);
-                        }
-                    });
+                        });
 
-                    $.each(resobject.ProductColorImages, (index, value) => {
-                        if (value.IsMain == false) {
-                            ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                <li>
-                                                    <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                        <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                    </a>
+                        $.each(resobject.ProductColorImages, (index, value) => {
+                            if (value.IsMain == false) {
+                                ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+                                                    <li>
+                                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                            <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                        </a>
 
-                                                </li>
-                                                    </div>`
-                        }
+                                                    </li>
+                                                        </div>`
+                            }
 
-                    });
-                    $.each(resobject.ProductColorImages, (index, value) => {
-                        if (value.IsMain == false) {
-                            ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                <li>
-                                                    <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                        <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                    </a>
+                        });
+                        $.each(resobject.ProductColorImages, (index, value) => {
+                            if (value.IsMain == false) {
+                                ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+                                                    <li>
+                                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                            <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                        </a>
 
-                                                </li>
-                                                    </div>`
-                        }
+                                                    </li>
+                                                        </div>`
+                            }
 
-                    });
+                        });
 
-                    ulmain += `</div>`;
-                    $('#gallery_01').append(ulmain);
+                        ulmain += `</div>`;
+                        $('#gallery_01').append(ulmain);
+                    }
+                });
+
+            }
+
+            function CartLoad() {
+            $.ajax({
+                url: '/Home/GetCartPartial',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+
+                success: function (result) {
+                   $('#DivaddtocartId').empty();
+                    $('#DivaddtocartId').append(result);
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
                 }
-            });
+            })
+        
 
         }
 
+            async function AddtoBasket() {
+                var colorID = $('#addtocartId').attr('data-id');
+               var quantity = $('#quantityId').val();
+               console.log(colorID)
+               console.log(quantity)
+              
+               let checkajax = await $.ajax({
+                    url: "/Home/AddtoBasket",
+                    type: "Post",
+                   
+                    data: {
+                        ColorId: parseInt(colorID),
+                        Quantity: parseInt(quantity)
+                    },
+                    success: function () {
+                        //  let resobject = jQuery.parseJSON(data);
+                        console.log("success AddtoCart")   
+                    },
+                    error: function () {
+                        alert('Failed to receive the Data');
+                        console.log('Failed ');
+                    }
+                });
+               if (checkajax) CartLoad();
+               
+            }
+            //DivaddtocartId
+
+        function ActiveToggle() {
+                var element = document.getElementById("isactiveId");
+                element.classList.toggle("active");
+            
+        }
     </script>
 
 

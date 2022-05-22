@@ -1,0 +1,76 @@
+﻿@inject Antomi.Services.LayoutServices layoutServices
+@{ 
+    BasketVM basket = await layoutServices.ShowBasket();
+}
+<a href="javascript:void(0)">
+    <i  class="fa fa-shopping-bag" onclick="ActiveToggle()"></i>
+    <span  class="cart_price" onclick="ActiveToggle()">$@Math.Round(basket.TotalPrice)<i class="ion-ios-arrow-down"></i></span>
+    <span class="cart_count">@basket.Count</span>
+
+</a>
+
+<div class="mini_cart" id="isactiveId">
+    <div class="cart_close">
+        <div class="cart_text">
+            <h3>cart</h3>
+        </div>
+        <div class="mini_cart_close">
+            <a href="javascript:void(0)"><i onclick="ActiveToggle()" class="ion-android-close"></i></a>
+        </div>
+    </div>
+    @foreach (var item in basket.BasketItems)
+    {
+        <div class="cart_item">
+            <div class="cart_img">
+                <a href="#"><img src="~/image/product/@item.ProductColor.ProductColorImages.FirstOrDefault(x=>x.IsMain).Image" alt=""></a>
+            </div>
+            <div class="cart_info">
+                <a href="#">@item.ProductColor.Product.Model</a>
+                <p>Qty: @item.Count X <span> $@Math.Round(item.Price,2) </span></p>
+            </div>
+            <div class="cart_remove">
+                <a href="#" id="@item.ProductColor.Id"><i class="ion-android-close"></i></a>
+            </div>
+        </div>
+    }
+    @*<div class="cart_item">
+        <div class="cart_img">
+            <a href="#"><img src="~/assets/img/s-product/product.jpg" alt=""></a>
+        </div>
+        <div class="cart_info">
+            <a href="#">Primis In Faucibus</a>
+            <p>Qty: 1 X <span> $60.00 </span></p>
+        </div>
+        <div class="cart_remove">
+            <a href="#"><i class="ion-android-close"></i></a>
+        </div>
+    </div>
+    <div class="cart_item">
+        <div class="cart_img">
+            <a href="#"><img src="~/assets/img/s-product/product2.jpg" alt=""></a>
+        </div>
+        <div class="cart_info">
+            <a href="#">Letraset Sheets</a>
+            <p>Qty: 1 X <span> $60.00 </span></p>
+        </div>
+        <div class="cart_remove">
+            <a href="#"><i class="ion-android-close"></i></a>
+        </div>
+    </div>*@
+    <div class="mini_cart_table">
+      
+        <div class="cart_total mt-10">
+            <span>total:</span>
+            <span class="price">$@Math.Round(basket.TotalPrice)</span>
+        </div>
+    </div>
+    <div class="mini_cart_footer">
+        <div class="cart_button">
+            <a href="cart.html">View cart</a>
+        </div>
+        <div class="cart_button">
+            <a class="active" href="checkout.html">Checkout</a>
+        </div>
+
+    </div>
+</div>
