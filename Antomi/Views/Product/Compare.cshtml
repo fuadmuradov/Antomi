@@ -1,0 +1,36 @@
+﻿<!--breadcrumbs area start-->
+<div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <ul>
+                        <li><a href="index.html">home</a></li>
+                        <li>compare</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--breadcrumbs area end-->
+<!-- main-content-wrap start -->
+<div class="main-content-wrap compaer-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="compaer-page--inner">
+                    <form action="#">
+                        <!-- Compare Table -->
+                        <div class="compare-table table-responsive">
+                            <table class="table mb-0">
+                              @await Html.PartialAsync("_ComparePartialView");
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- main-content-wrap end -->

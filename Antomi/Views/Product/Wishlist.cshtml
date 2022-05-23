@@ -1,12 +1,11 @@
-﻿@model WishlistVM
-<!--breadcrumbs area start-->
+﻿<!--breadcrumbs area start-->
 <div class="breadcrumbs_area">
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="breadcrumb_content">
                     <ul>
-                        <li><a href="index.html">home</a></li>
+                        <li><a asp-controller="Home" asp-action="Index">home</a></li>
                         <li>Wishlist</li>
                     </ul>
                 </div>
@@ -36,28 +35,8 @@
                                                 <th class="product_total">Add To Cart</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach (var item in Model.wishlistItems)
-                                            {
-                                            <tr>
-                                                <td class="product_remove"><a href="#">X</a></td>
-                                                <td class="product_thumb"><a href="#"><img src="~/image/product/@item.ProductColor.ProductColorImages.FirstOrDefault(x=>x.IsMain==true).Image" alt=""></a></td>
-                                                <td class="product_name"><a href="#">@item.ProductColor.Product.Model</a></td>
-                                                <td class="product-price">$@item.Price</td>
-                                                @if (item.ProductColor.Count > 0)
-                                                {
-                                                    <td class="product_quantity">In Stock</td>
-                                                }
-                                                else
-                                                {
-                                                    <td class="product_quantity">Not Stock</td>
-                                                }
-
-                                                <td class="product_total"><a href="#">Add To Cart</a></td>
-
-
-                                            </tr>
-                                            }
+                                        <tbody id="wishlistTableId">
+                                            @await Html.PartialAsync("_WishlistTablePartialView")
                                         </tbody>
                                     </table>
                                 </div>
@@ -84,3 +63,73 @@
         </div>
     </div>
 </div>
+
+
+@section Script{
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function WishlistLoad() {
+            $.ajax({
+                url: '/Product/GetWishlistPartial',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+
+                success: function (result) {
+                    $('.wishlist_load').empty();
+                    $('.wishlist_load').append(result);
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                }
+            })
+        }
+
+        function WishlistTableLoad() {
+            $.ajax({
+                url: '/Product/GetWishlistTablePartial',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+
+                success: function (result) {
+                    $('#wishlistTableId').empty();
+                    $('#wishlistTableId').append(result);
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                }
+            })
+        }
+        async function DeleteWishlistItem(itemId) {
+            console.log(itemId)
+            let checkajax = await $.ajax({
+                url: "/Product/DeleteWishlistItem",
+                type: "Post",
+                data: {
+                    itemID: parseInt(itemId)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) {
+                WishlistTableLoad();
+                WishlistLoad();
+            } 
+        }
+
+
+
+    </script>
+        
+        }

@@ -29,34 +29,10 @@
                 <p>Qty: @item.Count X <span> $@Math.Round(item.Price,2) </span></p>
             </div>
             <div class="cart_remove">
-                <a href="#" id="@item.ProductColor.Id"><i class="ion-android-close"></i></a>
+                <a data-id="@item.ProductColor.Id" onclick='DeleteCartItem(@item.ProductColor.Id)'><i class="ion-android-close"></i></a>
             </div>
         </div>
     }
-    @*<div class="cart_item">
-        <div class="cart_img">
-            <a href="#"><img src="~/assets/img/s-product/product.jpg" alt=""></a>
-        </div>
-        <div class="cart_info">
-            <a href="#">Primis In Faucibus</a>
-            <p>Qty: 1 X <span> $60.00 </span></p>
-        </div>
-        <div class="cart_remove">
-            <a href="#"><i class="ion-android-close"></i></a>
-        </div>
-    </div>
-    <div class="cart_item">
-        <div class="cart_img">
-            <a href="#"><img src="~/assets/img/s-product/product2.jpg" alt=""></a>
-        </div>
-        <div class="cart_info">
-            <a href="#">Letraset Sheets</a>
-            <p>Qty: 1 X <span> $60.00 </span></p>
-        </div>
-        <div class="cart_remove">
-            <a href="#"><i class="ion-android-close"></i></a>
-        </div>
-    </div>*@
     <div class="mini_cart_table">
       
         <div class="cart_total mt-10">

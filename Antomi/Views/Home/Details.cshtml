@@ -85,7 +85,7 @@
                                     <ul>
                                         @foreach (var item in Model.ProductColors)
                                         {
-                                            <li class="color1"><a style="background:@item.Name" class="btn" onclick='getData(@item.Id)' href="#"></a></li>
+                                            <li class="color1"><a style="background:@item.Name" class="btn" onclick='getData(@item.Id)'></a></li>
                                         }
                                     </ul>
                                 </div>
@@ -97,8 +97,8 @@
                                 </div>
                                 <div class=" product_d_action">
                                     <ul>
-                                        <li><a href="#" title="Add to wishlist">+ Add to Wishlist</a></li>
-                                        <li><a href="#" title="Add to wishlist">+ Compare</a></li>
+                                        <li><a onclick="AddtoWishlist()" title="Add to wishlist">+ Add to Wishlist</a></li>
+                                        <li><a href="#" title="Add to Compare">+ Compare</a></li>
                                     </ul>
                                 </div>
                                 <div class="product_meta">
@@ -829,8 +829,8 @@
                 dataType: 'html',
 
                 success: function (result) {
-                   $('#DivaddtocartId').empty();
-                    $('#DivaddtocartId').append(result);
+                   $('.DivaddtocartId').empty();
+                    $('.DivaddtocartId').append(result);
 
                 },
                 error: function (xhr, status) {
@@ -850,7 +850,6 @@
                let checkajax = await $.ajax({
                     url: "/Home/AddtoBasket",
                     type: "Post",
-                   
                     data: {
                         ColorId: parseInt(colorID),
                         Quantity: parseInt(quantity)
@@ -868,11 +867,73 @@
                
             }
             //DivaddtocartId
-
-        function ActiveToggle() {
+              function ActiveToggle() {
                 var element = document.getElementById("isactiveId");
                 element.classList.toggle("active");
             
+        }
+
+
+        function WishlistLoad() {
+            $.ajax({
+                url: '/Product/GetWishlistPartial',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+
+                success: function (result) {
+                    $('.wishlist_load').empty();
+                    $('.wishlist_load').append(result);
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                }
+            })
+
+
+        }
+        async function AddtoWishlist() {
+
+            var colorId = $('#addtocartId').attr('data-id');
+            console.log(colorId)
+            let checkajax = await $.ajax({
+                url: "/Product/AddWishlist",
+                type: "Post",
+                data: {
+                    ColorID: parseInt(colorId)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) WishlistLoad();
+        }
+
+
+        async function DeleteCartItem(itemId) {
+            console.log(itemId)
+            let checkajax = await $.ajax({
+                url: "/Home/DeleteBasketItem",
+                type: "Post",
+                data: {
+                    itemID: parseInt(itemId)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) CartLoad();
         }
     </script>
 

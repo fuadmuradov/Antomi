@@ -1,0 +1,9 @@
+﻿@inject Antomi.Services.LayoutServices layoutServices
+@{
+    int wishlistcount = await layoutServices.WishlistCount();
+}
+
+    <a href="wishlist.html">
+        <i class="ion-android-favorite-outline"></i>
+        <span class="wishlist_count">@wishlistcount</span>
+    </a>

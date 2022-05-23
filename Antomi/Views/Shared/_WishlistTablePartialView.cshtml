@@ -1,0 +1,27 @@
+﻿@inject Antomi.Services.LayoutServices layoutServices
+@{
+    WishlistVM wishlistVM = await layoutServices.WishlistTable();
+}
+
+
+    @foreach (var item in wishlistVM.wishlistItems)
+    {
+        <tr>
+            <td class="product_remove"><a onclick='DeleteWishlistItem(@item.ProductColor.Id)'>X</a></td>
+            <td class="product_thumb"><a href="#"><img src="~/image/product/@item.ProductColor.ProductColorImages.FirstOrDefault(x=>x.IsMain==true).Image" alt=""></a></td>
+            <td class="product_name"><a href="#">@item.ProductColor.Product.Model</a></td>
+            <td class="product-price">$@item.Price</td>
+            @if (item.ProductColor.Count > 0)
+            {
+                <td class="product_quantity">In Stock</td>
+            }
+            else
+            {
+                <td class="product_quantity">Not Stock</td>
+            }
+
+            <td class="product_total"><a href="#">Add To Cart</a></td>
+
+
+        </tr>
+    }

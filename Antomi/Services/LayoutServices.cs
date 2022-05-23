@@ -75,6 +75,58 @@ namespace Antomi.Services
 
             return basketVM;
         }
+        public async Task<int> WishlistCount()
+        {
+            int count = 0;
+            string wishlist = httpContext.HttpContext.Request.Cookies["Wishlist"];
+            List<WishlistCookieItemVM> wishlistCookieItems;
+            if (!string.IsNullOrEmpty(wishlist))
+            {
+                wishlistCookieItems = JsonConvert.DeserializeObject<List<WishlistCookieItemVM>>(wishlist);
+                count = wishlistCookieItems.Count;
+            }
+
+            return count;
+        }
+
+        public async Task<WishlistVM> WishlistTable()
+        {
+            string wishlist =httpContext.HttpContext.Request.Cookies["Wishlist"];
+            List<WishlistCookieItemVM> wishlistitems;
+            WishlistVM wishlistVM = new WishlistVM()
+            {
+                wishlistItems = new List<WishlistItemVM>()
+            };
+            if (!string.IsNullOrEmpty(wishlist))
+            {
+                wishlistitems = JsonConvert.DeserializeObject<List<WishlistCookieItemVM>>(wishlist);
+                foreach (var item in wishlistitems)
+                {
+                    double price = 0;
+                    ProductColor productColor = context.ProductColors.Include(x => x.ProductColorImages).Include(x => x.Discounts).Include(x => x.Product).FirstOrDefault(x => x.Id == item.Id && x.Count > 0);
+                    if (productColor != null)
+                    {
+                        Discount discount = productColor.Discounts.FirstOrDefault(x => x.IsActive == true);
+                        if (discount != null)
+                        {
+                            price = productColor.Price * (100 - discount.Percent) / 100;
+                        }
+                        else
+                        {
+                            price = productColor.Price;
+                        }
+                        WishlistItemVM wishlistItemVM = new WishlistItemVM()
+                        {
+                            ProductColor = productColor,
+                            Price = Math.Round(price, 2)
+                        };
+                        wishlistVM.wishlistItems.Add(wishlistItemVM);
+                    }
+                }
+            }
+
+            return wishlistVM;
+        }
 
     }
 }

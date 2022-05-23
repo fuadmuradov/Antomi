@@ -104,6 +104,34 @@ namespace Antomi.Controllers
             return PartialView("_CartPartialView");
         }
 
+        [HttpPost]
+        public IActionResult DeleteBasketItem(int itemID)
+        {
+            string basket = HttpContext.Request.Cookies["Basket"];
+            List<BasketCookieItemVM> basketCookieItems;
+            if (!string.IsNullOrEmpty(basket))
+            {
+                basketCookieItems = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basket);
+                foreach (var item in basketCookieItems)
+                {
+                    if (item.Id == itemID)
+                    {
+                        basketCookieItems.Remove(item);
+                        break;
+                    }
+                }
+                string basketstr = JsonConvert.SerializeObject(basketCookieItems, new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
+                HttpContext.Response.Cookies.Append("Basket", basketstr);
+            }
+
+
+            return PartialView("_WishlistPartialView");
+        }
+
+
         public IActionResult GetCartPartial()
         {
             return PartialView("_CartPartialView");
