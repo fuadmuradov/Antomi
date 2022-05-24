@@ -190,9 +190,14 @@ namespace Antomi.Controllers
             return PartialView("_ComparePartialView");
         }
 
-        public IActionResult GetComparePartial()
+        public IActionResult GetComparePhonePartial()
         {
             return PartialView("_ComparePartialView");
+        }
+
+        public IActionResult GetCompareNotebookPartial()
+        {
+            return PartialView("_CompareNotebookPartialView");
         }
         #endregion
 

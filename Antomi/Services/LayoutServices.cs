@@ -75,6 +75,7 @@ namespace Antomi.Services
 
             return basketVM;
         }
+
         public async Task<int> WishlistCount()
         {
             int count = 0;
@@ -126,6 +127,118 @@ namespace Antomi.Services
             }
 
             return wishlistVM;
+        }
+
+        public async Task<CompareVM> ComparePhoneList()
+        {
+            string compare = httpContext.HttpContext.Request.Cookies["Compare"];
+            CompareVM compareVM = new CompareVM
+            {
+                CompareItems = new List<CompareItemVM>()
+            };
+            List<CompareCookieItemVM> compareCookieItems;
+            if (!string.IsNullOrEmpty(compare))
+            {
+                compareCookieItems = JsonConvert.DeserializeObject<List<CompareCookieItemVM>>(compare);
+                foreach (var item in compareCookieItems)
+                {
+                    ProductColor productColor = await context.ProductColors.Include(x => x.Product).ThenInclude(x => x.SubCategory).Include(x => x.Product).ThenInclude(x => x.PhoneSpecifications).Include(x=>x.ProductColorImages).Include(x=>x.Discounts).FirstOrDefaultAsync(x => x.Id == item.Id);
+                    if (productColor == null) return compareVM;
+                    Discount discount = await context.Discounts.FirstOrDefaultAsync(x => x.ProductColorId == item.Id && x.IsActive == true);
+                    double price = 0;
+                    if (discount == null)
+                    {
+                        price = productColor.Price;
+                    }
+                    else
+                    {
+                        price = productColor.Price * (100 - discount.Percent) / 100;
+                    }
+
+                 
+                    if (productColor.Product.SubCategoryId == 1)
+                    {
+                        CompareItemVM compareItem = new CompareItemVM()
+                        {
+                            ProductColor = productColor,
+                            Price = Math.Round(price, 2)
+                        };
+                        compareVM.CompareItems.Add(compareItem);
+                    }
+                    
+                }
+
+
+            }
+
+            return compareVM;
+        }
+
+        public async Task<CompareVM> CompareNotebookList()
+        {
+            string compare = httpContext.HttpContext.Request.Cookies["Compare"];
+            CompareVM compareVM = new CompareVM
+            {
+                CompareItems = new List<CompareItemVM>()
+            };
+            List<CompareCookieItemVM> compareCookieItems;
+            if (!string.IsNullOrEmpty(compare))
+            {
+                compareCookieItems = JsonConvert.DeserializeObject<List<CompareCookieItemVM>>(compare);
+                foreach (var item in compareCookieItems)
+                {
+                    ProductColor productColor = await context.ProductColors.Include(x => x.Product).ThenInclude(x => x.SubCategory).Include(x => x.Product).ThenInclude(x => x.PhoneSpecifications).Include(x => x.ProductColorImages).Include(x => x.Discounts).FirstOrDefaultAsync(x => x.Id == item.Id);
+                    if (productColor == null) return compareVM;
+                    Discount discount = await context.Discounts.FirstOrDefaultAsync(x => x.ProductColorId == item.Id && x.IsActive == true);
+                    double price = 0;
+                    if (discount == null)
+                    {
+                        price = productColor.Price;
+                    }
+                    else
+                    {
+                        price = productColor.Price * (100 - discount.Percent) / 100;
+                    }
+
+
+                    if (productColor.Product.SubCategoryId == 17)
+                    {
+                        CompareItemVM compareItem = new CompareItemVM()
+                        {
+                            ProductColor = productColor,
+                            Price = Math.Round(price, 2)
+                        };
+                        compareVM.CompareItems.Add(compareItem);
+                    }
+
+                }
+
+
+            }
+
+            return compareVM;
+        }
+
+        public async Task<Product> ShowQuickView()
+        {
+            string productId = httpContext.HttpContext.Request.Cookies["Quickview"];
+            Product product;
+            if (!string.IsNullOrEmpty(productId))
+            {
+                int id = Convert.ToInt32(productId);
+                product =await context.Products.Include(x=>x.ProductColors).ThenInclude(x=>x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).FirstOrDefaultAsync(x => x.Id == id);
+
+            }
+            else
+            {
+                product = context.Products.Include(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).First();
+            }
+            if (productId == "0")
+            {
+                product = context.Products.Include(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).First();
+
+            }
+            return product;
         }
 
     }

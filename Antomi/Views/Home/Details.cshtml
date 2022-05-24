@@ -98,7 +98,7 @@
                                 <div class=" product_d_action">
                                     <ul>
                                         <li><a onclick="AddtoWishlist()" title="Add to wishlist">+ Add to Wishlist</a></li>
-                                        <li><a href="#" title="Add to Compare">+ Compare</a></li>
+                                        <li><a onclick='AddtoCompare()' title="Add to Compare">+ Compare</a></li>
                                     </ul>
                                 </div>
                                 <div class="product_meta">
@@ -914,7 +914,26 @@
             });
             if (checkajax) WishlistLoad();
         }
+        async function AddtoCompare() {
 
+            var colorId = $('#addtocartId').attr('data-id');
+            console.log(colorId)
+            let checkajax = await $.ajax({
+                url: "/Product/AddCompare",
+                type: "Post",
+                data: {
+                    ColorID: parseInt(colorId)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+        }
 
         async function DeleteCartItem(itemId) {
             console.log(itemId)

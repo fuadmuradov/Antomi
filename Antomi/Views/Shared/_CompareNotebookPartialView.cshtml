@@ -1,6 +1,7 @@
-﻿@inject Antomi.Services.LayoutServices layoutServices
+﻿
+@inject Antomi.Services.LayoutServices layoutServices
 @{
-    CompareVM compareVM = await layoutServices.ComparePhoneList();
+    CompareVM compareVM = await layoutServices.CompareNotebookList();
 }
 
 
@@ -60,7 +61,7 @@
         <td class="first-column">RAM</td>
         @foreach (var item in compareVM.CompareItems)
         {
-            <td class="pro-stock">@item.ProductColor.Product.PhoneSpecifications.First().RAM</td>
+            <td class="pro-stock">@item.ProductColor.Product.NotebookSpecifications.First().RAM</td>
 
         }
     </tr>
@@ -68,15 +69,15 @@
         <td class="first-column">Storage</td>
         @foreach (var item in compareVM.CompareItems)
         {
-            <td class="pro-stock">@item.ProductColor.Product.PhoneSpecifications.First().Storage</td>
+            <td class="pro-stock">@item.ProductColor.Product.NotebookSpecifications.First().Storage</td>
 
         }
     </tr>
     <tr>
-        <td class="first-column">Display Type</td>
+        <td class="first-column">Graphics</td>
         @foreach (var item in compareVM.CompareItems)
         {
-            <td class="pro-stock">@item.ProductColor.Product.PhoneSpecifications.First().DisplayType</td>
+            <td class="pro-stock">@item.ProductColor.Product.NotebookSpecifications.First().Graphics</td>
 
         }
     </tr>
@@ -84,7 +85,7 @@
         <td class="first-column">Processor</td>
         @foreach (var item in compareVM.CompareItems)
         {
-            <td class="pro-stock">@item.ProductColor.Product.PhoneSpecifications.First().Processor</td>
+            <td class="pro-stock">@item.ProductColor.Product.NotebookSpecifications.First().Processor</td>
 
         }
     </tr>
@@ -92,39 +93,22 @@
         <td class="first-column">Operation System</td>
         @foreach (var item in compareVM.CompareItems)
         {
-            <td class="pro-stock">@item.ProductColor.Product.PhoneSpecifications.First().OS</td>
+            <td class="pro-stock">@item.ProductColor.Product.NotebookSpecifications.First().OS</td>
 
         }
     </tr>
-    <tr>
-        <td class="first-column">Main Camera</td>
-        @foreach (var item in compareVM.CompareItems)
-        {
-            <td class="pro-stock">@item.ProductColor.Product.PhoneSpecifications.First().MainCamera</td>
-
-        }
-    </tr>
-    <tr>
-        <td class="first-column">Selfie Camera</td>
-        @foreach (var item in compareVM.CompareItems)
-        {
-            <td class="pro-stock">@item.ProductColor.Product.PhoneSpecifications.First().SelfieCamera</td>
-
-        }
-    </tr>
-
     <tr>
         <td class="first-column">Add to cart</td>
         @foreach (var item in compareVM.CompareItems)
         {
-            <td class="pro-addtocart"><a  onclick='AddtoBasket(@item.ProductColor.Id)' class="add-to-cart" tabindex="0"><span>ADD TO CART</span></a></td>
+            <td class="pro-addtocart"><a onclick='AddtoBasket(@item.ProductColor.Id)' class="add-to-cart" tabindex="0"><span>ADD TO CART</span></a></td>
         }
-       </tr>
+    </tr> 
     <tr>
         <td class="first-column">Delete</td>
         @foreach (var item in compareVM.CompareItems)
         {
-            <td class="pro-remove"><button onclick='DeletePhoneCompareItem(@item.ProductColor.Id)'><i class="fa fa-trash-o"></i></button></td>
+            <td class="pro-remove"><button onclick='DeleteNotebookCompareItem(@item.ProductColor.Id)'><i class="fa fa-trash-o"></i></button></td>
         }
     </tr>
 

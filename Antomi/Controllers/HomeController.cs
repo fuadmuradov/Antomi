@@ -30,10 +30,21 @@ namespace Antomi.Controllers
 
         public IActionResult Shop()
         {
-            return View();
+            List<Product> products = context.Products.Include(x=>x.ProductColors).ThenInclude(x=>x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).ToList();
+            List<Category> categories = context.Categories.Include(x=>x.SubCategories).ToList();
+            ShopVM shopVM = new ShopVM()
+            {
+                Products = products,
+                Categories = categories
+            };
+            return View(shopVM);
         }
-        public IActionResult Details(int id)
+        public IActionResult Details(int id=0)
         {
+            if(id==0)
+            {
+                id = context.Products.First().Id;
+            }
             Product product = context.Products.Include(x=>x.SubCategory).ThenInclude(x=>x.Category).Include(x => x.PhoneSpecifications).Include(x => x.NotebookSpecifications).Include(x => x.Specifications).Include(x => x.ProductColors).ThenInclude(x=>x.Discounts).Include(x => x.ProductColors).ThenInclude(x=>x.ProductColorImages).FirstOrDefault(x => x.Id == id);// ProductColorIMages
             return View(product);
         }
@@ -137,6 +148,8 @@ namespace Antomi.Controllers
             return PartialView("_CartPartialView");
         }
 
+    
+
         public IActionResult ShowBasket()
         {
             string basketstr = HttpContext.Request.Cookies["Basket"];
@@ -145,5 +158,24 @@ namespace Antomi.Controllers
 
         }
 
+
+        #region ModalQuickView
+
+        [HttpPost]
+        public IActionResult QuickView(int id)
+        {
+            string productId = id.ToString();
+            HttpContext.Response.Cookies.Append("Quickview", productId);
+
+            return PartialView("_ModalPartialView");
+        }
+
+
+        public IActionResult GetModalPartial()
+        {
+            return PartialView("_ModalPartialView");
+        }
+
+        #endregion
     }
 }

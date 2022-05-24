@@ -105,6 +105,7 @@
                 }
             })
         }
+
         async function DeleteWishlistItem(itemId) {
             console.log(itemId)
             let checkajax = await $.ajax({
@@ -128,7 +129,76 @@
             } 
         }
 
+        function CartLoad() {
+            $.ajax({
+                url: '/Home/GetCartPartial',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
 
+                success: function (result) {
+                    $('.DivaddtocartId').empty();
+                    $('.DivaddtocartId').append(result);
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                }
+            })
+
+
+        }
+
+
+        async function AddtoBasket(colorID) {
+            var quantity = 1;
+            console.log(colorID)
+            console.log(quantity)
+
+            let checkajax = await $.ajax({
+                url: "/Home/AddtoBasket",
+                type: "Post",
+                data: {
+                    ColorId: parseInt(colorID),
+                    Quantity: parseInt(quantity)
+                },
+                success: function () {
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) CartLoad();
+
+        }
+
+        function ActiveToggle() {
+            var element = document.getElementById("isactiveId");
+            element.classList.toggle("active");
+
+        }
+
+        async function DeleteCartItem(itemId) {
+            console.log(itemId)
+            let checkajax = await $.ajax({
+                url: "/Home/DeleteBasketItem",
+                type: "Post",
+                data: {
+                    itemID: parseInt(itemId)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) CartLoad();
+        }
 
     </script>
         
