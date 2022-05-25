@@ -166,6 +166,14 @@ namespace Antomi.Controllers
             return PartialView("_ComparePartialView");
         }
 
+        public IActionResult ShowCompare()
+        {
+            string basketstr = HttpContext.Request.Cookies["Compare"];
+            List<CompareCookieItemVM> basket = JsonConvert.DeserializeObject<List<CompareCookieItemVM>>(basketstr);
+            return Json(basket);
+
+        }
+
 
         public IActionResult DeleteCompareItem(int itemID)
         {

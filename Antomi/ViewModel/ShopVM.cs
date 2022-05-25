@@ -10,5 +10,6 @@ namespace Antomi.ViewModel
     {
         public List<Product> Products { get; set; }
         public List<Category> Categories { get; set; }
+        public CompareVM CompareVM { get; set; }
     }
 }

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Antomi.Controllers
 {
@@ -28,24 +29,76 @@ namespace Antomi.Controllers
             return View();
         }
 
-        public IActionResult Shop()
+        public async Task<IActionResult> Shop()
         {
-            List<Product> products = context.Products.Include(x=>x.ProductColors).ThenInclude(x=>x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).ToList();
-            List<Category> categories = context.Categories.Include(x=>x.SubCategories).ToList();
+            List<Product> products = context.Products.Include(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).ToList();
+            List<Category> categories = context.Categories.Include(x => x.SubCategories).ToList();
             ShopVM shopVM = new ShopVM()
             {
                 Products = products,
                 Categories = categories
             };
+
+
+
+            string compare = HttpContext.Request.Cookies["Compare"];
+            CompareVM compareVM = new CompareVM
+            {
+                CompareItems = new List<CompareItemVM>()
+            };
+            List<CompareCookieItemVM> compareCookieItems;
+            if (!string.IsNullOrEmpty(compare))
+            {
+                compareCookieItems = JsonConvert.DeserializeObject<List<CompareCookieItemVM>>(compare);
+                foreach (var item in compareCookieItems)
+                {
+                    ProductColor productColor = await context.ProductColors.Include(x => x.Product).ThenInclude(x => x.SubCategory).Include(x => x.Product).ThenInclude(x => x.PhoneSpecifications).Include(x => x.ProductColorImages).Include(x => x.Discounts).FirstOrDefaultAsync(x => x.Id == item.Id);
+                    if (productColor == null) return View(shopVM);
+                    Discount discount = await context.Discounts.FirstOrDefaultAsync(x => x.ProductColorId == item.Id && x.IsActive == true);
+                    double price = 0;
+                    if (discount == null)
+                    {
+                        price = productColor.Price;
+                    }
+                    else
+                    {
+                        price = productColor.Price * (100 - discount.Percent) / 100;
+                    }
+
+
+                    if (productColor.Product.SubCategoryId == 1)
+                    {
+                        CompareItemVM compareItem = new CompareItemVM()
+                        {
+                            ProductColor = productColor,
+                            Price = Math.Round(price, 2)
+                        };
+                        compareVM.CompareItems.Add(compareItem);
+                    }
+
+                }
+
+
+            }
+
+            shopVM.CompareVM = compareVM;     
+   
             return View(shopVM);
         }
         public IActionResult Details(int id=0)
         {
+        
             if(id==0)
             {
                 id = context.Products.First().Id;
             }
             Product product = context.Products.Include(x=>x.SubCategory).ThenInclude(x=>x.Category).Include(x => x.PhoneSpecifications).Include(x => x.NotebookSpecifications).Include(x => x.Specifications).Include(x => x.ProductColors).ThenInclude(x=>x.Discounts).Include(x => x.ProductColors).ThenInclude(x=>x.ProductColorImages).FirstOrDefault(x => x.Id == id);// ProductColorIMages
+            Marka marka = 
+            DetailsVM detailsVM = new DetailsVM
+            {
+                Product = product,
+
+            };
             return View(product);
         }
 
@@ -170,11 +223,57 @@ namespace Antomi.Controllers
             return PartialView("_ModalPartialView");
         }
 
-
         public IActionResult GetModalPartial()
         {
             return PartialView("_ModalPartialView");
         }
+
+        #endregion
+
+
+        #region ShopCategory
+        [HttpPost]
+        public IActionResult ShopCategory(int id)
+        {
+            string categoryId = id.ToString();
+            HttpContext.Response.Cookies.Append("Category", categoryId);
+            return PartialView("_ShopProductPartialView");
+        }
+
+        public IActionResult GetShopCategory()
+        {
+            return PartialView("_ShopProductPartialView");
+        }
+
+        [HttpPost]
+        public IActionResult ShopProdductSort(int value)
+        {
+            string sortvalue = value.ToString();
+            HttpContext.Session.SetString("Sorting", sortvalue);
+            return PartialView("_ShopProductPartialView");
+        }
+       
+        [HttpPost]
+        public IActionResult Filter(string text)
+        {
+            text = text.Replace("$", String.Empty);
+            text= text.Replace(" ", String.Empty);
+            string[] prices = text.Split("-");
+            FilterVM filterVM = new FilterVM()
+            {
+                Minimum = Convert.ToInt32(prices[0]),
+                Maximum = Convert.ToInt32(prices[1])
+            };
+
+            string filterstr = JsonConvert.SerializeObject(filterVM, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+            HttpContext.Session.SetString("Filter", filterstr);
+
+            return PartialView("_ShopProductPartialView");
+        }
+
 
         #endregion
     }

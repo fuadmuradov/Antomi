@@ -1,0 +1,100 @@
+﻿@inject Antomi.Services.LayoutServices layoutServices
+@{
+    List<Product> Products = await layoutServices.ShopCategory();
+}
+@foreach (var product in Products)
+{
+    <div class="col-lg-3 col-md-4 col-12 ">
+        <article class="single_product">
+            <figure>
+                <div class="product_thumb">
+                    <a class="primary_img" href="product-details.html"><img src="~/image/product/@product.ProductColors.First().ProductColorImages.FirstOrDefault(x=>x.IsMain==true).Image" alt=""></a>
+                    <a class="secondary_img" href="product-details.html"><img src="~/image/product/@product.ProductColors.First().ProductColorImages.FirstOrDefault(x=>x.IsMain==false).Image" alt=""></a>
+                    <div class="label_product">
+                        <span class="label_sale">Sale</span>
+                    </div>
+                    <div class="action_links">
+                        <ul>
+                            <li class="wishlist"><a onclick='AddtoWishlist(@product.ProductColors.First().Id)' data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Wishlist"><i class="ion-android-favorite-outline"></i></a></li>
+                            <li class="compare"><a onclick='AddtoCompare(@product.ProductColors.First().Id)' data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Compare"><i class="ion-ios-settings-strong"></i></a></li>
+                            <li class="quick_button"><a onclick='ModalQuickView(@product.Id)' data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-bs-toggle="modal" data-bs-target="#modal_box" data-tippy="quick view"><i class="ion-ios-search-strong"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="product_content grid_content">
+                    <div class="product_content_inner">
+                        <h4 class="product_name"><a asp-controller="Home" asp-action="Details" asp-route-id="@product.Id">@product.Model</a></h4>
+                        <div class="product_rating">
+                            <ul>
+                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="price_box">
+                            @if (product.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive) != null)
+                            {
+                                int discount = product.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive).Percent;
+                                double price = product.ProductColors.First().Price * (100 - discount) / 100;
+
+                                <span class="old_price">$@Math.Round(product.ProductColors.First().Price, 2)</span>
+                                <span class="current_price">$@Math.Round(price, 2)</span>
+                            }
+                            else
+                            {
+                                <span class="current_price">$@Math.Round(product.ProductColors.First().Price, 2)</span>
+                            }
+
+
+                        </div>
+                    </div>
+                    <div class="add_to_cart">
+                        <a onclick='AddtoBasket(@product.ProductColors.First().Id)' title="Add to cart">Add to cart</a>
+                    </div>
+                </div>
+                <div class="product_content list_content">
+                    <h4 class="product_name"><a asp-controller="Home" asp-action="Details" asp-route-id="@product.Id">@product.Model</a></h4>
+                    <div class="product_rating">
+                        <ul>
+                            <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                            <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                            <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                            <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                            <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="price_box">
+                        @if (product.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive) != null)
+                        {
+                            int discount = product.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive).Percent;
+                            double price = product.ProductColors.First().Price * (100 - discount) / 100;
+
+                            <span class="old_price">$@Math.Round(product.ProductColors.First().Price, 2)</span>
+                            <span class="current_price">@Math.Round(price, 2)</span>
+                        }
+                        else
+                        {
+                            <span class="old_price">$@Math.Round(product.ProductColors.First().Price, 2)</span>
+                        }
+                    </div>
+                    <div class="product_desc">
+                        <p>@product.Description.Substring(0, 300)</p>
+                    </div>
+                    <div class="add_to_cart">
+                        <a onclick='AddtoBasket(@product.ProductColors.First().Id)' title="Add to cart">Add to cart</a>
+                    </div>
+                    <div class="action_links">
+                        <ul>
+                            <li class="wishlist"><a onclick='AddtoWishlist(@product.ProductColors.First().Id)' title="Add to Wishlist"><i class="ion-android-favorite-outline"></i> Add to Wishlist</a></li>
+                            <li class="compare"><a onclick='AddtoCompare(@product.ProductColors.First().Id)' title="Add to Compare"><i class="ion-ios-settings-strong"></i> Compare</a></li>
+                            <li class="quick_button"><a onclick='ModalQuickView(@product.Id)' data-toggle="modal" data-target="#modal_box" title="quick view"><i class="ion-ios-search-strong"></i> quick view</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </figure>
+        </article>
+    </div>
+}

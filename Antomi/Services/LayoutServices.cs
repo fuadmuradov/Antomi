@@ -222,10 +222,12 @@ namespace Antomi.Services
         public async Task<Product> ShowQuickView()
         {
             string productId = httpContext.HttpContext.Request.Cookies["Quickview"];
+
             Product product;
             if (!string.IsNullOrEmpty(productId))
             {
                 int id = Convert.ToInt32(productId);
+
                 product =await context.Products.Include(x=>x.ProductColors).ThenInclude(x=>x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).FirstOrDefaultAsync(x => x.Id == id);
 
             }
@@ -240,6 +242,75 @@ namespace Antomi.Services
             }
             return product;
         }
+
+        public async Task<List<Product>> ShopCategory()
+        {
+            string categoryId = httpContext.HttpContext.Request.Cookies["Category"];
+            List<Product> sortedProduct;
+            string sortvalue = httpContext.HttpContext.Session.GetString("Sorting");
+            string filterstr = httpContext.HttpContext.Session.GetString("Filter");
+          
+
+            List<Product> product;
+            if (!string.IsNullOrEmpty(categoryId))
+            {
+                int id = Convert.ToInt32(categoryId);
+                product = await context.Products.Include(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).Where(x => x.SubCategoryId == id).ToListAsync();
+
+            }
+            else
+            {
+                product = await context.Products.Include(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).Where(x => x.SubCategoryId == 1).ToListAsync();
+            }
+            if (categoryId == "0")
+            {
+                product = await context.Products.Include(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).Where(x => x.SubCategoryId == 1).ToListAsync();
+
+            }
+
+            if (!string.IsNullOrEmpty(sortvalue))
+            {
+                int value = Convert.ToInt32(sortvalue);
+                switch (value)
+                {
+                    case 4:
+                        {
+                            sortedProduct = product.OrderByDescending(x => x.ProductColors.First().Price).ToList();
+                            break;
+                        };
+                    case 3:
+                        {
+                            sortedProduct = product.OrderBy(x => x.ProductColors.First().Price).ToList();
+                            break;
+                        };
+                    default:
+                        {
+                            sortedProduct = product;
+                            break;
+                        }
+
+                }
+             
+            }
+            else
+            if(sortvalue=="0")
+            {
+                sortedProduct = product;
+            }
+            else
+            {
+                sortedProduct = product;
+            }
+
+            if (!string.IsNullOrEmpty(filterstr))
+            {
+                FilterVM filterVM = JsonConvert.DeserializeObject<FilterVM>(filterstr);
+                return sortedProduct.Where(x => x.ProductColors.First().Price >= filterVM.Minimum && x.ProductColors.First().Price <= filterVM.Maximum).ToList();
+            }
+
+            return sortedProduct;
+        }
+
 
     }
 }

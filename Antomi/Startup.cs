@@ -50,6 +50,10 @@ namespace Antomi
             }).AddDefaultTokenProviders().AddEntityFrameworkStores<AntomiDbContext>();
             services.AddHttpContextAccessor();
             services.AddScoped<LayoutServices>();
+            services.AddSession(option =>
+            {
+                option.IdleTimeout = TimeSpan.FromSeconds(300);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,7 +71,7 @@ namespace Antomi
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();

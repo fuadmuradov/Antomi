@@ -32,7 +32,7 @@
                                     <ul class="widget_dropdown_categories">
                                         @foreach (var item in category.SubCategories)
                                         {
-                                            <li><a href="#">@item.Name</a></li>
+                                            <li onclick='ShopCategoryChange(@item.Id)'><a>@item.Name</a></li>
                                         }
                                     </ul>
                                 </li>
@@ -42,9 +42,9 @@
                     </div>
                     <div class="widget_list widget_filter">
                         <h3>Filter by price</h3>
-                        <form action="#">
+                        <form >
                             <div id="slider-range"></div>
-                            <button type="submit">Filter</button>
+                            <button type="button" onclick='ShopFilterProducts()'>Filter</button>
                             <input type="text" name="text" id="amount" />
 
                         </form>
@@ -52,78 +52,44 @@
                     <div class="widget_list">
                         <h3>Compare Products</h3>
                         <div class="recent_product_container">
-                            <article class="recent_product_list">
-                                <figure>
-                                    <div class="product_thumb">
-                                        <a class="primary_img" href="product-details.html"><img src="~/assets/img/product/product9.jpg" alt=""></a>
-                                        <a class="secondary_img" href="product-details.html"><img src="~/assets/img/product/product10.jpg" alt=""></a>
-                                    </div>
-                                    <div class="product_content">
-                                        <h4><a href="product-details.html">Aliquam lobortis pellentesque</a></h4>
-                                        <div class="product_rating">
-                                            <ul>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                            </ul>
+                            @foreach (var item in Model.CompareVM.CompareItems)
+                            {
+                                <article class="recent_product_list">
+                                    <figure>
+                                        <div class="product_thumb">
+                                            <a class="primary_img" asp-controller="Home" asp-action="Details" asp-route-id="@item.ProductColor.Product.Id"><img src="~/image/product/@item.ProductColor.ProductColorImages.FirstOrDefault(x=>x.IsMain==true).Image" alt=""></a>
+                                            <a class="secondary_img" asp-controller="Home" asp-action="Details" asp-route-id="@item.ProductColor.Product.Id"><img src="~/image/product/@item.ProductColor.ProductColorImages.FirstOrDefault(x=>x.IsMain==false).Image" alt=""></a>
                                         </div>
-                                        <div class="price_box">
-                                            <span class="old_price">$70.00</span>
-                                            <span class="current_price">$65.00</span>
+                                        <div class="product_content">
+                                            <h4><a asp-controller="Home" asp-action="Details" asp-route-id="@item.ProductColor.Product.Id">@item.ProductColor.Product.Model</a></h4>
+                                            <div class="product_rating">
+                                                <ul>
+                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="price_box">
+                                                @if (item.ProductColor.Discounts.FirstOrDefault(x => x.IsActive) != null)
+                                                {
+                                                    int discount = item.ProductColor.Discounts.FirstOrDefault(x => x.IsActive).Percent;
+                                                    double price = item.ProductColor.Price * (100 - discount) / 100;
+
+                                                    <span class="old_price">$@Math.Round(item.ProductColor.Price, 2)</span>
+                                                    <span class="current_price">$@Math.Round(price, 2)</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="current_price">$@Math.Round(item.ProductColor.Price, 2)</span>
+                                                }
+                                            </div>
                                         </div>
-                                    </div>
-                                </figure>
-                            </article>
-                            <article class="recent_product_list">
-                                <figure>
-                                    <div class="product_thumb">
-                                        <a class="primary_img" href="product-details.html"><img src="~/assets/img/product/product11.jpg" alt=""></a>
-                                        <a class="secondary_img" href="product-details.html"><img src="~/assets/img/product/product12.jpg" alt=""></a>
-                                    </div>
-                                    <div class="product_content">
-                                        <h4><a href="product-details.html">Convallis quam sit vitae sodales</a></h4>
-                                        <div class="product_rating">
-                                            <ul>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="price_box">
-                                            <span class="old_price">$70.00</span>
-                                            <span class="current_price">$65.00</span>
-                                        </div>
-                                    </div>
-                                </figure>
-                            </article>
-                            <article class="recent_product_list">
-                                <figure>
-                                    <div class="product_thumb">
-                                        <a class="primary_img" href="product-details.html"><img src="~/assets/img/product/product14.jpg" alt=""></a>
-                                        <a class="secondary_img" href="product-details.html"><img src="~/assets/img/product/product13.jpg" alt=""></a>
-                                    </div>
-                                    <div class="product_content">
-                                        <h4><a href="product-details.html">Cillum dolore nisl fermentum</a></h4>
-                                        <div class="product_rating">
-                                            <ul>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="price_box">
-                                            <span class="old_price">$70.00</span>
-                                            <span class="current_price">$65.00</span>
-                                        </div>
-                                    </div>
-                                </figure>
-                            </article>
+                                    </figure>
+                                </article>
+                            }
+                          
                         </div>
                     </div>
                     <div class="widget_list tags_widget">
@@ -158,122 +124,23 @@
                         <button data-role="grid_4" type="button" class=" active btn-grid-4" data-toggle="tooltip" title="4"></button>
                         <button data-role="grid_list" type="button" class="btn-list" data-toggle="tooltip" title="List"></button>
                     </div>
-                    <div class=" niceselect_option">
-                        <form class="select_option" action="#">
-                            <select name="orderby" id="short">
-
-                                <option selected value="1">Sort by average rating</option>
-                                <option value="2">Sort by popularity</option>
-                                <option value="3">Sort by newness</option>
-                                <option value="4">Sort by price: low to high</option>
-                                <option value="5">Sort by price: high to low</option>
-                                <option value="6">Product Name: Z</option>
-                            </select>
-                        </form>
+                    <div class="">
+                        <select class="form-select" aria-label="Default select example" name="orderby" id="shortId">
+                            <option value="1">Sort by popularity</option>
+                            <option value="2">Sort by newness</option>
+                            <option value="3">Sort by price: low to high</option>
+                            <option value="4">Sort by price: high to low</option>
+                        </select>
                     </div>
                     <div class="page_amount">
+                      
                         <p>Showing 1–9 of 21 results</p>
                     </div>
                 </div>
                 <!--shop toolbar end-->
                 <!--shop wrapper start-->
-                <div class="row no-gutters shop_wrapper">
-                    @foreach (var product in Model.Products)
-                    {
-                        <div class="col-lg-3 col-md-4 col-12 ">
-                            <article class="single_product">
-                                <figure>
-                                    <div class="product_thumb">
-                                        <a class="primary_img" href="product-details.html"><img src="~/image/product/@product.ProductColors.First().ProductColorImages.FirstOrDefault(x=>x.IsMain==true).Image" alt=""></a>
-                                        <a class="secondary_img" href="product-details.html"><img src="~/image/product/@product.ProductColors.First().ProductColorImages.FirstOrDefault(x=>x.IsMain==false).Image" alt=""></a>
-                                        <div class="label_product">
-                                            <span class="label_sale">Sale</span>
-                                        </div>
-                                        <div class="action_links">
-                                            <ul>
-                                                <li class="wishlist"><a onclick='AddtoWishlist(@product.ProductColors.First().Id)' data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Wishlist"><i class="ion-android-favorite-outline"></i></a></li>
-                                                <li class="compare"><a onclick='AddtoCompare(@product.ProductColors.First().Id)' data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Compare"><i class="ion-ios-settings-strong"></i></a></li>
-                                                <li class="quick_button"><a onclick='ModalQuickView(@product.Id)' data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-bs-toggle="modal" data-bs-target="#modal_box" data-tippy="quick view"><i class="ion-ios-search-strong"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div class="product_content grid_content">
-                                        <div class="product_content_inner">
-                                            <h4 class="product_name"><a asp-controller="Home" asp-action="Details" asp-route-id="@product.Id">@product.Model</a></h4>
-                                            <div class="product_rating">
-                                                <ul>
-                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                    <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="price_box">
-                                                @if (product.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive) != null)
-                                                {
-                                                    int discount = product.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive).Percent;
-                                                    double price = product.ProductColors.First().Price * (100 - discount) / 100;
-
-                                                    <span class="old_price">$@Math.Round(product.ProductColors.First().Price, 2)</span>
-                                                    <span class="current_price">$@Math.Round(price, 2)</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="current_price">$@Math.Round(product.ProductColors.First().Price, 2)</span>
-                                                }
-
-
-                                            </div>
-                                        </div>
-                                        <div class="add_to_cart">
-                                            <a onclick='AddtoBasket(@product.ProductColors.First().Id)' title="Add to cart">Add to cart</a>
-                                        </div>
-                                    </div>
-                                    <div class="product_content list_content">
-                                        <h4 class="product_name"><a asp-controller="Home" asp-action="Details" asp-route-id="@product.Id">@product.Model</a></h4>
-                                        <div class="product_rating">
-                                            <ul>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="price_box">
-                                            @if (product.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive) != null)
-                                            {
-                                                int discount = product.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive).Percent;
-                                                double price = product.ProductColors.First().Price * (100 - discount) / 100;
-
-                                                <span class="old_price">$@Math.Round(product.ProductColors.First().Price, 2)</span>
-                                                <span class="current_price">@Math.Round(price, 2)</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="old_price">$@Math.Round(product.ProductColors.First().Price, 2)</span>
-                                            }
-                                        </div>
-                                        <div class="product_desc">
-                                            <p>@product.Description.Substring(0,300)</p>  
-                                        </div>
-                                        <div class="add_to_cart">
-                                            <a onclick='AddtoBasket(@product.ProductColors.First().Id)' title="Add to cart">Add to cart</a>
-                                        </div>
-                                        <div class="action_links">
-                                            <ul>
-                                                <li class="wishlist"><a onclick='AddtoWishlist(@product.ProductColors.First().Id)' title="Add to Wishlist"><i class="ion-android-favorite-outline"></i> Add to Wishlist</a></li>
-                                                <li class="compare"><a onclick='AddtoCompare(@product.ProductColors.First().Id)'  title="Add to Compare"><i class="ion-ios-settings-strong"></i> Compare</a></li>
-                                                <li class="quick_button"><a href="#" data-toggle="modal" data-target="#modal_box" title="quick view"><i class="ion-ios-search-strong"></i> quick view</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </figure>
-                            </article>
-                        </div>
-                    }
+                <div class="row no-gutters shop_wrapper shopcategoryChng">
+                    @await Html.PartialAsync("_ShopProductPartialView")
 
                     <!--aaaaa-->
 
@@ -397,7 +264,7 @@
 
         async function AddtoCompare(colorId) {
 
-            var colorId = $('#addtocartId').attr('data-id');
+       
             console.log(colorId)
             let checkajax = await $.ajax({
                 url: "/Product/AddCompare",
@@ -476,5 +343,108 @@
             });
             if (checkajax) ModalQuickViewLoad();
         }
+
+        function ShopCategoryLoad() {
+            console.log("aaaaa");
+            $.ajax({
+                url: '/Home/GetShopCategory',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+
+                success: function (result) {
+                    $('.shopcategoryChng').empty();
+                    $('.shopcategoryChng').append(result);
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                }
+            })
+
+
+        }
+        async function ShopCategoryChange(categoryId) {
+
+            console.log(categoryId)
+            let checkajax = await $.ajax({
+                url: "/Home/ShopCategory",
+                type: "Post",
+                data: {
+                    id: parseInt(categoryId)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) ShopCategoryLoad();
+        }
+
+        $('#shortId').on('change', function () {
+            console.log(this.value)
+            ShopSortProducts(this.value);
+        });
+
+        async function ShopSortProducts(sortvalue) {
+
+            console.log(sortvalue)
+            let checkajax = await $.ajax({
+                url: "/Home/ShopProdductSort",
+                type: "Post",
+                data: {
+                    value: parseInt(sortvalue)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) ShopCategoryLoad();
+        }
+
+       //888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+
+        async function ShopFilterProducts() {
+            var filter = $("#amount").val();
+            console.log(filter)
+
+            let checkajax = await $.ajax({
+                url: "/Home/Filter",
+                type: "Post",
+                data: {
+                    text: filter.toString()
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("111111111111");
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) {
+                ShopCategoryLoad();
+            }
+            else {
+                ShopCategoryLoad();
+            }
+        }
+
+
+
+
     </script>
+
+ 
 }
