@@ -93,7 +93,8 @@ namespace Antomi.Controllers
                 id = context.Products.First().Id;
             }
             Product product = context.Products.Include(x=>x.SubCategory).ThenInclude(x=>x.Category).Include(x => x.PhoneSpecifications).Include(x => x.NotebookSpecifications).Include(x => x.Specifications).Include(x => x.ProductColors).ThenInclude(x=>x.Discounts).Include(x => x.ProductColors).ThenInclude(x=>x.ProductColorImages).FirstOrDefault(x => x.Id == id);// ProductColorIMages
-            Marka marka = 
+            Marka marka;
+            List<SubcategoryToMarka> subcategoryToMarka = context.SubcategoryToMarkas.Where(x=>x.MarkaId==product.MarkaId && x.SubCategoryId==product.SubCategoryId).ToList();
             DetailsVM detailsVM = new DetailsVM
             {
                 Product = product,

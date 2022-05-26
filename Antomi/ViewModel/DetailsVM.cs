@@ -9,6 +9,6 @@ namespace Antomi.ViewModel
     public class DetailsVM
     {
         public Product Product { get; set; }
-        public Marka Marka { get; set; }
+        public List<SubcategoryToMarka> SubcategoryToMarkas { get; set; }
     }
 }
