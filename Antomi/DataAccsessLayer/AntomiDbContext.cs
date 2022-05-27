@@ -46,6 +46,7 @@ namespace Antomi.DataAccsessLayer
             modelBuilder.ApplyConfiguration(new ProductColorConfiguration());
             modelBuilder.ApplyConfiguration(new SpecificationConfiguration());
             modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new CommentConfiguration());
 
             modelBuilder.Entity<Marka>()
                .HasMany(c => c.Products)

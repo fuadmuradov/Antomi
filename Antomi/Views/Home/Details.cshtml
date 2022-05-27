@@ -1,5 +1,9 @@
 ﻿
 @model Product
+@{
+    List<Product> rproducts = ViewBag.RelatedProduct;
+
+}
 <!--breadcrumbs area start-->
 <div class="breadcrumbs_area">
     <div class="container">
@@ -236,6 +240,7 @@
                                 <div class="tab-pane fade" id="reviews" role="tabpanel">
                                     <div class="reviews_wrapper">
                                         <h2>1 review for Donec eu furniture</h2>
+                                        <!--review for section-->
                                         <div class="reviews_comment_box">
                                             <div class="comment_thmb">
                                                 <img src="~/assets/img/blog/comment2.jpg" alt="">
@@ -257,6 +262,7 @@
                                             </div>
 
                                         </div>
+                                        <!-- Review end section-->
                                         <div class="comment_title">
                                             <h2>Add a review </h2>
                                             <p>Your email address will not be published. Required fields are marked </p>
@@ -276,17 +282,24 @@
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <label for="review_comment">Your review </label>
-                                                        <textarea name="comment" id="review_comment"></textarea>
+                                                        <textarea name="comment" name="comText" id="review_comment"></textarea>
                                                     </div>
-                                                    <div class="col-lg-6 col-md-6">
-                                                        <label for="author">Name</label>
-                                                        <input id="author" type="text">
+                                                    @if (!User.Identity.IsAuthenticated)
+                                                    {
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <label for="author">Name</label>
+                                                            <input id="author" name="comName" type="text">
 
-                                                    </div>
-                                                    <div class="col-lg-6 col-md-6">
-                                                        <label for="email">Email </label>
-                                                        <input id="email" type="text">
-                                                    </div>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <label for="email">Email </label>
+                                                            <input id="email" name="comEmail" type="text">
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6">
+                                                            <input name="comProductId" type="hidden" value='@Model.Id'>
+                                                        </div>
+                                                    }
+
                                                 </div>
                                                 <button type="submit">Submit</button>
                                             </form>
@@ -311,198 +324,51 @@
                 </div>
             </div>
             <div class="product_carousel product_style product_column5 owl-carousel">
-                <article class="single_product">
-                    <figure>
+                @foreach (var item in rproducts)
+                {
+                    <article class="single_product">
+                        <figure>
 
-                        <div class="product_thumb">
-                            <a class="primary_img" href="product-details.html"><img src="~/assets/img/product/product14.jpg" alt=""></a>
-                            <a class="secondary_img" href="product-details.html"><img src="~/assets/img/product/product13.jpg" alt=""></a>
-                            <div class="label_product">
-                                <span class="label_sale">Sale</span>
-                            </div>
-                            <div class="action_links">
-                                <ul>
-                                    <li class="wishlist"><a href="wishlist.html" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Wishlist"><i class="ion-android-favorite-outline"></i></a></li>
-                                    <li class="compare"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Compare"><i class="ion-ios-settings-strong"></i></a></li>
-                                    <li class="quick_button"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-bs-toggle="modal" data-bs-target="#modal_box" data-tippy="quick view"><i class="ion-ios-search-strong"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="product_content">
-                            <div class="product_content_inner">
-                                <h4 class="product_name"><a href="product-details.html">Natus erro at congue massa commodo sit Natus erro</a></h4>
-                                <div class="price_box">
-                                    <span class="old_price">$80.00</span>
-                                    <span class="current_price">$70.00</span>
+                            <div class="product_thumb">
+                                <a class="primary_img" asp-controller="Home" asp-action="Details" asp-route-id="@item.Id"><img src="~/image/product/@item.ProductColors.First().ProductColorImages.FirstOrDefault(x=>x.IsMain==true).Image" alt=""></a>
+                                <a class="secondary_img" asp-controller="Home" asp-action="Details" asp-route-id="@item.Id"><img src="~/image/product/@item.ProductColors.First().ProductColorImages.FirstOrDefault(x=>x.IsMain==false).Image" alt=""></a>
+                                <div class="label_product">
+                                    <span class="label_sale">Sale</span>
+                                </div>
+                                <div class="action_links">
+                                    <ul>
+                                        <li class="wishlist"><a onclick='AddtoWishlist2(@item.ProductColors.First().Id)' data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Wishlist"><i class="ion-android-favorite-outline"></i></a></li>
+                                        <li class="compare"><a onclick='AddtoCompare2(@item.ProductColors.First().Id)' data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Compare"><i class="ion-ios-settings-strong"></i></a></li>
+                                        <li class="quick_button"><a onclick='ModalQuickView(@item.Id)' data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-bs-toggle="modal" data-bs-target="#modal_box" data-tippy="quick view"><i class="ion-ios-search-strong"></i></a></li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div class="add_to_cart">
-                                <a href="cart.html" title="Add to cart">Add to cart</a>
-                            </div>
+                            <div class="product_content">
+                                <div class="product_content_inner">
+                                    <h4 class="product_name"><a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id">@item.Model</a></h4>
+                                    <div class="price_box">
+                                        @if (item.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive) != null)
+                                        {
+                                            int discount = item.ProductColors.First().Discounts.FirstOrDefault(x => x.IsActive).Percent;
+                                            double price = item.ProductColors.First().Price * (100 - discount) / 100;
 
-                        </div>
-                    </figure>
-                </article>
-                <article class="single_product">
-                    <figure>
-
-                        <div class="product_thumb">
-                            <a class="primary_img" href="product-details.html"><img src="~/assets/img/product/product17.jpg" alt=""></a>
-                            <a class="secondary_img" href="product-details.html"><img src="~/assets/img/product/product18.jpg" alt=""></a>
-                            <div class="label_product">
-                                <span class="label_sale">Sale</span>
-                            </div>
-                            <div class="action_links">
-                                <ul>
-                                    <li class="wishlist"><a href="wishlist.html" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Wishlist"><i class="ion-android-favorite-outline"></i></a></li>
-                                    <li class="compare"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Compare"><i class="ion-ios-settings-strong"></i></a></li>
-                                    <li class="quick_button"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-bs-toggle="modal" data-bs-target="#modal_box" data-tippy="quick view"><i class="ion-ios-search-strong"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="product_content">
-                            <div class="product_content_inner">
-                                <h4 class="product_name"><a href="product-details.html">Nullam maximus eget nisi dignissim sodales eget tempor</a></h4>
-                                <div class="price_box">
-                                    <span class="old_price">$76.00</span>
-                                    <span class="current_price">$75.00</span>
+                                            <span class="old_price">$@Math.Round(item.ProductColors.First().Price, 2)</span>
+                                            <span class="current_price">$@Math.Round(price, 2)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="current_price">$@Math.Round(item.ProductColors.First().Price, 2)</span>
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="add_to_cart">
-                                <a href="cart.html" title="Add to cart">Add to cart</a>
-                            </div>
-
-                        </div>
-                    </figure>
-                </article>
-                <article class="single_product">
-                    <figure>
-
-                        <div class="product_thumb">
-                            <a class="primary_img" href="product-details.html"><img src="~/assets/img/product/product19.jpg" alt=""></a>
-                            <a class="secondary_img" href="product-details.html"><img src="~/assets/img/product/product20.jpg" alt=""></a>
-                            <div class="label_product">
-                                <span class="label_sale">Sale</span>
-                            </div>
-                            <div class="action_links">
-                                <ul>
-                                    <li class="wishlist"><a href="wishlist.html" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Wishlist"><i class="ion-android-favorite-outline"></i></a></li>
-                                    <li class="compare"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Compare"><i class="ion-ios-settings-strong"></i></a></li>
-                                    <li class="quick_button"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-bs-toggle="modal" data-bs-target="#modal_box" data-tippy="quick view"><i class="ion-ios-search-strong"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="product_content">
-                            <div class="product_content_inner">
-                                <h4 class="product_name"><a href="product-details.html">Eodem modo vel mattis ante facilisis nec porttitor efficitur</a></h4>
-                                <div class="price_box">
-                                    <span class="old_price">$86.00</span>
-                                    <span class="current_price">$79.00</span>
+                                <div class="add_to_cart">
+                                    <a onclick='AddtoBasket2(@item.ProductColors.First().Id)' title="Add to cart">Add to cart</a>
                                 </div>
-                            </div>
-                            <div class="add_to_cart">
-                                <a href="cart.html" title="Add to cart">Add to cart</a>
-                            </div>
 
-                        </div>
-                    </figure>
-                </article>
-                <article class="single_product">
-                    <figure>
-
-                        <div class="product_thumb">
-                            <a class="primary_img" href="product-details.html"><img src="~/assets/img/product/product22.jpg" alt=""></a>
-                            <a class="secondary_img" href="product-details.html"><img src="~/assets/img/product/product23.jpg" alt=""></a>
-                            <div class="label_product">
-                                <span class="label_sale">Sale</span>
                             </div>
-                            <div class="action_links">
-                                <ul>
-                                    <li class="wishlist"><a href="wishlist.html" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Wishlist"><i class="ion-android-favorite-outline"></i></a></li>
-                                    <li class="compare"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Compare"><i class="ion-ios-settings-strong"></i></a></li>
-                                    <li class="quick_button"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-bs-toggle="modal" data-bs-target="#modal_box" data-tippy="quick view"><i class="ion-ios-search-strong"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="product_content">
-                            <div class="product_content_inner">
-                                <h4 class="product_name"><a href="product-details.html">Donec tempus pretium arcu et faucibus commodo</a></h4>
-                                <div class="price_box">
-                                    <span class="old_price">$82.00</span>
-                                    <span class="current_price">$75.00</span>
-                                </div>
-                            </div>
-                            <div class="add_to_cart">
-                                <a href="cart.html" title="Add to cart">Add to cart</a>
-                            </div>
-
-                        </div>
-                    </figure>
-                </article>
-                <article class="single_product">
-                    <figure>
-
-                        <div class="product_thumb">
-                            <a class="primary_img" href="product-details.html"><img src="~/assets/img/product/product24.jpg" alt=""></a>
-                            <a class="secondary_img" href="product-details.html"><img src="~/assets/img/product/product25.jpg" alt=""></a>
-                            <div class="label_product">
-                                <span class="label_sale">Sale</span>
-                            </div>
-                            <div class="action_links">
-                                <ul>
-                                    <li class="wishlist"><a href="wishlist.html" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Wishlist"><i class="ion-android-favorite-outline"></i></a></li>
-                                    <li class="compare"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Compare"><i class="ion-ios-settings-strong"></i></a></li>
-                                    <li class="quick_button"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-bs-toggle="modal" data-bs-target="#modal_box" data-tippy="quick view"><i class="ion-ios-search-strong"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="product_content">
-                            <div class="product_content_inner">
-                                <h4 class="product_name"><a href="product-details.html">Mirum est notare tellus eu nibh iaculis pretium</a></h4>
-                                <div class="price_box">
-                                    <span class="old_price">$72.00</span>
-                                    <span class="current_price">$70.00</span>
-                                </div>
-                            </div>
-                            <div class="add_to_cart">
-                                <a href="cart.html" title="Add to cart">Add to cart</a>
-                            </div>
-
-                        </div>
-                    </figure>
-                </article>
-                <article class="single_product">
-                    <figure>
-
-                        <div class="product_thumb">
-                            <a class="primary_img" href="product-details.html"><img src="~/assets/img/product/product26.jpg" alt=""></a>
-                            <a class="secondary_img" href="product-details.html"><img src="~/assets/img/product/product27.jpg" alt=""></a>
-                            <div class="label_product">
-                                <span class="label_sale">Sale</span>
-                            </div>
-                            <div class="action_links">
-                                <ul>
-                                    <li class="wishlist"><a href="wishlist.html" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Wishlist"><i class="ion-android-favorite-outline"></i></a></li>
-                                    <li class="compare"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-tippy="Add to Compare"><i class="ion-ios-settings-strong"></i></a></li>
-                                    <li class="quick_button"><a href="#" data-tippy-placement="top" data-tippy-arrow="true" data-tippy-inertia="true" data-bs-toggle="modal" data-bs-target="#modal_box" data-tippy="quick view"><i class="ion-ios-search-strong"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="product_content">
-                            <div class="product_content_inner">
-                                <h4 class="product_name"><a href="product-details.html">Mirum est notare tellus eu nibh iaculis pretium</a></h4>
-                                <div class="price_box">
-                                    <span class="old_price">$65.00</span>
-                                    <span class="current_price">$60.00</span>
-                                </div>
-                            </div>
-                            <div class="add_to_cart">
-                                <a href="cart.html" title="Add to cart">Add to cart</a>
-                            </div>
-
-                        </div>
-                    </figure>
-                </article>
+                        </figure>
+                    </article>
+                }
             </div>
 
         </section>
@@ -721,107 +587,107 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
 
-            function getData(colorId) {
-                console.log(colorId)
-                $.ajax({
-                    url: "/Home/ProductChangeColor",
-                    type: "Get",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: { ColorId: colorId },
-                    success: function (data) {
-                        let resobject = jQuery.parseJSON(data);
-                        console.log(resobject)
+        function getData(colorId) {
+            console.log(colorId)
+            $.ajax({
+                url: "/Home/ProductChangeColor",
+                type: "Get",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: { ColorId: colorId },
+                success: function (data) {
+                    let resobject = jQuery.parseJSON(data);
+                    console.log(resobject)
 
-                        $('#gallery_01').empty();
-                        $('#quantityId').attr('max', resobject.Count);
-                        $('#addtocartId').attr('data-id', resobject.Id);
-                        var checkdiscount = false;
-                        $.each(resobject.Discounts, (index, value) => {
-                            if (value.IsActive == true) {
-                                var currentprice = resobject.Price * (100 - value.Percent) / 100;
-                                // $('#oldpriceId').removeAttr(style);
-                                $('#oldpriceId').html("$" + resobject.Price.toFixed(2).toString())
-                                $('#currentpriceId').html("$" + currentprice.toFixed(2).toString())
-                                checkdiscount = true;
-                            }
-                        });
-                        if (checkdiscount == false) {
-                            $('#oldpriceId').html('');
-                            $('#currentpriceId').html("$" + resobject.Price.toFixed(2).toString())
+                    $('#gallery_01').empty();
+                    $('#quantityId').attr('max', resobject.Count);
+                    $('#addtocartId').attr('data-id', resobject.Id);
+                    var checkdiscount = false;
+                    $.each(resobject.Discounts, (index, value) => {
+                        if (value.IsActive == true) {
+                            var currentprice = resobject.Price * (100 - value.Percent) / 100;
+                            // $('#oldpriceId').removeAttr(style);
+                            $('#oldpriceId').html("$" + resobject.Price.toFixed(2).toString())
+                            $('#currentpriceId').html("$" + currentprice.toFixed(2).toString())
+                            checkdiscount = true;
                         }
+                    });
+                    if (checkdiscount == false) {
+                        $('#oldpriceId').html('');
+                        $('#currentpriceId').html("$" + resobject.Price.toFixed(2).toString())
+                    }
 
-                        let ulmain;
-                        let count = 0;
-                        $.each(resobject.ProductColorImages, (index, value) => {
-                            console.log(value.Image)
+                    let ulmain;
+                    let count = 0;
+                    $.each(resobject.ProductColorImages, (index, value) => {
+                        console.log(value.Image)
 
-                            if (value.IsMain == false) {
-                                if (count == 0) {
-                                    ulmain = `<div class="owl-stage-outer"><div class="owl-stage" style="transform: translate3d(-506px, 0px, 0px); transition: all 0s ease 0s; width: 1518px;"><div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                        <li>
-                                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                            <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                        </a>
+                        if (value.IsMain == false) {
+                            if (count == 0) {
+                                ulmain = `<div class="owl-stage-outer"><div class="owl-stage" style="transform: translate3d(-506px, 0px, 0px); transition: all 0s ease 0s; width: 1518px;"><div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+                                                            <li>
+                                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                            </a>
 
-                                                    </li></div>`
-                                }
-                                else {
-                                    ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                    <li>
-                                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                            <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                        </a>
-
-                                                    </li>
-                                                        </div>`
-                                }
-                                // $('#gallery_01').append(li);
+                                                        </li></div>`
                             }
                             else {
-                                $("#img-1").empty();
-                                let mainimage = ` <a href="#">
-                                                        <img id="zoom1" src="/image/product/${value.Image}" data-zoom-image="/image/product/${value.Image}" alt="big">
-                                                    </a>`
-                                $("#img-1").append(mainimage);
-                            }
-                        });
-
-                        $.each(resobject.ProductColorImages, (index, value) => {
-                            if (value.IsMain == false) {
                                 ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                    <li>
-                                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                            <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                        </a>
+                                                        <li>
+                                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                            </a>
 
-                                                    </li>
-                                                        </div>`
+                                                        </li>
+                                                            </div>`
                             }
+                            // $('#gallery_01').append(li);
+                        }
+                        else {
+                            $("#img-1").empty();
+                            let mainimage = ` <a href="#">
+                                                            <img id="zoom1" src="/image/product/${value.Image}" data-zoom-image="/image/product/${value.Image}" alt="big">
+                                                        </a>`
+                            $("#img-1").append(mainimage);
+                        }
+                    });
 
-                        });
-                        $.each(resobject.ProductColorImages, (index, value) => {
-                            if (value.IsMain == false) {
-                                ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                    <li>
-                                                        <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                            <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                        </a>
+                    $.each(resobject.ProductColorImages, (index, value) => {
+                        if (value.IsMain == false) {
+                            ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+                                                        <li>
+                                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                            </a>
 
-                                                    </li>
-                                                        </div>`
-                            }
+                                                        </li>
+                                                            </div>`
+                        }
 
-                        });
+                    });
+                    $.each(resobject.ProductColorImages, (index, value) => {
+                        if (value.IsMain == false) {
+                            ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
+                                                        <li>
+                                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                            </a>
 
-                        ulmain += `</div>`;
-                        $('#gallery_01').append(ulmain);
-                    }
-                });
+                                                        </li>
+                                                            </div>`
+                        }
 
-            }
+                    });
 
-            function CartLoad() {
+                    ulmain += `</div>`;
+                    $('#gallery_01').append(ulmain);
+                }
+            });
+
+        }
+
+        function CartLoad() {
             $.ajax({
                 url: '/Home/GetCartPartial',
                 contentType: 'application/html; charset=utf-8',
@@ -829,7 +695,7 @@
                 dataType: 'html',
 
                 success: function (result) {
-                   $('.DivaddtocartId').empty();
+                    $('.DivaddtocartId').empty();
                     $('.DivaddtocartId').append(result);
 
                 },
@@ -837,41 +703,42 @@
                     alert(status);
                 }
             })
-        
+
 
         }
 
-            async function AddtoBasket() {
-                var colorID = $('#addtocartId').attr('data-id');
-               var quantity = $('#quantityId').val();
-               console.log(colorID)
-               console.log(quantity)
-              
-               let checkajax = await $.ajax({
-                    url: "/Home/AddtoBasket",
-                    type: "Post",
-                    data: {
-                        ColorId: parseInt(colorID),
-                        Quantity: parseInt(quantity)
-                    },
-                    success: function () {
-                        //  let resobject = jQuery.parseJSON(data);
-                        console.log("success AddtoCart")   
-                    },
-                    error: function () {
-                        alert('Failed to receive the Data');
-                        console.log('Failed ');
-                    }
-                });
-               if (checkajax) CartLoad();
-               
-            }
-            //DivaddtocartId
-              function ActiveToggle() {
-                var element = document.getElementById("isactiveId");
-                element.classList.toggle("active");
-            
+        async function AddtoBasket() {
+            var colorID = $('#addtocartId').attr('data-id');
+            var quantity = $('#quantityId').val();
+            console.log(colorID)
+            console.log(quantity)
+
+            let checkajax = await $.ajax({
+                url: "/Home/AddtoBasket",
+                type: "Post",
+                data: {
+                    ColorId: parseInt(colorID),
+                    Quantity: parseInt(quantity)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) CartLoad();
+
         }
+        //DivaddtocartId
+        function ActiveToggle() {
+            var element = document.getElementById("isactiveId");
+            element.classList.toggle("active");
+
+        }
+
 
 
         function WishlistLoad() {
@@ -953,6 +820,113 @@
                 }
             });
             if (checkajax) CartLoad();
+        }
+
+        async function AddtoWishlist2(colorId) {
+
+            console.log(colorId)
+            let checkajax = await $.ajax({
+                url: "/Product/AddWishlist",
+                type: "Post",
+                data: {
+                    ColorID: parseInt(colorId)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) WishlistLoad();
+        }
+
+        async function AddtoCompare2(colorId) {
+
+
+            console.log(colorId)
+            let checkajax = await $.ajax({
+                url: "/Product/AddCompare",
+                type: "Post",
+                data: {
+                    ColorID: parseInt(colorId)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+        }
+
+        async function AddtoBasket2(colorID) {
+            var quantity = 1;
+            console.log(colorID)
+            console.log(quantity)
+
+            let checkajax = await $.ajax({
+                url: "/Home/AddtoBasket",
+                type: "Post",
+                data: {
+                    ColorId: parseInt(colorID),
+                    Quantity: parseInt(quantity)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) CartLoad();
+
+        }
+
+        function ModalQuickViewLoad() {
+            $.ajax({
+                url: '/Home/GetModalPartial',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+
+                success: function (result) {
+                    $('.modalquickview').empty();
+                    $('.modalquickview').append(result);
+
+                },
+                error: function (xhr, status) {
+                    alert(status);
+                }
+            })
+
+
+        }
+        async function ModalQuickView(productId) {
+
+            console.log(productId)
+            let checkajax = await $.ajax({
+                url: "/Home/QuickView",
+                type: "Post",
+                data: {
+                    id: parseInt(productId)
+                },
+                success: function () {
+                    //  let resobject = jQuery.parseJSON(data);
+                    console.log("success AddtoCart")
+                },
+                error: function () {
+                    alert('Failed to receive the Data');
+                    console.log('Failed ');
+                }
+            });
+            if (checkajax) ModalQuickViewLoad();
         }
     </script>
 

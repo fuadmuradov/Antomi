@@ -85,6 +85,7 @@ namespace Antomi.Controllers
    
             return View(shopVM);
         }
+
         public IActionResult Details(int id=0)
         {
         
@@ -93,15 +94,21 @@ namespace Antomi.Controllers
                 id = context.Products.First().Id;
             }
             Product product = context.Products.Include(x=>x.SubCategory).ThenInclude(x=>x.Category).Include(x => x.PhoneSpecifications).Include(x => x.NotebookSpecifications).Include(x => x.Specifications).Include(x => x.ProductColors).ThenInclude(x=>x.Discounts).Include(x => x.ProductColors).ThenInclude(x=>x.ProductColorImages).FirstOrDefault(x => x.Id == id);// ProductColorIMages
-            Marka marka;
-            List<SubcategoryToMarka> subcategoryToMarka = context.SubcategoryToMarkas.Where(x=>x.MarkaId==product.MarkaId && x.SubCategoryId==product.SubCategoryId).ToList();
-            DetailsVM detailsVM = new DetailsVM
-            {
-                Product = product,
-
-            };
+            List<SubcategoryToMarka> subcategoryToMarka = context.SubcategoryToMarkas.Include(x=>x.SubCategory).Include(x=>x.Marka).Where(x=>x.MarkaId==product.MarkaId && x.SubCategoryId==product.SubCategoryId).ToList();
+            Marka marka = context.Markas.Include(x=>x.Products).ThenInclude(x=>x.ProductColors).ThenInclude(x=>x.ProductColorImages).Include(x=>x.SubcategoryToMarkas).Include(x => x.Products).ThenInclude(x => x.ProductColors).ThenInclude(x=>x.Discounts).FirstOrDefault(x => x.Id == product.MarkaId);
+            List<Product> products = marka.Products.Where(x => x.SubCategoryId == product.SubCategoryId).ToList();
+            ViewBag.RelatedProduct = products;
             return View(product);
         }
+
+        public IActionResult AddComment(string comText, string comName, string comEmail, int comProductId)
+        {
+
+            return RedirectToAction("Details", "Home", new { id = 1 }) ;
+        }
+
+
+
 
         public IActionResult ProductChangeColor(int ColorId)
         {
