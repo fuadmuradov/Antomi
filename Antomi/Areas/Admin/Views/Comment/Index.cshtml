@@ -1,0 +1,83 @@
+﻿@model List<Comment>
+<div class="body-content">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <!--Table-->
+            <div class="card-body">
+                <div class=table-responsive>
+                    <!--<table class="table table-sm table-nowrap card-table">-->
+                    <label class="font-weight-600">Categories</label>
+                    <table class="table display table-bordered table-striped table-hover bg-white m-0 card-table">
+                        <thead>
+                            <tr>
+
+                                <th>UserName</th>
+                                <th>UserEmail</th>
+                                <th>Comment</th>
+                                <th>ProductName</th>
+                                <th>Created At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+
+
+                            <tr>
+                                @if (item.AppUser != null)
+                                {
+                                    <td>@item.AppUser.UserName</td>
+                                    <td>@item.AppUser.Email</td>
+                                }
+                                else
+                                {
+                                    <td>@item.Username</td>
+                                    <td>@item.Email</td>
+                                }
+
+                                @if (item.Text.Length > 50)
+                                {
+                                    <td data-toggle="tooltip" title="@(item.Text)">@item.Text.Substring(0, 50)</td>
+                                }
+                                else
+                                {
+                                    <td>@item.Text</td>
+                                }
+                                <td>@item.Product.Model</td>
+                                <td>
+                                    @item.CretadAt.ToString("dd.MMMM.yyyy")
+                                </td>
+
+                                <td>
+                                    @if (!item.isActive)
+                                    {
+                                        <a asp-action="ChangeCommentStatus" asp-controller="Comment" asp-area="admin" asp-route-id="@item.Id" class="btn btn-success-soft btn-sm"><i class="far fa-edit">Accept</i></a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="ChangeCommentStatus" asp-controller="Comment" asp-area="admin" asp-route-id="@item.Id" class="btn btn-danger-soft btn-sm"><i class="far fa-edit">Reject</i></a>
+                                    }
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                  
+                </div>
+            </div>
+
+            <!--End Table-->
+
+        </div>
+    </div>
+</div>
+
+@section Script{ 
+    <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+    </script>
+    
+}

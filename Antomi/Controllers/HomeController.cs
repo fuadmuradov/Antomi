@@ -94,17 +94,52 @@ namespace Antomi.Controllers
                 id = context.Products.First().Id;
             }
             Product product = context.Products.Include(x=>x.SubCategory).ThenInclude(x=>x.Category).Include(x => x.PhoneSpecifications).Include(x => x.NotebookSpecifications).Include(x => x.Specifications).Include(x => x.ProductColors).ThenInclude(x=>x.Discounts).Include(x => x.ProductColors).ThenInclude(x=>x.ProductColorImages).FirstOrDefault(x => x.Id == id);// ProductColorIMages
+            if (product == null) return NotFound();
             List<SubcategoryToMarka> subcategoryToMarka = context.SubcategoryToMarkas.Include(x=>x.SubCategory).Include(x=>x.Marka).Where(x=>x.MarkaId==product.MarkaId && x.SubCategoryId==product.SubCategoryId).ToList();
             Marka marka = context.Markas.Include(x=>x.Products).ThenInclude(x=>x.ProductColors).ThenInclude(x=>x.ProductColorImages).Include(x=>x.SubcategoryToMarkas).Include(x => x.Products).ThenInclude(x => x.ProductColors).ThenInclude(x=>x.Discounts).FirstOrDefault(x => x.Id == product.MarkaId);
             List<Product> products = marka.Products.Where(x => x.SubCategoryId == product.SubCategoryId).ToList();
             ViewBag.RelatedProduct = products;
+            ViewBag.Comments = context.Comments.OrderBy(x=>x.CretadAt).Where(x => x.ProductId == id && x.isActive).ToList();
+            
             return View(product);
         }
 
-        public IActionResult AddComment(string comText, string comName, string comEmail, int comProductId)
+        public async Task<IActionResult> AddComment(string comment, string comName, string comEmail, int comProductId)
         {
 
-            return RedirectToAction("Details", "Home", new { id = 1 }) ;
+            Comment ccomment;
+            if (User.Identity.IsAuthenticated)
+            {
+                ccomment = new Comment()
+                {
+                    Text = comment,
+                    Username = comName,
+                    Email = comEmail,
+                    ProductId = comProductId,
+                    isActive = false,
+                    AppUserId = User.Identity.Name,
+                    CretadAt = DateTime.UtcNow.AddHours(+4)
+                };
+            }
+            else
+            {
+                ccomment = new Comment()
+                {
+                    Text = comment,
+                    Username = comName,
+                    Email = comEmail,
+                    ProductId = comProductId,
+                    isActive = false,
+                    CretadAt = DateTime.UtcNow
+                };
+            }
+
+            await context.Comments.AddAsync(ccomment);
+            await context.SaveChangesAsync();
+
+
+
+            return RedirectToAction("Details", "Home", new { id = comProductId }) ;
         }
 
 

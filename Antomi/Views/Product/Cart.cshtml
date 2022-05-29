@@ -1,0 +1,63 @@
+﻿<!--breadcrumbs area start-->
+<div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <ul>
+                        <li><a href="index.html">home</a></li>
+                        <li>Shopping Cart</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@model BasketVM 
+<!--breadcrumbs area end-->
+<!--shopping cart area start -->
+<div class="cart_page_bg">
+    <div class="container">
+        <div class="shopping_cart_area">
+            <form action="#">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table_desc">
+                            <div class="cart_page table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="product_remove">Delete</th>
+                                            <th class="product_thumb">Image</th>
+                                            <th class="product_name">Product</th>
+                                            <th class="product-price">Price</th>
+                                            <th class="product_quantity">Quantity</th>
+                                            <th class="product_total">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.BasketItems)
+                                        {
+                                            <tr>
+                                                <td class="product_remove"><a ><i class="fa fa-trash-o"></i></a></td>
+                                                <td class="product_thumb"><a href="#"><img src="~/image/product/@item.ProductColor.ProductColorImages.FirstOrDefault(x=>x.IsMain==true).Image" alt=""></a></td>
+                                                <td class="product_name"><a href="#">@item.ProductColor.Product.Model</a></td>
+                                                <td class="product-price">@item.Price</td>
+                                                <td class="product_quantity"><label>Quantity</label> <input min="1" max="100" value="@item.Count" type="number"></td>
+                                                <td class="product_total">@(Math.Round(item.Price*item.Count,2))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="cart_submit">
+                                <button type="submit">update cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--shopping cart area end -->

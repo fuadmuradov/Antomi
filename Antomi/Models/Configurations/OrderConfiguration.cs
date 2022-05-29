@@ -13,8 +13,6 @@ namespace Antomi.Models.Configurations
         public void Configure(EntityTypeBuilder<Order> builder)
         {
             builder.Property(x => x.TotalPrice).IsRequired();
-            builder.Property(x => x.TotalShipping).IsRequired();
-            builder.Property(x => x.AppUserId).IsRequired();
             builder.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("GETUTCDATE()");
             builder.Property(x => x.ModifiedAt).IsRequired().HasDefaultValueSql("GETUTCDATE()");
             builder.Property(x => x.IsDeleted).HasDefaultValue(false);

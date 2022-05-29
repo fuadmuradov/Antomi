@@ -2,6 +2,7 @@
 @model Product
 @{
     List<Product> rproducts = ViewBag.RelatedProduct;
+    List<Comment> comments = ViewBag.Comments;
 
 }
 <!--breadcrumbs area start-->
@@ -139,7 +140,7 @@
                                         <a data-toggle="tab" href="#sheet" role="tab" aria-controls="sheet" aria-selected="false">Specification</a>
                                     </li>
                                     <li>
-                                        <a data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Reviews (1)</a>
+                                        <a data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Reviews (@comments.Where(x => x.isActive == true).Count())</a>
                                     </li>
                                 </ul>
                             </div>
@@ -241,27 +242,39 @@
                                     <div class="reviews_wrapper">
                                         <h2>1 review for Donec eu furniture</h2>
                                         <!--review for section-->
-                                        <div class="reviews_comment_box">
-                                            <div class="comment_thmb">
-                                                <img src="~/assets/img/blog/comment2.jpg" alt="">
-                                            </div>
-                                            <div class="comment_text">
-                                                <div class="reviews_meta">
-                                                    <div class="product_rating">
-                                                        <ul>
-                                                            <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                            <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                            <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                            <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                            <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
-                                                        </ul>
+                                        @foreach (var item in comments)
+                                        {
+                                            <div class="reviews_comment_box">
+                                                <div class="comment_thmb">
+                                                    <img src="~/assets/img/blog/comment2.jpg" alt="">
+                                                </div>
+                                                <div class="comment_text">
+                                                    <div class="reviews_meta">
+                                                        <div class="product_rating">
+                                                            <ul>
+                                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                                <li><a href="#"><i class="ion-android-star-outline"></i></a></li>
+                                                            </ul>
+                                                        </div>
+                                                        @if (item.AppUser != null)
+                                                        {
+                                                            <p><strong>@item.AppUser.UserName </strong>- @item.CretadAt.ToString("MMMM dd, yyyy : HH:m")</p>
+                                                        }
+                                                        else
+                                                        {
+                                                    <p><strong>@item.Username </strong>- @item.CretadAt.ToString("MMMM dd, yyyy : HH:m")</p>
+                                                        }
+                                                        <span>@item.Text</span>
                                                     </div>
-                                                    <p><strong>admin </strong>- September 12, 2018</p>
-                                                    <span>roadthemes</span>
                                                 </div>
                                             </div>
+                                        }
 
-                                        </div>
+
+                               
                                         <!-- Review end section-->
                                         <div class="comment_title">
                                             <h2>Add a review </h2>
@@ -278,11 +291,11 @@
                                             </ul>
                                         </div>
                                         <div class="product_review_form">
-                                            <form action="#">
+                                            <form asp-controller="Home" asp-action="AddComment">
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <label for="review_comment">Your review </label>
-                                                        <textarea name="comment" name="comText" id="review_comment"></textarea>
+                                                        <textarea name="comment" id="review_comment"></textarea>
                                                     </div>
                                                     @if (!User.Identity.IsAuthenticated)
                                                     {
@@ -625,30 +638,30 @@
                         if (value.IsMain == false) {
                             if (count == 0) {
                                 ulmain = `<div class="owl-stage-outer"><div class="owl-stage" style="transform: translate3d(-506px, 0px, 0px); transition: all 0s ease 0s; width: 1518px;"><div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                            <li>
-                                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                            </a>
+                                                                <li>
+                                                                <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                                    <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                                </a>
 
-                                                        </li></div>`
+                                                            </li></div>`
                             }
                             else {
                                 ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                        <li>
-                                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                            </a>
+                                                            <li>
+                                                                <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                                    <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                                </a>
 
-                                                        </li>
-                                                            </div>`
+                                                            </li>
+                                                                </div>`
                             }
                             // $('#gallery_01').append(li);
                         }
                         else {
                             $("#img-1").empty();
                             let mainimage = ` <a href="#">
-                                                            <img id="zoom1" src="/image/product/${value.Image}" data-zoom-image="/image/product/${value.Image}" alt="big">
-                                                        </a>`
+                                                                <img id="zoom1" src="/image/product/${value.Image}" data-zoom-image="/image/product/${value.Image}" alt="big">
+                                                            </a>`
                             $("#img-1").append(mainimage);
                         }
                     });
@@ -656,26 +669,26 @@
                     $.each(resobject.ProductColorImages, (index, value) => {
                         if (value.IsMain == false) {
                             ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                        <li>
-                                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                            </a>
+                                                            <li>
+                                                                <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                                    <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                                </a>
 
-                                                        </li>
-                                                            </div>`
+                                                            </li>
+                                                                </div>`
                         }
 
                     });
                     $.each(resobject.ProductColorImages, (index, value) => {
                         if (value.IsMain == false) {
                             ulmain += `<div class="owl-item cloned" style="width: 111.5px; margin-right: 15px;">
-                                                        <li>
-                                                            <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
-                                                                <img src="/image/product/${value.Image}" alt="zo-th-1">
-                                                            </a>
+                                                            <li>
+                                                                <a href="#" class="elevatezoom-gallery active" data-update="" data-image="~/image/product/${value.Image}" data-zoom-image="~/image/product/${value.Image}">
+                                                                    <img src="/image/product/${value.Image}" alt="zo-th-1">
+                                                                </a>
 
-                                                        </li>
-                                                            </div>`
+                                                            </li>
+                                                                </div>`
                         }
 
                     });

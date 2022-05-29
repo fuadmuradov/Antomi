@@ -17,6 +17,7 @@ namespace Antomi.Models.Entity
         public SubCategory SubCategory { get; set; }
 
         public List<Specification> Specifications { get; set; }
+        public List<Comment> Comments { get; set; }
         public List<ProductColor> ProductColors { get; set; }
         public List<PhoneSpecification> PhoneSpecifications { get; set; }
         public List<NotebookSpecification> NotebookSpecifications { get; set; }

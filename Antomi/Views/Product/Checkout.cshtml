@@ -1,0 +1,116 @@
+﻿@model CheckoutVM
+
+<!--breadcrumbs area start-->
+<div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <ul>
+                        <li><a href="index.html">home</a></li>
+                        <li>Checkout</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--breadcrumbs area end-->
+<!--Checkout page section-->
+<div class="checkout_page_bg">
+    <div class="container">
+        <div class="Checkout_section">
+            <div class="row">
+               
+            </div>
+            <div class="checkout_form">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="checkout_form_left">
+                            <form method="post">
+                                <h3>Address Details</h3>
+                                <div class="row">
+
+                                    <div class="col-lg-6 mb-20">
+                                        <label>First Name <span>*</span></label>
+                                        <input type="text" asp-for="Address.Name">
+                                    </div>
+                                    <div class="col-lg-6 mb-20">
+                                        <label>Last Name <span>*</span></label>
+                                        <input type="text" asp-for="Address.Surname">
+                                    </div>
+
+                                    <div class="col-12 mb-20">
+                                        <label>Country Name</label>
+                                        <input type="text" asp-for="Address.Country">
+                                    </div>
+
+                                    <div class="col-12 mb-20">
+                                        <label>Street address <span>*</span></label>
+                                        <input placeholder="House number and street name, Apartment, suite, unit etc. (optional)" type="text" asp-for="Address.Street">
+                                    </div>
+
+                                    <div class="col-12 mb-20">
+                                        <label>Town / City <span>*</span></label>
+                                        <input type="text" asp-for="Address.Town">
+                                    </div>
+
+                                    <div class="col-lg-6 mb-20">
+                                        <label>Phone<span>*</span></label>
+                                        <input type="text" asp-for="Address.Phone">
+
+                                    </div>
+                                    <div class="col-lg-6 mb-20">
+                                        <label> Email Address <span>*</span></label>
+                                        <input type="text" asp-for="Address.Email">
+
+                                    </div>
+
+                                </div>
+                                <div class="order_button">
+                                    <button type="submit">Order Payment</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="checkout_form_right">
+                            <form action="#">
+                                <h3>Your order</h3>
+                                <div class="order_table table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.BasketVM.BasketItems)
+                                            {
+                                                <tr>
+                                                    <td> @item.ProductColor.Product.Model <strong> × @item.Count</strong></td>
+                                                    <td> $@Math.Round(item.Count*item.Price, 2)</td>
+                                                </tr>
+                                            }
+                                           
+                                        </tbody>
+                                        <tfoot>
+                                         
+                                            <tr class="order_total">
+                                                <th>Order Total</th>
+                                                <td><strong>$@Model.BasketVM.TotalPrice</strong></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                       
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Checkout page section end-->

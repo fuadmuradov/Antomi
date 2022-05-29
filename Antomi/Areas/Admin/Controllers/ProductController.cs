@@ -27,7 +27,7 @@ namespace Antomi.Areas.Admin.Controllers
 
         public IActionResult Product()
         {
-            List<Product> products = context.Products.Include(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).ToList();
+            List<Product> products = context.Products.Include(x=>x.Comments).Include(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).ToList();
             return View(products);
         }
 

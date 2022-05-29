@@ -4,67 +4,22 @@ using Antomi.DataAccsessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Antomi.Migrations
 {
     [DbContext(typeof(AntomiDbContext))]
-    partial class AntomiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220527201930_updatteCommenttable")]
+    partial class updatteCommenttable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
-
-            modelBuilder.Entity("Antomi.Models.Entity.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(90)
-                        .HasColumnType("nvarchar(90)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
-
-                    b.Property<string>("Town")
-                        .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Addresses");
-                });
 
             modelBuilder.Entity("Antomi.Models.Entity.AppUser", b =>
                 {
@@ -235,9 +190,6 @@ namespace Antomi.Migrations
                     b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("CretadAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Email")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
@@ -373,10 +325,10 @@ namespace Antomi.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AddressId")
+                    b.Property<int>("AppUserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("AppUserId")
+                    b.Property<string>("AppUserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -394,14 +346,18 @@ namespace Antomi.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("int");
+
                     b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalShipping")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
-
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId1");
 
                     b.ToTable("Orders");
                 });
@@ -415,9 +371,6 @@ namespace Antomi.Migrations
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -469,7 +422,8 @@ namespace Antomi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderId")
+                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -874,7 +828,7 @@ namespace Antomi.Migrations
                         .HasForeignKey("AppUserId");
 
                     b.HasOne("Antomi.Models.Entity.Product", "Product")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -908,17 +862,9 @@ namespace Antomi.Migrations
 
             modelBuilder.Entity("Antomi.Models.Entity.Order", b =>
                 {
-                    b.HasOne("Antomi.Models.Entity.Address", "Address")
-                        .WithMany("Orders")
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Antomi.Models.Entity.AppUser", "AppUser")
                         .WithMany("Orders")
-                        .HasForeignKey("AppUserId");
-
-                    b.Navigation("Address");
+                        .HasForeignKey("AppUserId1");
 
                     b.Navigation("AppUser");
                 });
@@ -945,9 +891,8 @@ namespace Antomi.Migrations
             modelBuilder.Entity("Antomi.Models.Entity.Payment", b =>
                 {
                     b.HasOne("Antomi.Models.Entity.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("Payment")
+                        .HasForeignKey("Antomi.Models.Entity.Payment", "OrderId")
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -1094,11 +1039,6 @@ namespace Antomi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Antomi.Models.Entity.Address", b =>
-                {
-                    b.Navigation("Orders");
-                });
-
             modelBuilder.Entity("Antomi.Models.Entity.AppUser", b =>
                 {
                     b.Navigation("Orders");
@@ -1116,10 +1056,13 @@ namespace Antomi.Migrations
                     b.Navigation("SubcategoryToMarkas");
                 });
 
+            modelBuilder.Entity("Antomi.Models.Entity.Order", b =>
+                {
+                    b.Navigation("Payment");
+                });
+
             modelBuilder.Entity("Antomi.Models.Entity.Product", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("NotebookSpecifications");
 
                     b.Navigation("PhoneSpecifications");

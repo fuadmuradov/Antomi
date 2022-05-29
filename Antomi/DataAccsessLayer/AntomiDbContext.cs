@@ -21,6 +21,7 @@ namespace Antomi.DataAccsessLayer
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<PhoneSpecification> PhoneSpecifications { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductColor> ProductColors { get; set; }
@@ -28,6 +29,8 @@ namespace Antomi.DataAccsessLayer
         public DbSet<Specification> Specifications { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<SubcategoryToMarka> SubcategoryToMarkas { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,6 +50,7 @@ namespace Antomi.DataAccsessLayer
             modelBuilder.ApplyConfiguration(new SpecificationConfiguration());
             modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new CommentConfiguration());
+            modelBuilder.ApplyConfiguration(new AddressConfiguration());
 
             modelBuilder.Entity<Marka>()
                .HasMany(c => c.Products)
@@ -58,10 +62,8 @@ namespace Antomi.DataAccsessLayer
            .WithOne(e => e.SubCategory)
            .OnDelete(DeleteBehavior.ClientSetNull);
 
-            modelBuilder.Entity<Payment>()
-                .HasOne(c => c.Order)
-                .WithOne(c => c.Payment)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+          
+
 
             base.OnModelCreating(modelBuilder);
 
