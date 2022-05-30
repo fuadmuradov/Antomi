@@ -2,6 +2,7 @@
 using Antomi.Models.Entity;
 using Antomi.ViewModel;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -15,16 +16,17 @@ namespace Antomi.Services
     {
         private readonly AntomiDbContext context;
         private readonly IHttpContextAccessor httpContext;
+        private readonly UserManager<AppUser> userManager;
 
-        public LayoutServices(AntomiDbContext context, IHttpContextAccessor httpContext)
+        public LayoutServices(AntomiDbContext context, IHttpContextAccessor httpContext, UserManager<AppUser> userManager)
         {
             this.context = context;
             this.httpContext = httpContext;
+            this.userManager = userManager;
         }
 
         public async Task<BasketVM> ShowBasket()
         {
-            string basket = httpContext.HttpContext.Request.Cookies["Basket"];
             BasketVM basketVM = new BasketVM()
             {
                 TotalPrice = 0,
@@ -32,46 +34,104 @@ namespace Antomi.Services
                 BasketItems = new List<BasketItemVM>()
             };
 
-            if (!string.IsNullOrEmpty(basket))
+            if (!httpContext.HttpContext.User.Identity.IsAuthenticated)
             {
-                List<BasketCookieItemVM> basketCookieItems = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basket);
-                foreach (BasketCookieItemVM item in basketCookieItems)
+                string basket = httpContext.HttpContext.Request.Cookies["Basket"];
+               
+                if (!string.IsNullOrEmpty(basket))
                 {
-                    ProductColor productColor = context.ProductColors.Include(x => x.Product).Include(x => x.ProductColorImages).Include(x => x.Discounts).FirstOrDefault(x => x.Id == item.Id && x.Count > 0);
-                    if (productColor != null)
+                    List<BasketCookieItemVM> basketCookieItems = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basket);
+                    foreach (BasketCookieItemVM item in basketCookieItems)
                     {
-                        double price = 0;
-                        double itemMainPrice = 0;
-                        Discount discount = productColor.Discounts.FirstOrDefault(x => x.IsActive == true);
-                        if (discount != null)
+                        ProductColor productColor = context.ProductColors.Include(x => x.Product).Include(x => x.ProductColorImages).Include(x => x.Discounts).FirstOrDefault(x => x.Id == item.Id && x.Count > 0);
+                        if (productColor != null)
                         {
-                            itemMainPrice = productColor.Price * (100 - discount.Percent) / 100;
-                            price = itemMainPrice * item.Count;
+                            double price = 0;
+                            double itemMainPrice = 0;
+                            Discount discount = productColor.Discounts.FirstOrDefault(x => x.IsActive == true);
+                            if (discount != null)
+                            {
+                                itemMainPrice = productColor.Price * (100 - discount.Percent) / 100;
+                                price = itemMainPrice * item.Count;
+                            }
+                            else
+                            {
+                                itemMainPrice = productColor.Price;
+                                price = itemMainPrice * item.Count;
+                            }
+                            BasketItemVM basketItem = new BasketItemVM()
+                            {
+                                ProductColor = productColor,
+                                Count = item.Count,
+                                Price = Math.Round(itemMainPrice, 2)
+                            };
+
+                            basketVM.BasketItems.Add(basketItem);
+                            basketVM.Count++;
+
+
+                            basketVM.TotalPrice += Math.Round(price, 2);
                         }
-                        else
-                        {
-                            itemMainPrice = productColor.Price;
-                            price = itemMainPrice * item.Count;
-                        }
-                        BasketItemVM basketItem = new BasketItemVM()
-                        {
-                            ProductColor = productColor,
-                            Count = item.Count,
-                            Price = Math.Round(itemMainPrice,2)                             
-                        };
-
-                        basketVM.BasketItems.Add(basketItem);
-                        basketVM.Count++;
 
 
-                        basketVM.TotalPrice += Math.Round(price, 2);
                     }
 
 
                 }
+            }
+            else
+            {
+                AppUser user = userManager.FindByNameAsync(httpContext.HttpContext.User.Identity.Name).Result;
+                List<Cart> carts = context.Carts.Where(x => x.AppUserId == user.Id && x.IsDeleted == false).ToList();
+                foreach (var item in carts)
+                {                 
+                        ProductColor productColor = context.ProductColors.Include(x => x.Product).Include(x => x.ProductColorImages).Include(x => x.Discounts).FirstOrDefault(x => x.Id == item.ProductColorId && x.Count > 0);
+                        if (productColor != null)
+                        {
+                            double price = 0;
+                            double itemMainPrice = 0;
+                            Discount discount = productColor.Discounts.FirstOrDefault(x => x.IsActive == true);
+                            if (discount != null)
+                            {
+                                itemMainPrice = productColor.Price * (100 - discount.Percent) / 100;
+                                price = itemMainPrice * item.Quantity;
+                            }
+                            else
+                            {
+                                itemMainPrice = productColor.Price;
+                                price = itemMainPrice * item.Quantity;
+                            }
+
+                        if (item.Price != itemMainPrice) {
+                            item.Price = itemMainPrice;
+                            await context.SaveChangesAsync();
+                        }
+                        
+
+                            BasketItemVM basketItem = new BasketItemVM()
+                            {
+                                ProductColor = productColor,
+                                Count = item.Quantity,
+                                Price = Math.Round(itemMainPrice, 2)
+                            };
+
+                            basketVM.BasketItems.Add(basketItem);
+                            basketVM.Count++;
+
+
+                            basketVM.TotalPrice += Math.Round(price, 2);
+                        }
+                    else
+                    {
+                        item.IsDeleted = true;
+                    }
+
+                  
+                }
 
 
             }
+           
 
             return basketVM;
         }
@@ -79,32 +139,72 @@ namespace Antomi.Services
         public async Task<int> WishlistCount()
         {
             int count = 0;
-            string wishlist = httpContext.HttpContext.Request.Cookies["Wishlist"];
-            List<WishlistCookieItemVM> wishlistCookieItems;
-            if (!string.IsNullOrEmpty(wishlist))
+            if (!httpContext.HttpContext.User.Identity.IsAuthenticated)
             {
-                wishlistCookieItems = JsonConvert.DeserializeObject<List<WishlistCookieItemVM>>(wishlist);
-                count = wishlistCookieItems.Count;
+                string wishlist = httpContext.HttpContext.Request.Cookies["Wishlist"];
+                List<WishlistCookieItemVM> wishlistCookieItems;
+                if (!string.IsNullOrEmpty(wishlist))
+                {
+                    wishlistCookieItems = JsonConvert.DeserializeObject<List<WishlistCookieItemVM>>(wishlist);
+                    count = wishlistCookieItems.Count;
+                }
             }
-
+            else
+            {
+                AppUser user = userManager.FindByNameAsync(httpContext.HttpContext.User.Identity.Name).Result;
+                List<Cart> carts = await context.Carts.Where(x => x.AppUserId == user.Id && x.IsDeleted == false).ToListAsync();
+                count = carts.Count;
+            }
             return count;
         }
 
         public async Task<WishlistVM> WishlistTable()
         {
-            string wishlist =httpContext.HttpContext.Request.Cookies["Wishlist"];
-            List<WishlistCookieItemVM> wishlistitems;
             WishlistVM wishlistVM = new WishlistVM()
             {
                 wishlistItems = new List<WishlistItemVM>()
             };
-            if (!string.IsNullOrEmpty(wishlist))
+            if (!httpContext.HttpContext.User.Identity.IsAuthenticated)
             {
-                wishlistitems = JsonConvert.DeserializeObject<List<WishlistCookieItemVM>>(wishlist);
-                foreach (var item in wishlistitems)
+                string wishlist = httpContext.HttpContext.Request.Cookies["Wishlist"];
+                List<WishlistCookieItemVM> wishlistitems;
+                if (!string.IsNullOrEmpty(wishlist))
+                {
+                    wishlistitems = JsonConvert.DeserializeObject<List<WishlistCookieItemVM>>(wishlist);
+                    foreach (var item in wishlistitems)
+                    {
+                        double price = 0;
+                        ProductColor productColor = context.ProductColors.Include(x => x.ProductColorImages).Include(x => x.Discounts).Include(x => x.Product).FirstOrDefault(x => x.Id == item.Id && x.Count > 0);
+                        if (productColor != null)
+                        {
+                            Discount discount = productColor.Discounts.FirstOrDefault(x => x.IsActive == true);
+                            if (discount != null)
+                            {
+                                price = productColor.Price * (100 - discount.Percent) / 100;
+                            }
+                            else
+                            {
+                                price = productColor.Price;
+                            }
+                            WishlistItemVM wishlistItemVM = new WishlistItemVM()
+                            {
+                                ProductColor = productColor,
+                                Price = Math.Round(price, 2)
+                            };
+                            wishlistVM.wishlistItems.Add(wishlistItemVM);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                AppUser user = userManager.FindByNameAsync(httpContext.HttpContext.User.Identity.Name).Result;
+                List<Wishlist> wishlists = await context.Wishlists.Where(x => x.AppUserId == user.Id).ToListAsync();
+
+                foreach (var item in wishlists)
                 {
                     double price = 0;
-                    ProductColor productColor = context.ProductColors.Include(x => x.ProductColorImages).Include(x => x.Discounts).Include(x => x.Product).FirstOrDefault(x => x.Id == item.Id && x.Count > 0);
+                    ProductColor productColor = context.ProductColors.Include(x => x.ProductColorImages).Include(x => x.Discounts).Include(x => x.Product).FirstOrDefault(x => x.Id == item.ProductColorId && x.Count > 0);
                     if (productColor != null)
                     {
                         Discount discount = productColor.Discounts.FirstOrDefault(x => x.IsActive == true);
@@ -116,6 +216,12 @@ namespace Antomi.Services
                         {
                             price = productColor.Price;
                         }
+                        if(item.Price != price)
+                        {
+                            item.Price = price;
+                            await context.SaveChangesAsync();
+                        }
+
                         WishlistItemVM wishlistItemVM = new WishlistItemVM()
                         {
                             ProductColor = productColor,
@@ -124,7 +230,12 @@ namespace Antomi.Services
                         wishlistVM.wishlistItems.Add(wishlistItemVM);
                     }
                 }
+
+
+
             }
+
+
 
             return wishlistVM;
         }

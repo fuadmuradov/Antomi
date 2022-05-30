@@ -4,14 +4,16 @@ using Antomi.DataAccsessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Antomi.Migrations
 {
     [DbContext(typeof(AntomiDbContext))]
-    partial class AntomiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220530072403_wishlistTable")]
+    partial class wishlistTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -731,7 +733,10 @@ namespace Antomi.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProductColorId")
+                    b.Property<int>("ProducrColorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductColorId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -1079,9 +1084,7 @@ namespace Antomi.Migrations
 
                     b.HasOne("Antomi.Models.Entity.ProductColor", "ProductColor")
                         .WithMany()
-                        .HasForeignKey("ProductColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductColorId");
 
                     b.Navigation("AppUser");
 

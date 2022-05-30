@@ -30,6 +30,7 @@ namespace Antomi.DataAccsessLayer
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<SubcategoryToMarka> SubcategoryToMarkas { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Wishlist> Wishlists { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -51,6 +52,7 @@ namespace Antomi.DataAccsessLayer
             modelBuilder.ApplyConfiguration(new SubCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new CommentConfiguration());
             modelBuilder.ApplyConfiguration(new AddressConfiguration());
+            modelBuilder.ApplyConfiguration(new WishlistConfiguration());
 
             modelBuilder.Entity<Marka>()
                .HasMany(c => c.Products)

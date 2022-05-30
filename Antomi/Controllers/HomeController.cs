@@ -12,16 +12,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace Antomi.Controllers
 {
     public class HomeController : Controller
     {
         private readonly AntomiDbContext context;
+        private readonly UserManager<AppUser> userManager;
 
-        public HomeController(AntomiDbContext context)
+        public HomeController(AntomiDbContext context, UserManager<AppUser> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
@@ -155,87 +158,129 @@ namespace Antomi.Controllers
             }));
         }
         [HttpPost]
-        public IActionResult AddtoBasket(int ColorId, int Quantity)
+        public async Task<IActionResult> AddtoBasket(int ColorId, int Quantity)
         {
-            ProductColor productColor = context.ProductColors.FirstOrDefault(x => x.Id == ColorId && x.Count>=Quantity);
+            ProductColor productColor = context.ProductColors.FirstOrDefault(x => x.Id == ColorId && x.Count >= Quantity);
             if (productColor == null) return NotFound();
 
-            string basket = HttpContext.Request.Cookies["Basket"];
-           
-            List<BasketCookieItemVM> basketCookieItems;
-            if (basket == null)
+            if (!User.Identity.IsAuthenticated)
             {
-                basketCookieItems = new List<BasketCookieItemVM>();
-                BasketCookieItemVM basketCookieItem = new BasketCookieItemVM()
+                string basket = HttpContext.Request.Cookies["Basket"];
+
+                List<BasketCookieItemVM> basketCookieItems;
+                if (basket == null)
                 {
-                    Id = ColorId,
-                    Count = Quantity
-                };
-                basketCookieItems.Add(basketCookieItem);
-                
-            }
-            else
-            {
-                basketCookieItems = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basket);
-                
-                bool isExist = false;
-                foreach (var item in basketCookieItems)
-                {
-                    if (item.Id == ColorId)
-                    {
-                        if ((item.Count + Quantity) > productColor.Count) return NotFound();
-                        else
-                        {
-                           item.Count = item.Count + Quantity;
-                            isExist = true;
-                        }
-                    }
-                }
-                if (isExist == false)
-                {
+                    basketCookieItems = new List<BasketCookieItemVM>();
                     BasketCookieItemVM basketCookieItem = new BasketCookieItemVM()
                     {
                         Id = ColorId,
                         Count = Quantity
                     };
                     basketCookieItems.Add(basketCookieItem);
+
                 }
-            }
-            string basketstr = JsonConvert.SerializeObject(basketCookieItems, new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
-
-            HttpContext.Response.Cookies.Append("Basket", basketstr);
-
-            return PartialView("_CartPartialView");
-        }
-
-        [HttpPost]
-        public IActionResult DeleteBasketItem(int itemID)
-        {
-            string basket = HttpContext.Request.Cookies["Basket"];
-            List<BasketCookieItemVM> basketCookieItems;
-            if (!string.IsNullOrEmpty(basket))
-            {
-                basketCookieItems = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basket);
-                foreach (var item in basketCookieItems)
+                else
                 {
-                    if (item.Id == itemID)
+                    basketCookieItems = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basket);
+
+                    bool isExist = false;
+                    foreach (var item in basketCookieItems)
                     {
-                        basketCookieItems.Remove(item);
-                        break;
+                        if (item.Id == ColorId)
+                        {
+                            if ((item.Count + Quantity) > productColor.Count) return NotFound();
+                            else
+                            {
+                                item.Count = item.Count + Quantity;
+                                isExist = true;
+                            }
+                        }
+                    }
+                    if (isExist == false)
+                    {
+                        BasketCookieItemVM basketCookieItem = new BasketCookieItemVM()
+                        {
+                            Id = ColorId,
+                            Count = Quantity
+                        };
+                        basketCookieItems.Add(basketCookieItem);
                     }
                 }
                 string basketstr = JsonConvert.SerializeObject(basketCookieItems, new JsonSerializerSettings()
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 });
+
                 HttpContext.Response.Cookies.Append("Basket", basketstr);
+            }
+            else
+            {
+                AppUser user = userManager.FindByNameAsync(User.Identity.Name).Result;
+                Cart cart = await context.Carts.FirstOrDefaultAsync(x => x.ProductColorId == ColorId);
+                if(cart == null)
+                {
+                    Cart newcart = new Cart()
+                    {
+                        AppUserId = user.Id,
+                        ProductColorId = ColorId,
+                        Quantity = Quantity,
+                        Price = productColor.Price
+                    };
+                    await context.Carts.AddAsync(newcart);
+                 
+                }
+                else
+                {
+                    cart.Quantity++;
+                }
+                await context.SaveChangesAsync();
+            }
+            return PartialView("_CartPartialView");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBasketItem(int itemID)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                string basket = HttpContext.Request.Cookies["Basket"];
+                List<BasketCookieItemVM> basketCookieItems;
+                if (!string.IsNullOrEmpty(basket))
+                {
+                    basketCookieItems = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basket);
+                    foreach (var item in basketCookieItems)
+                    {
+                        if (item.Id == itemID)
+                        {
+                            basketCookieItems.Remove(item);
+                            break;
+                        }
+                    }
+                    string basketstr = JsonConvert.SerializeObject(basketCookieItems, new JsonSerializerSettings()
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
+                    HttpContext.Response.Cookies.Append("Basket", basketstr);
+                }
+            }
+            else
+            {
+                AppUser user = userManager.FindByNameAsync(User.Identity.Name).Result;
+                Cart cart = await context.Carts.FirstOrDefaultAsync(x => x.ProductColorId == itemID);
+                if(cart != null)
+                {
+                    context.Carts.Remove(cart);
+                    await context.SaveChangesAsync();
+                }
+                else
+                {
+                    return PartialView("_CartPartialView");
+                }
+         
             }
 
 
-            return PartialView("_WishlistPartialView");
+            return PartialView("_CartPartialView");
         }
 
 
