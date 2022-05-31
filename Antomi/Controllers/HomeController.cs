@@ -39,7 +39,7 @@ namespace Antomi.Controllers
             ShopVM shopVM = new ShopVM()
             {
                 Products = products,
-                Categories = categories
+                Categories = categories 
             };
 
 
@@ -144,8 +144,6 @@ namespace Antomi.Controllers
 
             return RedirectToAction("Details", "Home", new { id = comProductId }) ;
         }
-
-
 
 
         public IActionResult ProductChangeColor(int ColorId)
@@ -360,6 +358,23 @@ namespace Antomi.Controllers
             HttpContext.Session.SetString("Filter", filterstr);
 
             return PartialView("_ShopProductPartialView");
+        }
+
+        public IActionResult Search(int select, string searchInput)
+        {
+
+            SearchVM searchVM = new SearchVM()
+            {
+                SubCategoryId = select,
+                SearchText = searchInput
+            };
+
+            string searchstr = JsonConvert.SerializeObject(searchVM, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+            HttpContext.Response.Cookies.Append("Search", searchstr);
+            return RedirectToAction(nameof(Shop), "Home");
         }
 
 

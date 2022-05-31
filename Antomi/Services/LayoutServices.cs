@@ -25,6 +25,20 @@ namespace Antomi.Services
             this.userManager = userManager;
         }
 
+        public async Task<List<SubCategory>> ListSubCategory()
+        {
+            List<SubCategory> subCategories = await context.SubCategories.ToListAsync();
+
+            return subCategories;
+        }
+
+        public async Task<List<Category>> ListCategory()
+        {
+            List<Category> Categories = await context.Categories.Include(x=>x.SubCategories).ToListAsync();
+
+            return Categories;
+        }
+
         public async Task<BasketVM> ShowBasket()
         {
             BasketVM basketVM = new BasketVM()
@@ -360,7 +374,7 @@ namespace Antomi.Services
             List<Product> sortedProduct;
             string sortvalue = httpContext.HttpContext.Session.GetString("Sorting");
             string filterstr = httpContext.HttpContext.Session.GetString("Filter");
-          
+            string searchstr = httpContext.HttpContext.Request.Cookies["Search"];
 
             List<Product> product;
             if (!string.IsNullOrEmpty(categoryId))
@@ -416,8 +430,23 @@ namespace Antomi.Services
             if (!string.IsNullOrEmpty(filterstr))
             {
                 FilterVM filterVM = JsonConvert.DeserializeObject<FilterVM>(filterstr);
-                return sortedProduct.Where(x => x.ProductColors.First().Price >= filterVM.Minimum && x.ProductColors.First().Price <= filterVM.Maximum).ToList();
+                sortedProduct = sortedProduct.Where(x => x.ProductColors.First().Price >= filterVM.Minimum && x.ProductColors.First().Price <= filterVM.Maximum).ToList();
             }
+            if (!string.IsNullOrEmpty(searchstr))
+            {
+                SearchVM searchVM = JsonConvert.DeserializeObject<SearchVM>(searchstr);
+                if(searchVM.SubCategoryId != 0)
+                {
+                    sortedProduct = sortedProduct.Where(x=>x.SubCategoryId==searchVM.SubCategoryId).ToList();
+
+                }
+                if(!string.IsNullOrEmpty(searchVM.SearchText))
+                sortedProduct = sortedProduct.Where(x => x.Model.ToLower().Contains(searchVM.SearchText.ToLower())).ToList();
+
+                httpContext.HttpContext.Response.Cookies.Delete("Search");
+            }
+
+
 
             return sortedProduct;
         }
