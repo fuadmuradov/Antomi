@@ -1,0 +1,34 @@
+﻿
+@model Discount
+
+<div class="card center-block mb-5" style="width:50rem;">
+    <div class="card-body">
+        <form asp-area="Admin" asp-controller="Discount" asp-action="DiscauntAdd" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label asp-for="ProductColorId" class="font-weight-600">Select Product Color</label>
+                    <select asp-for="ProductColorId" class="form-select" asp-items="@(new SelectList(ViewBag.ProductColors, "Id", "Name"))">
+                    </select>
+                    <span asp-validation-for="ProductColorId"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Percent" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="Percent"><br />
+                    <span asp-validation-for="Percent"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartDate" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="StartDate" name="startdate"><br />
+                    <span asp-validation-for="StartDate"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndDate" class="font-weight-600"></label>
+                    <input class="form-control" asp-for="EndDate" name="enddate"><br />
+                    <span asp-validation-for="EndDate"></span>
+                </div>
+            </div>
+            <button type="submit" formmethod="post" class="btn btn-success ml-4">Add Discount</button>
+        </form>
+    </div>
+</div>

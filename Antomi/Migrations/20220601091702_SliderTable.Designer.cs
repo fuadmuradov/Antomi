@@ -4,14 +4,16 @@ using Antomi.DataAccsessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Antomi.Migrations
 {
     [DbContext(typeof(AntomiDbContext))]
-    partial class AntomiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220601091702_SliderTable")]
+    partial class SliderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -274,11 +276,6 @@ namespace Antomi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
-
-                    b.Property<bool>("DealofMonth")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");

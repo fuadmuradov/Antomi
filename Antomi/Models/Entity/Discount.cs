@@ -14,5 +14,6 @@ namespace Antomi.Models.Entity
         public DateTime EndDate { get; set; }
         public int ProductColorId { get; set; }
         public ProductColor ProductColor { get; set; }
+        public bool DealofMonth { get; set; }
     }
 }

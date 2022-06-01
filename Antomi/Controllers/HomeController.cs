@@ -29,7 +29,11 @@ namespace Antomi.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            HomeVM homeVM = new HomeVM()
+            {
+                Sliders = context.Sliders.ToList()
+            };
+            return View(homeVM);
         }
 
         public async Task<IActionResult> Shop()

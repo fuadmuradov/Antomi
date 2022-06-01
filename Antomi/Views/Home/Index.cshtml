@@ -1,51 +1,41 @@
 ﻿ <!--slider area start-->
+@model HomeVM 
 <section class="slider_section slider_s_four mb-60 mt-20">
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
                 <div class="slider_area slider3_carousel owl-carousel">
-                    <div class="single_slider d-flex align-items-center" data-bgimg="assets/img/slider/slider12.jpg">
-                        <div class="slider_content slider_c_four color_white">
-                            <h3>new Arrivals</h3>
-                            <h1>summer <br> collection 2019</h1>
-                            <p>discount <span> -30% off</span> this week</p>
-                            <a class="button" href="shop.html">DISCOVER NOW</a>
+                    @foreach (var slider in Model.Sliders)
+                    {
+                        <div class="single_slider d-flex align-items-center" data-bgimg="assets/img/slider/@slider.Image">
+                            <div class="slider_content slider_c_four color_white">
+                                <h3>Popular Product</h3>
+                                <h1>@slider.Title</h1>
+                                <p>discount <span> -@slider.Discount% off</span> this week</p>
+                                <a class="button" asp-controller="Home" asp-action="Shop">DISCOVER NOW</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="single_slider d-flex align-items-center" data-bgimg="assets/img/slider/slider13.jpg">
-                        <div class="slider_content slider_c_four color_white">
-                            <h3>popular products</h3>
-                            <h1>chellphone <br> new model 2019</h1>
-                            <p>discount <span> -30% off</span> this week</p>
-                            <a class="button" href="shop.html">DISCOVER NOW</a>
-                        </div>
-                    </div>
-                    <div class="single_slider d-flex align-items-center" data-bgimg="assets/img/slider/slider14.jpg">
-                        <div class="slider_content slider_c_four">
-                            <h3>big sale products</h3>
-                            <h1>wooden minimalist <br> chair 2019</h1>
-                            <p>discount <span> -30% off</span> this week</p>
-                            <a class="button" href="shop.html">DISCOVER NOW</a>
-                        </div>
-                    </div>
+                    }
+
+                 
                 </div>
             </div>
             <div class="col-lg-3">
                 <figure class="single_banner">
                     <div class="banner_thumb">
-                        <a href="shop.html"><img src="~/assets/img/bg/banner9.jpg" alt=""></a>
+                        <a asp-controller="Home" asp-action="Shop"><img src="~/assets/img/bg/banner9.jpg" alt=""></a>
                     </div>
                 </figure>
             </div>
             <div class="col-lg-3">
                 <figure class="single_banner mb-30">
                     <div class="banner_thumb">
-                        <a href="shop.html"><img src="~/assets/img/bg/banner10.jpg" alt=""></a>
+                        <a asp-controller="Home" asp-action="Shop"><img src="~/assets/img/bg/banner10.jpg" alt=""></a>
                     </div>
                 </figure>
                 <figure class="single_banner">
                     <div class="banner_thumb">
-                        <a href="shop.html"><img src="~/assets/img/bg/banner11.jpg" alt=""></a>
+                        <a asp-controller="Home" asp-action="Shop"><img src="~/assets/img/bg/banner11.jpg" alt=""></a>
                     </div>
                 </figure>
             </div>
@@ -106,35 +96,6 @@
     </div>
 </div>
 <!--shipping area end-->
-<!--banner area start-->
-<div class="banner_area banner_style2 banner_style4 mb-60">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3 col-md-3">
-                <figure class="single_banner">
-                    <div class="banner_thumb">
-                        <a href="shop.html"><img src="~/assets/img/bg/banner6.jpg" alt=""></a>
-                    </div>
-                </figure>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <figure class="single_banner">
-                    <div class="banner_thumb">
-                        <a href="shop.html"><img src="~/assets/img/bg/banner7.jpg" alt=""></a>
-                    </div>
-                </figure>
-            </div>
-            <div class="col-lg-3 col-md-3">
-                <figure class="single_banner">
-                    <div class="banner_thumb">
-                        <a href="shop.html"><img src="~/assets/img/bg/banner8.jpg" alt=""></a>
-                    </div>
-                </figure>
-            </div>
-        </div>
-    </div>
-</div>
-<!--banner area end-->
 <!--home section bg area start-->
 <div class="home_section_bg">
     <!--Categories product area start-->
@@ -302,7 +263,7 @@
                                                 <p><span>Hurry Up!</span> Offers ends in: </p>
                                             </div>
                                             <div class="product_timing">
-                                                <div data-countdown="2021/12/15"></div>
+                                                <div data-countdown="2022/06/15"></div>
                                             </div>
                                         </div>
                                     </div>
