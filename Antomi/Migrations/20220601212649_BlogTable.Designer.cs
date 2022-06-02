@@ -4,14 +4,16 @@ using Antomi.DataAccsessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Antomi.Migrations
 {
     [DbContext(typeof(AntomiDbContext))]
-    partial class AntomiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220601212649_BlogTable")]
+    partial class BlogTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -356,27 +358,6 @@ namespace Antomi.Migrations
                     b.HasIndex("ProductColorId");
 
                     b.ToTable("Discounts");
-                });
-
-            modelBuilder.Entity("Antomi.Models.Entity.HomeCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("HomeCategories");
                 });
 
             modelBuilder.Entity("Antomi.Models.Entity.Marka", b =>
@@ -1041,17 +1022,6 @@ namespace Antomi.Migrations
                         .IsRequired();
 
                     b.Navigation("ProductColor");
-                });
-
-            modelBuilder.Entity("Antomi.Models.Entity.HomeCategory", b =>
-                {
-                    b.HasOne("Antomi.Models.Entity.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Antomi.Models.Entity.NotebookSpecification", b =>

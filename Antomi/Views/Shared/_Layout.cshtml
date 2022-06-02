@@ -342,7 +342,7 @@
                                                 <a asp-controller="Home" asp-action="ShopCategory" asp-route-id="@category.Id">@category.Name <i class="fa fa-angle-right"></i></a>
                                                 <ul class="categories_mega_menu column_3">
                                                     <li class="menu_item_children">
-                                                        <a href="#">@category.Name</a>
+                                                        <a  asp-controller="Home" asp-action="ShopCategory" asp-route-id="@category.Id">@category.Name</a>
                                                         <ul class="categorie_sub_menu">
                                                             @foreach (var subcategory in category.SubCategories)
                                                             {

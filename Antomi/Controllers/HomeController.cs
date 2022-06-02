@@ -27,11 +27,30 @@ namespace Antomi.Controllers
             this.userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            List<Discount> discounts = await context.Discounts.Include(x => x.ProductColor).ThenInclude(x => x.ProductColorImages).Include(x => x.ProductColor).ThenInclude(x => x.Product).Where(x => x.DealofMonth == true).ToListAsync();
+            List<Category> categories = context.Categories.Include(x => x.SubCategories).ToList();
+            List<HomeCategory> homeCategories = context.HomeCategories.Include(x => x.Category).ThenInclude(x => x.SubCategories).ThenInclude(x => x.Products).ThenInclude(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.Category).ThenInclude(x => x.SubCategories).ThenInclude(x => x.Products).ThenInclude(x => x.ProductColors).ThenInclude(x => x.Discounts).ToList();
+            List<ProductVM> productVMs = new List<ProductVM>();
+            foreach (var item in context.HomeCategories.Include(x=>x.Category).ThenInclude(x=>x.SubCategories).ToList())
+            {
+                ProductVM productVM = new ProductVM()
+                {
+                    HomeCategory = item,
+                    Products = context.Products.Include(x=>x.ProductColors).ThenInclude(x=>x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x=>x.Discounts).Where(x=>x.SubCategory.CategoryId==item.CategoryId).OrderByDescending(x=>x.ProductColors.First().Price).Take(12).ToList()
+                };
+                productVMs.Add(productVM);
+            }
+
+            
             HomeVM homeVM = new HomeVM()
             {
-                Sliders = context.Sliders.ToList()
+                Sliders = context.Sliders.ToList(),
+                Discounts = discounts,
+                Categories = categories,
+                HomeCategories = homeCategories,
+                ProductVMs = productVMs
             };
             return View(homeVM);
         }
@@ -43,7 +62,7 @@ namespace Antomi.Controllers
             ShopVM shopVM = new ShopVM()
             {
                 Products = products,
-                Categories = categories 
+                Categories = categories
             };
 
 
