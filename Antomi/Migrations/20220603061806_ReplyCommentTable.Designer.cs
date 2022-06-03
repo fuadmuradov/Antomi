@@ -4,14 +4,16 @@ using Antomi.DataAccsessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Antomi.Migrations
 {
     [DbContext(typeof(AntomiDbContext))]
-    partial class AntomiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220603061806_ReplyCommentTable")]
+    partial class ReplyCommentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -753,12 +755,6 @@ namespace Antomi.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AppUserId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("BlogCommentId")
                         .HasColumnType("int");
 
@@ -773,8 +769,6 @@ namespace Antomi.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId1");
 
                     b.HasIndex("BlogCommentId");
 
@@ -1250,17 +1244,11 @@ namespace Antomi.Migrations
 
             modelBuilder.Entity("Antomi.Models.Entity.ReplyComment", b =>
                 {
-                    b.HasOne("Antomi.Models.Entity.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId1");
-
                     b.HasOne("Antomi.Models.Entity.BlogComment", "BlogComment")
-                        .WithMany("ReplyComments")
+                        .WithMany()
                         .HasForeignKey("BlogCommentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AppUser");
 
                     b.Navigation("BlogComment");
                 });
@@ -1384,11 +1372,6 @@ namespace Antomi.Migrations
             modelBuilder.Entity("Antomi.Models.Entity.AppUser", b =>
                 {
                     b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("Antomi.Models.Entity.BlogComment", b =>
-                {
-                    b.Navigation("ReplyComments");
                 });
 
             modelBuilder.Entity("Antomi.Models.Entity.Category", b =>

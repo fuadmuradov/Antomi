@@ -1,0 +1,75 @@
+﻿@model RegisterVM
+    <!--breadcrumbs area start-->
+    <div class="breadcrumbs_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb_content">
+                        <ul>
+                            <li><a href="index.html">home</a></li>
+                            <li>Register</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--breadcrumbs area end-->
+    <!-- customer login start -->
+    <div class="login_page_bg">
+        <div class="container">
+            <div class="customer_login">
+                <div class="row">
+
+                    <!-- register area start-->
+                    <div class="col-lg-6 col-md-6">
+                        <div class="account_form register">
+                            <h2>Register</h2>
+                            <form method="post">
+                                <p>
+                                    <label>Firstname <span>*</span></label>
+                                    <input type="text" asp-for="FirstName">
+                                </p>
+                                <p>
+                                    <label>Lastname <span>*</span></label>
+                                    <input type="text" asp-for="LastName">
+                                </p>
+                                <p>
+                                    <label>Country <span>*</span></label>
+                                    <input type="text" asp-for="Country">
+                                </p>
+                                <p>
+                                    <label>City <span>*</span></label>
+                                    <input type="text" asp-for="City">
+                                </p>
+                                <p>
+                                    <label>Street Address <span>*</span></label>
+                                    <input type="text" asp-for="Street">
+                                </p>
+                                <p>
+                                    <label>Email address <span>*</span></label>
+                                    <input type="text" asp-for="Email">
+                                </p>
+                                <p>
+                                    <label>Phone Number <span>*</span></label>
+                                    <input type="text" asp-for="Phone">
+                                </p>
+                                <p>
+                                    <label>Password <span>*</span></label>
+                                    <input type="password" asp-for="Password">
+                                </p>
+                                <p>
+                                    <label>Confirm Password <span>*</span></label>
+                                    <input type="password" asp-for="ConfirmPassword">
+                                </p>
+                                <div class="login_submit">
+                                    <button type="submit">Register</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--register area end -->
+                </div>
+            </div>
+        </div>
+    </div>

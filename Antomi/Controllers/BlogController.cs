@@ -1,6 +1,7 @@
 ﻿using Antomi.DataAccsessLayer;
 using Antomi.Models.Entity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +26,19 @@ namespace Antomi.Controllers
         {
             Blog blog = context.Blogs.FirstOrDefault(x => x.Id == id);
             if (blog == null) return NotFound();
-
+            ViewBag.BlogComments = context.BlogComments.Include(x => x.ReplyComments).Where(x => x.Id == id).ToList();
             ViewBag.Blogs = context.Blogs.Where(x => x.CategoryId == blog.CategoryId).Take(3).ToList();
             ViewBag.LatestBlogs = context.Blogs.OrderBy(x => x.CreatedAt).Take(5);
             ViewBag.Category = context.Categories.ToList();
             return View(blog);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddComment(string comment, int blogId)
+        {
+            return View();
+        }
+
+
     }
 }

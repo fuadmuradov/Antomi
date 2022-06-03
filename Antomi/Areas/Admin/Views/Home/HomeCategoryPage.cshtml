@@ -1,0 +1,31 @@
+﻿
+@model List<HomeCategory>
+
+<div class="body-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <a class="btn btn-success-soft" asp-area="Admin" asp-action="CreateHomeCategory" asp-controller="Home" style="width:800px">Create Cource</a>
+        </div>
+        <div class="row justify-content-center">
+
+            @foreach (var item in Model)
+            {
+                <div class="card mr-2 ml-2" style="width: 22rem;">
+                    <div class="mt-2">
+                        <img src="~/assets/img/bg/@item.Image" class="card-img-top" alt="Course Image">
+                    </div>
+                    <div class="card-body center-block mt-2">
+                        <div>
+                            <h5 class="card-title"> <strong> @item.Category.Name</strong> </h5>
+
+                        </div>
+                        <a asp-area="Admin" asp-controller="Home" asp-action="DeleteHomeCategory" asp-route-id="@item.Id" class="btn btn-danger-soft btn-sm" onclick="return confirm('Are you sure you want to delete?')"><i class="far fa-trash-alt"></i></a>
+                      
+
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

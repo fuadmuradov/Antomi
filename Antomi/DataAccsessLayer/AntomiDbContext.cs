@@ -34,6 +34,10 @@ namespace Antomi.DataAccsessLayer
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<HomeCategory> HomeCategories { get; set; }
+        public DbSet<BlogComment> BlogComments { get; set; }
+        public DbSet<ReplyComment> ReplyComments { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -58,6 +62,8 @@ namespace Antomi.DataAccsessLayer
             modelBuilder.ApplyConfiguration(new SliderConfiguration());
             modelBuilder.ApplyConfiguration(new BlogConfiguration());
             modelBuilder.ApplyConfiguration(new HomeCategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new BlogCommentConfiguration());
+            modelBuilder.ApplyConfiguration(new ReplyCommentConfiguration());
 
             modelBuilder.Entity<Marka>()
                .HasMany(c => c.Products)

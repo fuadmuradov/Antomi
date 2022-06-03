@@ -33,12 +33,14 @@ namespace Antomi.Controllers
             List<Category> categories = context.Categories.Include(x => x.SubCategories).ToList();
             List<HomeCategory> homeCategories = context.HomeCategories.Include(x => x.Category).ThenInclude(x => x.SubCategories).ThenInclude(x => x.Products).ThenInclude(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.Category).ThenInclude(x => x.SubCategories).ThenInclude(x => x.Products).ThenInclude(x => x.ProductColors).ThenInclude(x => x.Discounts).ToList();
             List<ProductVM> productVMs = new List<ProductVM>();
+            List<Product> products;
             foreach (var item in context.HomeCategories.Include(x=>x.Category).ThenInclude(x=>x.SubCategories).ToList())
             {
+                products = context.Products.Include(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x => x.Discounts).Where(x => x.SubCategory.CategoryId == item.CategoryId).OrderByDescending(x => x.ProductColors.First().Price).Take(12).ToList();
                 ProductVM productVM = new ProductVM()
                 {
                     HomeCategory = item,
-                    Products = context.Products.Include(x=>x.ProductColors).ThenInclude(x=>x.ProductColorImages).Include(x => x.ProductColors).ThenInclude(x=>x.Discounts).Where(x=>x.SubCategory.CategoryId==item.CategoryId).OrderByDescending(x=>x.ProductColors.First().Price).Take(12).ToList()
+                    Products = products
                 };
                 productVMs.Add(productVM);
             }

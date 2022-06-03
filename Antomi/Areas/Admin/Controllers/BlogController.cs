@@ -37,6 +37,7 @@ namespace Antomi.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBlog(Blog blog)
         {
+            ViewBag.Category = context.Categories.ToList();
             if (!ModelState.IsValid) return View(blog);
             if (!blog.Photo.IsImage())
             {
@@ -55,7 +56,7 @@ namespace Antomi.Areas.Admin.Controllers
         public IActionResult DeleteBlog(int id)
         {
             Blog blog = context.Blogs.FirstOrDefault(x => x.Id == id);
-            blog.IsDeleted = false;
+            blog.IsDeleted = true;
             context.SaveChangesAsync();
 
             return LocalRedirect("~/Admin/Blog/Index/");

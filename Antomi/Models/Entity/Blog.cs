@@ -26,7 +26,6 @@ namespace Antomi.Models.Entity
     {
         public BlogValidation()
         {
-            RuleFor(x => x.AppUserId).NotEmpty().NotNull();
             RuleFor(x => x.CategoryId).NotEmpty().NotNull();
             RuleFor(x => x.Title).NotEmpty().NotNull().MaximumLength(150);
             RuleFor(x => x.Description).NotEmpty().NotNull().MaximumLength(3000);

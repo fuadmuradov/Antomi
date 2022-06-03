@@ -4,14 +4,16 @@ using Antomi.DataAccsessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Antomi.Migrations
 {
     [DbContext(typeof(AntomiDbContext))]
-    partial class AntomiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220603060534_BlogCommentTable")]
+    partial class BlogCommentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,6 +227,11 @@ namespace Antomi.Migrations
 
                     b.Property<string>("AppUserId1")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BlogCommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("BlogId")
                         .HasColumnType("int");
@@ -746,41 +753,6 @@ namespace Antomi.Migrations
                     b.ToTable("ProductColorImages");
                 });
 
-            modelBuilder.Entity("Antomi.Models.Entity.ReplyComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AppUserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("BlogCommentId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId1");
-
-                    b.HasIndex("BlogCommentId");
-
-                    b.ToTable("ReplyComments");
-                });
-
             modelBuilder.Entity("Antomi.Models.Entity.Slider", b =>
                 {
                     b.Property<int>("Id")
@@ -1248,23 +1220,6 @@ namespace Antomi.Migrations
                     b.Navigation("ProductColor");
                 });
 
-            modelBuilder.Entity("Antomi.Models.Entity.ReplyComment", b =>
-                {
-                    b.HasOne("Antomi.Models.Entity.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId1");
-
-                    b.HasOne("Antomi.Models.Entity.BlogComment", "BlogComment")
-                        .WithMany("ReplyComments")
-                        .HasForeignKey("BlogCommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("BlogComment");
-                });
-
             modelBuilder.Entity("Antomi.Models.Entity.Specification", b =>
                 {
                     b.HasOne("Antomi.Models.Entity.Product", "Product")
@@ -1384,11 +1339,6 @@ namespace Antomi.Migrations
             modelBuilder.Entity("Antomi.Models.Entity.AppUser", b =>
                 {
                     b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("Antomi.Models.Entity.BlogComment", b =>
-                {
-                    b.Navigation("ReplyComments");
                 });
 
             modelBuilder.Entity("Antomi.Models.Entity.Category", b =>

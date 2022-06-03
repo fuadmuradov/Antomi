@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Antomi.Models.Entity;
 using Microsoft.EntityFrameworkCore;
+using Antomi.Extension;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Antomi.Areas.Admin.Controllers
 {
@@ -14,10 +16,12 @@ namespace Antomi.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         private readonly AntomiDbContext context;
+        private readonly IWebHostEnvironment webHost;
 
-        public HomeController(AntomiDbContext context)
+        public HomeController(AntomiDbContext context,  IWebHostEnvironment webHost)
         {
             this.context = context;
+            this.webHost = webHost;
         }
         //******************************
         #region Category CRUD
@@ -309,6 +313,53 @@ namespace Antomi.Areas.Admin.Controllers
         }
         #endregion
 
+        #region HomeCategory
+        public IActionResult HomeCategoryPage()
+        {
+            List<HomeCategory> homeCategories = context.HomeCategories.Include(x => x.Category).ToList();
+            return View(homeCategories);
+        }
 
+        [HttpGet("{id}")]
+        public IActionResult CreateHomeCategory(int id)
+        {
+            ViewBag.Category = context.Categories.ToList();
+            HomeCategory homeCategory = context.HomeCategories.FirstOrDefault(x => x.Id == id);
+            if (homeCategory == null) return NotFound();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateHomeCategory(HomeCategory homeCategory)
+        {
+            
+            if (!ModelState.IsValid) return View(homeCategory);
+            if (!homeCategory.Photo.IsImage())
+            {
+                ModelState.AddModelError("", "image type is not Correct");
+                return View();
+            }
+            string folder = @"assets\img\bg\";
+            homeCategory.Image = homeCategory.Photo.SavaAsync(webHost.WebRootPath, folder).Result;
+            context.HomeCategories.Add(homeCategory);
+            await context.SaveChangesAsync();
+            return View();
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult DeleteHomeCategory(int id)
+        {
+            HomeCategory homeCategory = context.HomeCategories.FirstOrDefault(x => x.Id == id);
+            if (homeCategory == null) return NotFound();
+            string folder = @"assets\img\bg\";
+            FileExtension.Delete(webHost.WebRootPath, folder, homeCategory.Image);
+            context.HomeCategories.Remove(homeCategory);
+            context.SaveChangesAsync();
+            return LocalRedirect("~/Admin/Home/HomeCategoryPage/");
+        }
+
+
+
+        #endregion
     }
 }
