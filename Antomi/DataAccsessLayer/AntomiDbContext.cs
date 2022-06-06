@@ -75,7 +75,25 @@ namespace Antomi.DataAccsessLayer
            .WithOne(e => e.SubCategory)
            .OnDelete(DeleteBehavior.ClientSetNull);
 
-          
+            modelBuilder.Entity<AppUser>()
+          .HasMany(c => c.BlogComments)
+          .WithOne(e => e.AppUser)
+          .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Blog>()
+          .HasMany(c => c.BlogComments)
+          .WithOne(e => e.Blog)
+          .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AppUser>()
+         .HasMany(c => c.ReplyComments)
+         .WithOne(e => e.AppUser)
+         .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BlogComment>()
+        .HasMany(c => c.ReplyComments)
+        .WithOne(e => e.BlogComment)
+        .OnDelete(DeleteBehavior.Restrict);
 
 
             base.OnModelCreating(modelBuilder);

@@ -29,6 +29,8 @@ namespace Antomi.Controllers
 
         public async Task<IActionResult> Index()
         {
+            string username = User.Identity.Name;
+            AppUser user = userManager.FindByNameAsync(User.Identity.Name).Result;
             List<Discount> discounts = await context.Discounts.Include(x => x.ProductColor).ThenInclude(x => x.ProductColorImages).Include(x => x.ProductColor).ThenInclude(x => x.Product).Where(x => x.DealofMonth == true).ToListAsync();
             List<Category> categories = context.Categories.Include(x => x.SubCategories).ToList();
             List<HomeCategory> homeCategories = context.HomeCategories.Include(x => x.Category).ThenInclude(x => x.SubCategories).ThenInclude(x => x.Products).ThenInclude(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.Category).ThenInclude(x => x.SubCategories).ThenInclude(x => x.Products).ThenInclude(x => x.ProductColors).ThenInclude(x => x.Discounts).ToList();
@@ -132,12 +134,14 @@ namespace Antomi.Controllers
             return View(product);
         }
 
+        [HttpPost]
         public async Task<IActionResult> AddComment(string comment, string comName, string comEmail, int comProductId)
         {
 
             Comment ccomment;
             if (User.Identity.IsAuthenticated)
             {
+                AppUser user = userManager.FindByNameAsync(User.Identity.Name).Result;
                 ccomment = new Comment()
                 {
                     Text = comment,
@@ -145,7 +149,7 @@ namespace Antomi.Controllers
                     Email = comEmail,
                     ProductId = comProductId,
                     isActive = false,
-                    AppUserId = User.Identity.Name,
+                    AppUserId = user.Id,
                     CretadAt = DateTime.UtcNow.AddHours(+4)
                 };
             }
@@ -158,7 +162,7 @@ namespace Antomi.Controllers
                     Email = comEmail,
                     ProductId = comProductId,
                     isActive = false,
-                    CretadAt = DateTime.UtcNow
+                    CretadAt = DateTime.UtcNow.AddHours(+4)
                 };
             }
 

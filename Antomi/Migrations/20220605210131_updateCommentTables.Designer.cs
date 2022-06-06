@@ -4,14 +4,16 @@ using Antomi.DataAccsessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Antomi.Migrations
 {
     [DbContext(typeof(AntomiDbContext))]
-    partial class AntomiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220605210131_updateCommentTables")]
+    partial class updateCommentTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,6 +223,7 @@ namespace Antomi.Migrations
                         .UseIdentityColumn();
 
                     b.Property<string>("AppUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("BlogId")
@@ -1063,14 +1066,15 @@ namespace Antomi.Migrations
             modelBuilder.Entity("Antomi.Models.Entity.BlogComment", b =>
                 {
                     b.HasOne("Antomi.Models.Entity.AppUser", "AppUser")
-                        .WithMany("BlogComments")
+                        .WithMany()
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Antomi.Models.Entity.Blog", "Blog")
-                        .WithMany("BlogComments")
+                        .WithMany()
                         .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -1246,14 +1250,13 @@ namespace Antomi.Migrations
             modelBuilder.Entity("Antomi.Models.Entity.ReplyComment", b =>
                 {
                     b.HasOne("Antomi.Models.Entity.AppUser", "AppUser")
-                        .WithMany("ReplyComments")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
 
                     b.HasOne("Antomi.Models.Entity.BlogComment", "BlogComment")
                         .WithMany("ReplyComments")
                         .HasForeignKey("BlogCommentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -1379,16 +1382,7 @@ namespace Antomi.Migrations
 
             modelBuilder.Entity("Antomi.Models.Entity.AppUser", b =>
                 {
-                    b.Navigation("BlogComments");
-
                     b.Navigation("Orders");
-
-                    b.Navigation("ReplyComments");
-                });
-
-            modelBuilder.Entity("Antomi.Models.Entity.Blog", b =>
-                {
-                    b.Navigation("BlogComments");
                 });
 
             modelBuilder.Entity("Antomi.Models.Entity.BlogComment", b =>

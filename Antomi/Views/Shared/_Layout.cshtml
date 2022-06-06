@@ -3,7 +3,7 @@
     List<SubCategory> subCategories = await layoutServices.ListSubCategory();
     List<Category> categories = await layoutServices.ListCategory();
 
-    }
+}
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -63,7 +63,7 @@
                                         {
                                             <option value="@item.Id">@item.Name</option>
                                         }
-                                      
+
                                     </select>
                                 </div>
                                 <div class="search_box">
@@ -222,7 +222,7 @@
                                 <div class="header_wishlist wishlist_load">
                                     @await Html.PartialAsync("_WishlistPartialView")
                                 </div>
-                               
+
                                 <div id="DivaddtocartId" class="DivaddtocartId mini_cart_wrapper">
 
                                     <!--mini cart-->
@@ -256,7 +256,7 @@
                                                 <ul class="mega_menu_inner">
                                                     <li>
                                                         <a asp-controller="Home" asp-action="Shop">Shop Layouts</a>
-                                                      
+
                                                     </li>
                                                     <li>
                                                         <a href="#">other Pages</a>
@@ -316,7 +316,7 @@
                                 <div class="header_wishlist wishlist_load">
                                     @await Html.PartialAsync("_WishlistPartialView")
                                 </div>
-                         
+
                                 <div class="DivaddtocartId mini_cart_wrapper">
                                     @await Html.PartialAsync("_CartPartialView")
                                 </div>
@@ -342,7 +342,7 @@
                                                 <a asp-controller="Home" asp-action="ShopCategory" asp-route-id="@category.Id">@category.Name <i class="fa fa-angle-right"></i></a>
                                                 <ul class="categories_mega_menu column_3">
                                                     <li class="menu_item_children">
-                                                        <a  asp-controller="Home" asp-action="ShopCategory" asp-route-id="@category.Id">@category.Name</a>
+                                                        <a asp-controller="Home" asp-action="ShopCategory" asp-route-id="@category.Id">@category.Name</a>
                                                         <ul class="categorie_sub_menu">
                                                             @foreach (var subcategory in category.SubCategories)
                                                             {
@@ -355,7 +355,7 @@
                                                 </ul>
                                             </li>
                                         }
-                                   </ul>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -625,9 +625,8 @@
     ============================================ -->
     <!-- Plugins JS -->
     @RenderSection("Script", false)
-<script>
-
-</script>
+    <script>
+    </script>
     <script src="~/assets/js/plugins.js"></script>
 
     <!-- Main JS -->

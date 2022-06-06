@@ -12,7 +12,6 @@ namespace Antomi.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<BlogComment> builder)
         {
-            builder.Property(x => x.AppUserId).IsRequired();
             builder.Property(x => x.BlogId).IsRequired();
             builder.Property(x => x.Text).IsRequired().HasMaxLength(150);
             builder.Property(x => x.CreatedAt).IsRequired().HasDefaultValueSql("GETUTCDATE()");

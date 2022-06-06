@@ -2,6 +2,7 @@
 using Antomi.Extension;
 using Antomi.Models.Entity;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,13 @@ namespace Antomi.Areas.Admin.Controllers
     {
         private readonly AntomiDbContext context;
         private readonly IWebHostEnvironment webHost;
+        private readonly UserManager<AppUser> userManager;
 
-        public BlogController(AntomiDbContext context, IWebHostEnvironment webHost)
+        public BlogController(AntomiDbContext context, IWebHostEnvironment webHost, UserManager<AppUser> userManager)
         {
             this.context = context;
             this.webHost = webHost;
+            this.userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -35,9 +38,13 @@ namespace Antomi.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddBlog(Blog blog)
         {
             ViewBag.Category = context.Categories.ToList();
+            if (!User.Identity.IsAuthenticated) return RedirectToAction("Login", "Account");
+            AppUser user = userManager.FindByNameAsync(User.Identity.Name).Result;
+            blog.AppUserId = user.Id;
             if (!ModelState.IsValid) return View(blog);
             if (!blog.Photo.IsImage())
             {
@@ -45,8 +52,9 @@ namespace Antomi.Areas.Admin.Controllers
                 return View();
             }
             string folder = @"assets\img\blog\";
+            
             blog.Image = blog.Photo.SavaAsync(webHost.WebRootPath, folder).Result;
-
+         
             await context.Blogs.AddAsync(blog);
             await context.SaveChangesAsync();
 

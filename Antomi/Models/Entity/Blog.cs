@@ -20,6 +20,8 @@ namespace Antomi.Models.Entity
         public string Emphasis { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+
+        public List<BlogComment> BlogComments { get; set; }
     }
 
     public class BlogValidation : AbstractValidator<Blog>

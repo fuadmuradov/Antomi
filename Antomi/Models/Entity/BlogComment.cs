@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +10,9 @@ namespace Antomi.Models.Entity
     public class BlogComment
     {
         public int Id { get; set; }
-        public int AppUserId { get; set; }
+        [NotMapped]
+        public string AppUserId1 { get; set; }
+        public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
         public string Text { get; set; }
         public int BlogId { get; set; }
@@ -22,7 +25,6 @@ namespace Antomi.Models.Entity
     {
         public BlogCommentValidation()
         {
-            RuleFor(x => x.AppUserId).NotEmpty().NotNull();
             RuleFor(x => x.BlogId).NotEmpty().NotNull();
             RuleFor(x => x.Text).NotEmpty().NotNull().MaximumLength(250);
         }
