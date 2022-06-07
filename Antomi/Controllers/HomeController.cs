@@ -29,8 +29,7 @@ namespace Antomi.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string username = User.Identity.Name;
-            AppUser user = userManager.FindByNameAsync(User.Identity.Name).Result;
+           
             List<Discount> discounts = await context.Discounts.Include(x => x.ProductColor).ThenInclude(x => x.ProductColorImages).Include(x => x.ProductColor).ThenInclude(x => x.Product).Where(x => x.DealofMonth == true).ToListAsync();
             List<Category> categories = context.Categories.Include(x => x.SubCategories).ToList();
             List<HomeCategory> homeCategories = context.HomeCategories.Include(x => x.Category).ThenInclude(x => x.SubCategories).ThenInclude(x => x.Products).ThenInclude(x => x.ProductColors).ThenInclude(x => x.ProductColorImages).Include(x => x.Category).ThenInclude(x => x.SubCategories).ThenInclude(x => x.Products).ThenInclude(x => x.ProductColors).ThenInclude(x => x.Discounts).ToList();

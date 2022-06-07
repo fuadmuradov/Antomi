@@ -417,22 +417,13 @@ namespace Antomi.Controllers
             {
                 AppUser user = userManager.FindByNameAsync(User.Identity.Name).Result;
 
-                    double itemMainPrice = 0;
-                    Discount discount = productColor.Discounts.FirstOrDefault(x => x.IsActive == true);
-                    if (discount != null)
-                    {
-                        itemMainPrice = productColor.Price * (100 - discount.Percent) / 100;
-                    }
-                    else
-                    {
-                        itemMainPrice = productColor.Price;
-                    }
+                    if(context.Wishlists.Any(x=>x.ProductColorId==ColorID)) return StatusCode(200);
 
                 Wishlist wishlistDb = new Wishlist()
                 {
                     AppUserId = user.Id,
                     ProductColorId = ColorID,
-                    Price = itemMainPrice
+                    Price = productColor.Price
                 };
 
                 context.Wishlists.AddAsync(wishlistDb);
@@ -441,7 +432,8 @@ namespace Antomi.Controllers
             }
 
 
-            return PartialView("_WishlistPartialView");
+            //  return PartialView("_WishlistPartialView");
+            return StatusCode(200);
         }
 
         [HttpPost]
@@ -473,12 +465,11 @@ namespace Antomi.Controllers
             }
             else
             {
-                ProductColor productColor = context.ProductColors.FirstOrDefaultAsync(x => x.Id == itemID).Result;
-                if(productColor==null) return PartialView("_WishlistPartialView");
+            
                 Wishlist wishlist = context.Wishlists.FirstOrDefaultAsync(x => x.ProductColorId == itemID).Result;
                 if (wishlist == null) return PartialView("_WishlistPartialView");
                 context.Wishlists.Remove(wishlist);
-                context.SaveChangesAsync();
+                context.SaveChanges();
 
             }
 

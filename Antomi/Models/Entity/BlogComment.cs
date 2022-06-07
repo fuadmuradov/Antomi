@@ -10,8 +10,7 @@ namespace Antomi.Models.Entity
     public class BlogComment
     {
         public int Id { get; set; }
-        [NotMapped]
-        public string AppUserId1 { get; set; }
+
         public string AppUserId { get; set; }
         public AppUser AppUser { get; set; }
         public string Text { get; set; }

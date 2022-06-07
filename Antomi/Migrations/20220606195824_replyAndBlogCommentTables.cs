@@ -2,7 +2,7 @@
 
 namespace Antomi.Migrations
 {
-    public partial class updateCommentTables : Migration
+    public partial class replyAndBlogCommentTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,39 +10,25 @@ namespace Antomi.Migrations
                 name: "FK_BlogComments_AspNetUsers_AppUserId1",
                 table: "BlogComments");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_ReplyComments_AspNetUsers_AppUserId1",
-                table: "ReplyComments");
-
-            migrationBuilder.DropIndex(
-                name: "IX_ReplyComments_AppUserId1",
-                table: "ReplyComments");
-
             migrationBuilder.DropIndex(
                 name: "IX_BlogComments_AppUserId1",
                 table: "BlogComments");
 
             migrationBuilder.DropColumn(
                 name: "AppUserId1",
-                table: "ReplyComments");
-
-            migrationBuilder.DropColumn(
-                name: "AppUserId1",
                 table: "BlogComments");
 
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.AddColumn<string>(
                 name: "AppUserId",
                 table: "ReplyComments",
                 type: "nvarchar(450)",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "int");
+                nullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "AppUserId",
                 table: "BlogComments",
                 type: "nvarchar(450)",
-                nullable: false,
+                nullable: true,
                 oldClrType: typeof(int),
                 oldType: "int");
 
@@ -62,7 +48,7 @@ namespace Antomi.Migrations
                 column: "AppUserId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ReplyComments_AspNetUsers_AppUserId",
@@ -91,9 +77,13 @@ namespace Antomi.Migrations
                 name: "IX_BlogComments_AppUserId",
                 table: "BlogComments");
 
+            migrationBuilder.DropColumn(
+                name: "AppUserId",
+                table: "ReplyComments");
+
             migrationBuilder.AlterColumn<int>(
                 name: "AppUserId",
-                table: "ReplyComments",
+                table: "BlogComments",
                 type: "int",
                 nullable: false,
                 defaultValue: 0,
@@ -103,28 +93,9 @@ namespace Antomi.Migrations
 
             migrationBuilder.AddColumn<string>(
                 name: "AppUserId1",
-                table: "ReplyComments",
-                type: "nvarchar(450)",
-                nullable: true);
-
-            migrationBuilder.AlterColumn<int>(
-                name: "AppUserId",
-                table: "BlogComments",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
-
-            migrationBuilder.AddColumn<string>(
-                name: "AppUserId1",
                 table: "BlogComments",
                 type: "nvarchar(450)",
                 nullable: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReplyComments_AppUserId1",
-                table: "ReplyComments",
-                column: "AppUserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BlogComments_AppUserId1",
@@ -134,14 +105,6 @@ namespace Antomi.Migrations
             migrationBuilder.AddForeignKey(
                 name: "FK_BlogComments_AspNetUsers_AppUserId1",
                 table: "BlogComments",
-                column: "AppUserId1",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_ReplyComments_AspNetUsers_AppUserId1",
-                table: "ReplyComments",
                 column: "AppUserId1",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",

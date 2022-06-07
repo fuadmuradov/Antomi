@@ -1064,13 +1064,12 @@ namespace Antomi.Migrations
                 {
                     b.HasOne("Antomi.Models.Entity.AppUser", "AppUser")
                         .WithMany("BlogComments")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("AppUserId");
 
                     b.HasOne("Antomi.Models.Entity.Blog", "Blog")
                         .WithMany("BlogComments")
                         .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -1247,13 +1246,12 @@ namespace Antomi.Migrations
                 {
                     b.HasOne("Antomi.Models.Entity.AppUser", "AppUser")
                         .WithMany("ReplyComments")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("AppUserId");
 
                     b.HasOne("Antomi.Models.Entity.BlogComment", "BlogComment")
                         .WithMany("ReplyComments")
                         .HasForeignKey("BlogCommentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");

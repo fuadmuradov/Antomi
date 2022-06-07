@@ -252,14 +252,14 @@
                 },
                 success: function () {
                     //  let resobject = jQuery.parseJSON(data);
+
                     console.log("success AddtoCart")
-                },
-                error: function () {
-                    alert('Failed to receive the Data');
-                    console.log('Failed ');
                 }
+               
             });
-            if (checkajax) WishlistLoad();
+           
+                WishlistLoad();
+           
         }
 
         async function AddtoCompare(colorId) {

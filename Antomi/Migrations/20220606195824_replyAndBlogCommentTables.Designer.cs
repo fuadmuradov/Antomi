@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Antomi.Migrations
 {
     [DbContext(typeof(AntomiDbContext))]
-    [Migration("20220606090802_upadarereplyandBlogComment")]
-    partial class upadarereplyandBlogComment
+    [Migration("20220606195824_replyAndBlogCommentTables")]
+    partial class replyAndBlogCommentTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1066,13 +1066,12 @@ namespace Antomi.Migrations
                 {
                     b.HasOne("Antomi.Models.Entity.AppUser", "AppUser")
                         .WithMany("BlogComments")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("AppUserId");
 
                     b.HasOne("Antomi.Models.Entity.Blog", "Blog")
                         .WithMany("BlogComments")
                         .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
@@ -1249,13 +1248,12 @@ namespace Antomi.Migrations
                 {
                     b.HasOne("Antomi.Models.Entity.AppUser", "AppUser")
                         .WithMany("ReplyComments")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("AppUserId");
 
                     b.HasOne("Antomi.Models.Entity.BlogComment", "BlogComment")
                         .WithMany("ReplyComments")
                         .HasForeignKey("BlogCommentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");

@@ -166,8 +166,8 @@ namespace Antomi.Services
             else
             {
                 AppUser user = userManager.FindByNameAsync(httpContext.HttpContext.User.Identity.Name).Result;
-                List<Cart> carts = await context.Carts.Where(x => x.AppUserId == user.Id && x.IsDeleted == false).ToListAsync();
-                count = carts.Count;
+                List<Wishlist> wishlists = await context.Wishlists.Where(x => x.AppUserId == user.Id).ToListAsync();
+                count = wishlists.Count;
             }
             return count;
         }

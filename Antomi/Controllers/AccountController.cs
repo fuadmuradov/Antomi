@@ -3,6 +3,7 @@ using Antomi.Models.Entity;
 using Antomi.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,12 +65,74 @@ namespace Antomi.Controllers
             }
 
             ViewBag.username = user.Email;
-
+            CartAddtoDatabase(user.Id);
+            WishlistAddtoDatabase(user.Id);
 
             return RedirectToAction("Index", "Home");
         }
 
         #endregion
+
+
+        public  void CartAddtoDatabase(string userId)
+        {
+            string basket = HttpContext.Request.Cookies["Basket"];
+            if (!string.IsNullOrEmpty(basket))
+            {
+                List<BasketCookieItemVM> basketCookieItems = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basket);
+                foreach (var item in basketCookieItems)
+                {
+                    if (context.Carts.Any(x => x.ProductColorId == item.Id)) continue;
+                    ProductColor productColor = context.ProductColors.FirstOrDefault(x => x.Id == item.Id);
+                    if (productColor != null)
+                    {
+                        Cart cart = new Cart()
+                        {
+                            ProductColorId = productColor.Id,
+                            Price = productColor.Price,
+                            Quantity = item.Count,
+                            AppUserId = userId
+                        };
+
+                        context.Carts.Add(cart);
+                       
+                    }
+                }
+                 context.SaveChanges();
+
+                HttpContext.Response.Cookies.Delete("Basket");
+            }
+        }
+
+
+        public  void WishlistAddtoDatabase(string userId)
+        {
+            string wishlist = HttpContext.Request.Cookies["Wishlist"];
+            if (!string.IsNullOrEmpty(wishlist))
+            {
+                List<WishlistCookieItemVM> wishlistCookieItems = JsonConvert.DeserializeObject<List<WishlistCookieItemVM>>(wishlist);
+                foreach (var item in wishlistCookieItems)
+                {
+                    if (context.Wishlists.Any(x => x.ProductColorId == item.Id)) continue;
+                    ProductColor productColor = context.ProductColors.FirstOrDefault(x => x.Id == item.Id);
+                    if (productColor != null)
+                    {
+                        Wishlist wishlist1 = new Wishlist()
+                        {
+                            ProductColorId = productColor.Id,
+                            Price = productColor.Price,
+                            AppUserId = userId
+                        };
+
+                         context.Wishlists.Add(wishlist1);
+
+                    }
+                }
+                 context.SaveChanges();
+
+                HttpContext.Response.Cookies.Delete("Wishlist");
+            }
+        }
 
         //********************  REGISTER  *********************
         #region Register
@@ -185,7 +248,8 @@ namespace Antomi.Controllers
 
             await signInManager.SignInAsync(user, true);
             ViewBag.username = user.Email;
-
+            CartAddtoDatabase(user.Id);
+            WishlistAddtoDatabase(user.Id);
             return LocalRedirect("/Home");
         }
 
