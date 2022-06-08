@@ -22,7 +22,11 @@ namespace Antomi.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            List<Blog> blogs = context.Blogs.ToList();
+            ViewBag.Category = context.Categories.ToList();
+            ViewBag.LatestBlogs = context.Blogs.OrderBy(x => x.CreatedAt).Take(5).ToList();
+            ViewBag.BlogComments = context.BlogComments.Include(x => x.AppUser).OrderBy(x => x.CreatedAt).Take(4).ToList();
+            return View(blogs);
         }
 
         public IActionResult Details(int id=0)

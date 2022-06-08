@@ -1,11 +1,17 @@
-﻿<!--breadcrumbs area start-->
+﻿@model List<Blog>
+@{ 
+    List<BlogComment> blogComments = ViewBag.BlogComments;
+    List<Category> categories = ViewBag.Category;
+    List<Blog> LatestBlogs = ViewBag.LatestBlogs;
+}
+<!--breadcrumbs area start-->
 <div class="breadcrumbs_area">
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="breadcrumb_content">
                     <ul>
-                        <li><a href="index.html">home</a></li>
+                        <li><a asp-controller="Home" asp-action="Index">home</a></li>
                         <li>blog sidebar</li>
                     </ul>
                 </div>
@@ -35,120 +41,52 @@
                             <div class="widget_title">
                                 <h3>Recent Comments</h3>
                             </div>
-                            <div class="post_wrapper">
-                                <div class="post_thumb">
-                                    <a href="blog-details.html">
-                                        <img src="~/assets/img/blog/comment2.png.jpg"
-                                             alt="">
-                                    </a>
+                            @foreach (var item in blogComments)
+                            {
+                                <div class="post_wrapper">
+                                    <div class="post_thumb">
+                                        <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.BlogId">
+                                            <img src="~/assets/img/blog/comment2.png.jpg"
+                                                 alt="">
+                                        </a>
+                                    </div>
+                                    <div class="post_info">
+                                        <span> <a  asp-controller="Blog" asp-action="Details" asp-route-id="@item.BlogId">demo</a> says:</span>
+                                        <a  asp-controller="Blog" asp-action="Details" asp-route-id="@item.BlogId">@(item.Text.Length>20? item.Text.Substring(0, 20): item.Text))</a>
+                                    </div>
                                 </div>
-                                <div class="post_info">
-                                    <span> <a href="#">demo</a> says:</span>
-                                    <a href="blog-details.html">Quisque semper nunc</a>
-                                </div>
-                            </div>
-                            <div class="post_wrapper">
-                                <div class="post_thumb">
-                                    <a href="blog-details.html">
-                                        <img src="~/assets/img/blog/comment2.png.jpg"
-                                             alt="">
-                                    </a>
-                                </div>
-                                <div class="post_info">
-                                    <span><a href="#">admin</a> says:</span>
-                                    <a href="blog-details.html">Quisque orci porta...</a>
-                                </div>
-                            </div>
-                            <div class="post_wrapper">
-                                <div class="post_thumb">
-                                    <a href="blog-details.html">
-                                        <img src="~/assets/img/blog/comment2.png.jpg"
-                                             alt="">
-                                    </a>
-                                </div>
-                                <div class="post_info">
-                                    <span><a href="#">demo</a> says:</span>
-                                    <a href="blog-details.html">Quisque semper nunc</a>
-                                </div>
-                            </div>
-                            <div class="post_wrapper">
-                                <div class="post_thumb">
-                                    <a href="blog-details.html">
-                                        <img src="~/assets/img/blog/comment2.png.jpg"
-                                             alt="">
-                                    </a>
-                                </div>
-                                <div class="post_info">
-                                    <span><a href="#">admin</a> says:</span>
-                                    <a href="blog-details.html">Quisque semper nunc</a>
-                                </div>
-                            </div>
+                            }
+                           
                         </div>
                         <div class="widget_list widget_post">
                             <div class="widget_title">
                                 <h3>Recent Posts</h3>
                             </div>
-                            <div class="post_wrapper">
-                                <div class="post_thumb">
-                                    <a href="blog-details.html"><img src="~/assets/img/blog/blog6.jpg" alt=""></a>
+                            @foreach (var item in LatestBlogs)
+                            {
+                                <div class="post_wrapper">
+                                    <div class="post_thumb">
+                                        <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.Id"><img src="~/assets/img/blog/@item.Image" alt=""></a>
+                                    </div>
+                                    <div class="post_info">
+                                        <h4><a asp-controller="Blog" asp-action="Details" asp-route-id="@item.Id">@item.Title</a></h4>
+                                        <span>@item.CreatedAt.ToString("MMMM dd, yyyy") </span>
+                                    </div>
                                 </div>
-                                <div class="post_info">
-                                    <h4><a href="blog-details.html">Blog image post</a></h4>
-                                    <span>March 16, 2018 </span>
-                                </div>
-                            </div>
-                            <div class="post_wrapper">
-                                <div class="post_thumb">
-                                    <a href="blog-details.html"><img src="~/assets/img/blog/blog7.jpg" alt=""></a>
-                                </div>
-                                <div class="post_info">
-                                    <h4><a href="blog-details.html">Post with Gallery</a></h4>
-                                    <span>March 16, 2018 </span>
-                                </div>
-                            </div>
-                            <div class="post_wrapper">
-                                <div class="post_thumb">
-                                    <a href="blog-details.html"><img src="~/assets/img/blog/blog8.jpg" alt=""></a>
-                                </div>
-                                <div class="post_info">
-                                    <h4><a href="blog-details.html">Post with Audio</a></h4>
-                                    <span>March 16, 2018 </span>
-                                </div>
-                            </div>
-                            <div class="post_wrapper">
-                                <div class="post_thumb">
-                                    <a href="blog-details.html"><img src="~/assets/img/blog/blog9.jpg" alt=""></a>
-                                </div>
-                                <div class="post_info">
-                                    <h4><a href="blog-details.html">Post with Video</a></h4>
-                                    <span>March 16, 2018 </span>
-                                </div>
-                            </div>
+                            }
+
                         </div>
                         <div class="widget_list widget_categories">
                             <div class="widget_title">
                                 <h3>Categories</h3>
                             </div>
                             <ul>
-                                <li><a href="#">Audio</a></li>
-                                <li><a href="#">Company</a></li>
-                                <li><a href="#">Gallery</a></li>
-                                <li><a href="#">Image</a></li>
-                                <li><a href="#">Other</a></li>
-                                <li><a href="#">Travel</a></li>
+                                @foreach (var item in categories)
+                                {
+                                    <li><a href="#">@item.Name</a></li>
+                                }
+                               
                             </ul>
-                        </div>
-                        <div class="widget_list widget_tag">
-                            <div class="widget_title">
-                                <h3>Tag products</h3>
-                            </div>
-                            <div class="tag_widget">
-                                <ul>
-                                    <li><a href="#">asian</a></li>
-                                    <li><a href="#">brown</a></li>
-                                    <li><a href="#">euro</a></li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -158,206 +96,39 @@
                             <h1>Blog</h1>
                         </div>
                         <div class="blog_wrapper_inner">
-                            <article class="single_blog">
-                                <figure>
-                                    <div class="blog_thumb">
-                                        <a href="blog-details.html">
-                                            <img src="~/assets/img/blog/blogpage1.jpg"
-                                                 alt="">
-                                        </a>
-                                    </div>
-                                    <figcaption class="blog_content">
-                                        <h4 class="post_title">
-                                            <a href="blog-details.html">
-                                                Blog image post
-                                                (sticky)
+                            @foreach (var item in Model)
+                            {
+                                <article class="single_blog">
+                                    <figure>
+                                        <div class="blog_thumb">
+                                            <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.Id">
+                                                <img src="~/assets/img/blog/@item.Image"
+                                                     alt="">
                                             </a>
-                                        </h4>
-                                        <div class="blog_meta">
-                                            <span class="author">Posted by : <a href="#">admin</a> / </span>
-                                            <span class="meta_date">Posted on : <a href="#">June 22, 2019</a></span>
                                         </div>
-                                        <div class="blog_desc">
-                                            <p>
-                                                Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu
-                                                ex. Aenean posuere libero eu augue condimentum rhoncus. Praesent
-                                                ornare tortor ac ante egestas hendrerit. Aliquam et metus pharetra,
-                                                bibendum massa nec, fermentum odio. Nunc id leo ultrices, mollis
-                                                ligula in, finibus tortor. Mauris perferendis officia, nihil
-                                                molestiae!
-                                            </p>
-                                        </div>
-                                        <footer class="btn_more">
-                                            <a href="blog-details.html"> Read more</a>
-                                        </footer>
-                                    </figcaption>
-                                </figure>
-                            </article>
-                            <article class="single_blog single_blog_gallery">
-                                <figure>
-                                    <div class="blog_thumb blog_thumb_active owl-carousel">
-                                        <div class="single_blog_thumb">
-                                            <a href="#"><img src="~/assets/img/blog/blogpage2.jpg" alt=""></a>
-                                        </div>
-                                        <div class="single_blog_thumb">
-                                            <a href="#"><img src="~/assets/img/blog/blogpage1.jpg" alt=""></a>
-                                        </div>
-                                        <div class="single_blog_thumb">
-                                            <a href="#"><img src="~/assets/img/blog/blogpage3.jpg" alt=""></a>
-                                        </div>
-                                        <div class="single_blog_thumb">
-                                            <a href="#"><img src="~/assets/img/blog/blogpage4.jpg" alt=""></a>
-                                        </div>
-                                    </div>
-                                    <figcaption class="blog_content">
-                                        <h4 class="post_title">
-                                            <a href="blog-details.html">Post with Gallery</a>
-                                        </h4>
-                                        <div class="blog_meta">
-                                            <span class="author">Posted by : <a href="#">admin</a> / </span>
-                                            <span class="meta_date">Posted on : <a href="#">June 22, 2019</a></span>
-                                        </div>
-                                        <div class="blog_desc">
-                                            <p>
-                                                Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu
-                                                ex. Aenean posuere libero eu augue condimentum rhoncus. Praesent
-                                                ornare tortor ac ante egestas hendrerit. Aliquam et metus pharetra,
-                                                bibendum massa nec, fermentum odio. Nunc id leo ultrices, mollis
-                                                ligula in, finibus tortor. Mauris perferendis officia, nihil
-                                                molestiae!
-                                            </p>
-                                        </div>
-                                        <footer class="btn_more">
-                                            <a href="blog-details.html"> Read more</a>
-                                        </footer>
-                                    </figcaption>
-                                </figure>
-                            </article>
-                            <article class="single_blog">
-                                <figure>
-                                    <div class="blog_thumb">
-                                        <a href="blog-details.html">
-                                            <img src="~/assets/img/blog/blogpage3.jpg"
-                                                 alt="">
-                                        </a>
-                                    </div>
-                                    <figcaption class="blog_content">
-                                        <h4 class="post_title"><a href="blog-details.html">Post with Audio</a></h4>
-                                        <div class="blog_meta">
-                                            <span class="author">Posted by : <a href="#">admin</a> / </span>
-                                            <span class="meta_date">Posted on : <a href="#">June 22, 2019</a></span>
-                                        </div>
-                                        <div class="blog_aduio_icone">
-                                            <audio controls>
-                                                <source src="https://www.jplayer.org/audio/mp3/TSP-01-Cro_magnon_man.mp3?1"
-                                                        type="audio/mp3">
-                                            </audio>
-                                        </div>
-                                        <div class="blog_desc">
-                                            <p>
-                                                Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu
-                                                ex. Aenean posuere libero eu augue condimentum rhoncus. Praesent
-                                                ornare tortor ac ante egestas hendrerit. Aliquam et is
-                                            </p>
-                                        </div>
-                                        <footer class="btn_more">
-                                            <a href="blog-details.html"> Read more</a>
-                                        </footer>
-                                    </figcaption>
-                                </figure>
-                            </article>
-                            <article class="single_blog blog_bidio">
-                                <figure>
-                                    <div class="blog_thumb">
-                                        <iframe src="https://www.youtube.com/embed/2Zt8va_6HRk"
-                                                allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                                    </div>
-                                    <figcaption class="blog_content">
-                                        <h4 class="post_title"><a href="blog-details.html">Post with Video</a></h4>
-                                        <div class="blog_meta">
-                                            <span class="author">Posted by : <a href="#">admin</a> / </span>
-                                            <span class="meta_date">Posted on : <a href="#">June 22, 2019</a></span>
-                                        </div>
-                                        <div class="blog_desc">
-                                            <p>
-                                                Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu
-                                                ex. Aenean posuere libero eu augue condimentum rhoncus. Praesent
-                                                ornare tortor ac ante egestas hendrerit. Aliquam et metus pharetra,
-                                                bibendum massa nec, fermentum odio. Nunc id leo ultrices, mollis
-                                                ligula in, finibus tortor. Mauris perferendis officia, nihil
-                                                molestiae!
-                                            </p>
-                                        </div>
-                                        <footer class="btn_more">
-                                            <a href="blog-details.html"> Read more</a>
-                                        </footer>
-                                    </figcaption>
-                                </figure>
-                            </article>
-                            <article class="single_blog">
-                                <figure>
-                                    <div class="blog_thumb">
-                                        <a href="blog-details.html">
-                                            <img src="~/assets/img/blog/blogpage4.jpg"
-                                                 alt="">
-                                        </a>
-                                    </div>
-                                    <figcaption class="blog_content">
-                                        <h4 class="post_title">
-                                            <a href="blog-details.html">Maecenas ultricies</a>
-                                        </h4>
-                                        <div class="blog_meta">
-                                            <span class="author">Posted by : <a href="#">admin</a> / </span>
-                                            <span class="meta_date">Posted on : <a href="#">June 22, 2019</a></span>
-                                        </div>
-                                        <div class="blog_desc">
-                                            <p>
-                                                Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu
-                                                ex. Aenean posuere libero eu augue condimentum rhoncus. Praesent
-                                                ornare tortor ac ante egestas hendrerit. Aliquam et metus pharetra,
-                                                bibendum massa nec, fermentum odio. Nunc id leo ultrices, mollis
-                                                ligula in, finibus tortor. Mauris perferendis officia, nihil
-                                                molestiae!
-                                            </p>
-                                        </div>
-                                        <footer class="btn_more">
-                                            <a href="blog-details.html"> Read more</a>
-                                        </footer>
-                                    </figcaption>
-                                </figure>
-                            </article>
-                            <article class="single_blog">
-                                <figure>
-                                    <div class="blog_thumb">
-                                        <a href="blog-details.html">
-                                            <img src="~/assets/img/blog/blogpage5.jpg"
-                                                 alt="">
-                                        </a>
-                                    </div>
-                                    <figcaption class="blog_content">
-                                        <h4 class="post_title">
-                                            <a href="blog-details.html">Praesent imperdiet</a>
-                                        </h4>
-                                        <div class="blog_meta">
-                                            <span class="author">Posted by : <a href="#">admin</a> / </span>
-                                            <span class="meta_date">Posted on : <a href="#">June 22, 2019</a></span>
-                                        </div>
-                                        <div class="blog_desc">
-                                            <p>
-                                                Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu
-                                                ex. Aenean posuere libero eu augue condimentum rhoncus. Praesent
-                                                ornare tortor ac ante egestas hendrerit. Aliquam et metus pharetra,
-                                                bibendum massa nec, fermentum odio. Nunc id leo ultrices, mollis
-                                                ligula in, finibus tortor. Mauris perferendis officia, nihil
-                                                molestiae!
-                                            </p>
-                                        </div>
-                                        <footer class="btn_more">
-                                            <a href="blog-details.html"> Read more</a>
-                                        </footer>
-                                    </figcaption>
-                                </figure>
-                            </article>
+                                        <figcaption class="blog_content">
+                                            <h4 class="post_title">
+                                                <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.Id">
+                                                   @item.Title
+                                                </a>
+                                            </h4>
+                                            <div class="blog_meta">
+                                                <span class="author">Posted by : <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.Id">@item.AppUser.UserName</a> / </span>
+                                                <span class="meta_date">Posted on : <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.Id">@item.CreatedAt.ToString("MMMM dd, yyyy")</a></span>
+                                            </div>
+                                            <div class="blog_desc">
+                                                <p>
+                                                    @item.Description.Substring(0,350)
+                                                </p>
+                                            </div>
+                                            <footer class="btn_more">
+                                                <a asp-controller="Blog" asp-action="Details" asp-route-id="@item.Id"> Read more</a>
+                                            </footer>
+                                        </figcaption>
+                                    </figure>
+                                </article>
+                            }
+
                         </div>
                     </div>
                     <!--blog pagination area start-->

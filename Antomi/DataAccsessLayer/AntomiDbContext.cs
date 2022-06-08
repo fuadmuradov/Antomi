@@ -36,6 +36,7 @@ namespace Antomi.DataAccsessLayer
         public DbSet<HomeCategory> HomeCategories { get; set; }
         public DbSet<BlogComment> BlogComments { get; set; }
         public DbSet<ReplyComment> ReplyComments { get; set; }
+        public DbSet<Setting> Settings { get; set; }
 
 
 
@@ -64,6 +65,7 @@ namespace Antomi.DataAccsessLayer
             modelBuilder.ApplyConfiguration(new HomeCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new BlogCommentConfiguration());
             modelBuilder.ApplyConfiguration(new ReplyCommentConfiguration());
+            modelBuilder.ApplyConfiguration(new SettingConfiguration());
 
             modelBuilder.Entity<Marka>()
                .HasMany(c => c.Products)

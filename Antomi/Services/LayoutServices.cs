@@ -25,6 +25,13 @@ namespace Antomi.Services
             this.userManager = userManager;
         }
 
+        public async Task<Setting> GetSetting()
+        {
+            Setting setting = await context.Settings.FirstAsync();
+
+            return setting;
+        }
+
         public async Task<List<SubCategory>> ListSubCategory()
         {
             List<SubCategory> subCategories = await context.SubCategories.ToListAsync();
