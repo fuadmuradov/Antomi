@@ -87,6 +87,7 @@ namespace Antomi.Controllers
             }
             else
             {
+                
                 AppUser user = userManager.FindByNameAsync(User.Identity.Name).Result;
                 List<Cart> carts = context.Carts.Where(x => x.AppUserId == user.Id).ToListAsync().Result;
                 if (carts.Count > 0)
@@ -135,124 +136,13 @@ namespace Antomi.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return View(basketVM);
                 }
 
             }
             return View(basketVM);
         }
-
-        [HttpGet]
-        public IActionResult Basket()
-        {
-            BasketVM basketVM = new BasketVM()
-            {
-                TotalPrice = 0,
-                Count = 0,
-                BasketItems = new List<BasketItemVM>()
-            };
-            if (!User.Identity.IsAuthenticated)
-            {
-                string basket = HttpContext.Request.Cookies["Basket"];
-
-                if (!string.IsNullOrEmpty(basket))
-                {
-                    List<BasketCookieItemVM> basketCookieItems = JsonConvert.DeserializeObject<List<BasketCookieItemVM>>(basket);
-                    foreach (BasketCookieItemVM item in basketCookieItems)
-                    {
-                        ProductColor productColor = context.ProductColors.Include(x => x.Product).Include(x => x.ProductColorImages).Include(x => x.Discounts).FirstOrDefault(x => x.Id == item.Id && x.Count > 0);
-                        if (productColor != null)
-                        {
-                            double price = 0;
-                            double itemMainPrice = 0;
-                            Discount discount = productColor.Discounts.FirstOrDefault(x => x.IsActive == true);
-                            if (discount != null)
-                            {
-                                itemMainPrice = productColor.Price * (100 - discount.Percent) / 100;
-                                price = itemMainPrice * item.Count;
-                            }
-                            else
-                            {
-                                itemMainPrice = productColor.Price;
-                                price = itemMainPrice * item.Count;
-                            }
-                            BasketItemVM basketItem = new BasketItemVM()
-                            {
-                                ProductColor = productColor,
-                                Count = item.Count,
-                                Price = Math.Round(itemMainPrice, 2)
-                            };
-
-                            basketVM.BasketItems.Add(basketItem);
-                            basketVM.Count++;
-
-
-                            basketVM.TotalPrice += Math.Round(price, 2);
-                        }
-
-                    }
-
-                }
-
-            }
-            //else
-            //{
-            //    appuser user = usermanager.findbynameasync(user.identity.name).result;
-            //    list<cart> carts = context.carts.where(x => x.appuserid == user.id).tolistasync().result;
-            //    if (carts.count > 0)
-            //    {
-            //        foreach (var item in carts)
-            //        {
-            //            productcolor productcolor = context.productcolors.include(x => x.product).include(x => x.productcolorimages).include(x => x.discounts).firstordefault(x => x.id == item.productcolorid && x.count > 0);
-            //            if (productcolor != null)
-            //            {
-            //                double price = 0;
-            //                double itemmainprice = 0;
-            //                discount discount = productcolor.discounts.firstordefault(x => x.isactive == true);
-            //                if (discount != null)
-            //                {
-            //                    itemmainprice = productcolor.price * (100 - discount.percent) / 100;
-            //                    price = itemmainprice * item.quantity;
-            //                }
-            //                else
-            //                {
-            //                    itemmainprice = productcolor.price;
-            //                    price = itemmainprice * item.quantity;
-            //                }
-
-
-            //                if (item.price != itemmainprice)
-            //                {
-            //                    item.price = itemmainprice;
-            //                    context.savechangesasync();
-            //                }
-            //                basketitemvm basketitem = new basketitemvm()
-            //                {
-            //                    productcolor = item.productcolor,
-            //                    count = item.quantity,
-            //                    price = item.price
-            //                };
-            //                basketvm.basketitems.add(basketitem);
-            //                basketvm.totalprice += price;
-            //                basketvm.count++;
-            //            }
-            //            else
-            //            {
-            //                item.isdeleted = true;
-            //            }
-
-            //        }
-            //    }
-            //    else
-            //    {
-            //        return notfound();
-            //    }
-
-            //}
-            return View(basketVM);
-        }
-
-
+    
 
 
 

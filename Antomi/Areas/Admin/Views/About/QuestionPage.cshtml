@@ -1,0 +1,72 @@
+﻿@model List<Question>
+
+<div class="body-content">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <!--Table-->
+            <div class="card-body">
+                <div class=table-responsive>
+                    <!--<table class="table table-sm table-nowrap card-table">-->
+                    <label class="font-weight-600">FAQ</label>
+                    <table class="table display table-bordered table-striped table-hover bg-white m-0 card-table">
+                        <thead>
+                            <tr>
+
+                                <th>Question</th>
+                                <th>Answer</th>
+                          
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+
+
+                            <tr>
+                                @if (item.Issue.Length > 50)
+                                {
+                                    <td data-toggle="tooltip" title="@(item.Issue)">@item.Issue.Substring(0, 50)</td>
+                                }
+                                else
+                                {
+                                    <td>@item.Issue</td>
+                                }
+
+                                @if (item.Answer.Length > 50)
+                                {
+                                    <td data-toggle="tooltip" title="@(item.Answer)">@item.Answer.Substring(0, 50)</td>
+                                }
+                                else
+                                {
+                                    <td>@item.Answer</td>
+                                }
+                                <td>
+                                    <a asp-action="DeleteQuestion" asp-controller="About" asp-area="admin" asp-route-id="@item.Id" class="btn btn-danger-soft btn-sm" onclick="return confirm('Are you sure you want to delete?')"><i class="far fa-trash-alt"></i></a>
+                                    <a asp-action="EditQuestion" asp-controller="About" asp-area="admin" asp-route-id="@item.Id" class="btn btn-success-soft btn-sm ml-1 btnEdit" ><i class="far fa-edit"></i></a>
+                                </td>
+
+                              
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <!--End Table-->
+
+        </div>
+    </div>
+</div>
+
+@section Script{
+    <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+    </script>
+
+}
+
