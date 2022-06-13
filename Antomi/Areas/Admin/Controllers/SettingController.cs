@@ -67,10 +67,10 @@ namespace Antomi.Areas.Admin.Controllers
             existSetting.AppstoreUrl = setting.AppstoreUrl;
 
 
-            await context.SaveChangesAsync();
+             context.SaveChanges();
 
 
-            return View(setting);
+            return LocalRedirect("~/admin/setting/index/");
         }
     }
 } 

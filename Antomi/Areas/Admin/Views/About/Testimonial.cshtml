@@ -1,0 +1,58 @@
+﻿@model List<Testimonial>
+    <!--Table-->
+<div class="card-body">
+    <div class=table-responsive>
+        <!--<table class="table table-sm table-nowrap card-table">-->
+        <label class="font-weight-600">Slider Images</label>
+        <table class="table display table-bordered table-striped table-hover bg-white m-0 card-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Fullname</th>
+                    <th>Jobname</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="avatar-group">
+                                <a href="user_profile.html" class="avatar avatar-xs" data-toggle="tooltip" title="Melissa Ayre">
+                                    <img src="~/assets/img/about/@item.Image" class="avatar-img rounded-circle" alt="...">
+                                </a>
+
+                            </div>
+                        </td>
+                        <td>@item.Fullname</td>
+                        <td>
+                            @item.Jobname
+                        </td>
+                        <td data-toggle="tooltip" title="@(item.Description)">
+                           @(item.Description.Length<=50 ? item.Description:item.Description.Substring(0,50))
+                         </td>
+                            
+                        <td>
+                            <a asp-controller="About" asp-action="DeleteTestimonial" asp-area="admin" asp-route-id="@item.Id" class="btn btn-danger-soft btn-sm" onclick="return confirm('Are you sure you want to delete?')"><i class="far fa-trash-alt"></i></a>
+                            <a asp-controller="About" asp-action="UpdateTestimonial" asp-area="admin" asp-route-id="@item.Id" class="btn btn-success-soft btn-sm ml-1"><i class="far fa-edit"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <a asp-controller="About" asp-action="AddTestimonial" asp-area="admin"> <button type="button" class="btn btn-secondary">Add New Testimonial</button></a>
+    </div>
+</div>
+
+<!--End Table-->
+
+@section Script{
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+
+}

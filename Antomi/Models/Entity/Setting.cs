@@ -30,7 +30,6 @@ namespace Antomi.Models.Entity
     {
         public SettingValidation()
         {
-            RuleFor(x => x.Photo).NotEmpty().NotNull();
             RuleFor(x => x.Email).NotEmpty().NotNull();
             RuleFor(x => x.Phone).NotEmpty().NotNull();
             RuleFor(x => x.Address).NotEmpty().NotNull();

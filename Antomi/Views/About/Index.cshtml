@@ -1,0 +1,184 @@
+﻿@model AboutVM
+<!--about bg area start-->
+<div class="about_bg_area">
+    <div class="container">
+        <!--about section area -->
+        <section class="about_section mb-60">
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <figure>
+                        <div class="about_thumb">
+                            <img src="~/assets/img/about/@Model.About.Image" alt="">
+                        </div>
+                        <figcaption class="about_content">
+                            <h1>@Model.About.Title</h1>
+                            <p>@Model.About.Description</p>
+                            <div class="about_signature">
+                                <img src="~/assets/img/about/@Model.About.Signature" alt="">
+                            </div>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+        <!--about section end-->
+        <!--chose us area start-->
+        <div class="choseus_area" data-bgimg="assets/img/about/about-us-policy-bg.jpg">
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <div class="single_chose">
+                        <div class="chose_icone">
+                            <img src="~/assets/img/about/About_icon1.png" alt="">
+                        </div>
+                        <div class="chose_content">
+                            <h3>Creative Design</h3>
+                            <p>Erat metus sodales eget dolor consectetuer, porta ut purus at et alias, nulla ornare velit amet</p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="single_chose">
+                        <div class="chose_icone">
+                            <img src="~/assets/img/about/About_icon2.png" alt="">
+                        </div>
+                        <div class="chose_content">
+                            <h3>100% Money Back Guarantee</h3>
+                            <p>Erat metus sodales eget dolor consectetuer, porta ut purus at et alias, nulla ornare velit amet</p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="single_chose">
+                        <div class="chose_icone">
+                            <img src="~/assets/img/about/About_icon3.png" alt="">
+                        </div>
+                        <div class="chose_content">
+                            <h3>Online Support 24/7</h3>
+                            <p>Erat metus sodales eget dolor consectetuer, porta ut purus at et alias, nulla ornare velit amet</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--chose us area end-->
+        <!--services img area-->
+        <div class="about_gallery_section mb-55">
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <article class="single_gallery_section">
+                        <figure>
+                            <div class="gallery_thumb">
+                                <img src="~/assets/img/about/about2.jpg" alt="">
+                            </div>
+                            <figcaption class="about_gallery_content">
+                                <h3>What do we do?</h3>
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto</p>
+                            </figcaption>
+                        </figure>
+                    </article>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <article class="single_gallery_section">
+                        <figure>
+                            <div class="gallery_thumb">
+                                <img src="~/assets/img/about/about3.jpg" alt="">
+                            </div>
+                            <figcaption class="about_gallery_content">
+                                <h3>Our Mission</h3>
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto</p>
+                            </figcaption>
+                        </figure>
+                    </article>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <article class="single_gallery_section">
+                        <figure>
+                            <div class="gallery_thumb">
+                                <img src="~/assets/img/about/about4.jpg" alt="">
+                            </div>
+                            <figcaption class="about_gallery_content">
+                                <h3>History Of Us</h3>
+                                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto</p>
+                            </figcaption>
+                        </figure>
+                    </article>
+                </div>
+            </div>
+        </div>
+        <!--services img end-->
+        <!--testimonial area start-->
+        <div class="faq-client-say-area">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="section_title">
+                        <h2>What can we do for you ?</h2>
+                    </div>
+                    <div class="faq-style-wrap" id="faq-five">
+
+                        @{
+                            string faqid = "faq-collapse";
+                            int itemId = 1;
+                        }
+
+                        @foreach (var item in Model.Questions)
+                        {
+                           
+                            faqid = "faq-collapse"+itemId.ToString();
+                            <!-- Panel-default -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">
+                                        <a id="octagon" class="collapsed" role="button" data-bs-toggle="collapse" href="#@faqid" aria-expanded="true" aria-controls="faq-collapse1"> <span class="button-faq"></span>@item.Issue</a>
+                                    </h5>
+                                </div>
+                                <div id="@faqid" class="collapse show" aria-expanded="true" role="tabpanel" data-parent="#faq-five">
+                                    <div class="panel-body">
+                                        <p>@item.Answer</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--// Panel-default -->
+                            itemId+=1;
+                        }
+
+                    </div>
+
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="testimonials-area">
+                        <div class="section_title">
+                            <h2>What Our Customers Says ?</h2>
+                        </div>
+                        <div class="testimonial-two owl-carousel">
+                            @foreach (var item in Model.Testimonials)
+                            {
+                                <div class="testimonial-wrap-two text-center">
+                                    <div class="quote-container">
+                                        <div class="quote-image">
+                                            <img src="~/assets/img/about/@item.Image" alt="">
+                                        </div>
+                                        <div class="testimonials-text">
+                                            <p>@item.Description</p>
+                                        </div>
+                                        <div class="author">
+                                            <h6>@item.Fullname</h6>
+                                            <p>@item.Jobname</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--testimonial area end-->
+    </div>
+</div>
+<!--about bg area end-->

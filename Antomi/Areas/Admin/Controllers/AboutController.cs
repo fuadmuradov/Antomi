@@ -106,7 +106,7 @@ namespace Antomi.Areas.Admin.Controllers
             if (!ModelState.IsValid) return View(question);
             context.Questions.Add(question);
             context.SaveChangesAsync();
-            return View();
+            return LocalRedirect("~/admin/About/QuestionPage");
         }
 
         public IActionResult EditQuestion(int id)
@@ -124,7 +124,7 @@ namespace Antomi.Areas.Admin.Controllers
             existQuestion.Issue = question.Issue;
             existQuestion.Answer = question.Answer;
             context.SaveChangesAsync();
-            return View();
+            return LocalRedirect("~/admin/About/QuestionPage");
         }
 
 
@@ -159,11 +159,64 @@ namespace Antomi.Areas.Admin.Controllers
             testimonial.Image = testimonial.Photo.SavaAsync(webHost.WebRootPath, folder).Result;
 
             context.Testimonials.Add(testimonial);
-            context.SaveChangesAsync();
+            context.SaveChanges();
 
-            return View();
+            return LocalRedirect("~/admin/About/testimonial"); 
         }
 
+
+        public IActionResult UpdateTestimonial(int id)
+        {
+            Testimonial testimonial = context.Testimonials.FirstOrDefault(x => x.Id == id);
+            if (testimonial == null)
+                return NotFound();
+
+            return View(testimonial);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateTestimonial(Testimonial testimonial)
+        {
+            if (!ModelState.IsValid) return View(testimonial);
+            Testimonial existTestimonial = context.Testimonials.FirstOrDefault(x => x.Id == testimonial.Id);
+
+            if (testimonial.Photo != null)
+            {
+                try
+                {
+                    string folder = @"assets\img\about\";
+                    string newImg = await testimonial.Photo.SavaAsync(webHost.WebRootPath, folder);
+                    FileExtension.Delete(webHost.WebRootPath, folder, existTestimonial.Image);
+                    existTestimonial.Image = newImg;
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", "unexpected error for Update");
+                    return View();
+                }
+            }
+            existTestimonial.Fullname = testimonial.Fullname;
+            existTestimonial.Jobname = testimonial.Jobname;
+            existTestimonial.Description = testimonial.Description;
+
+            await context.SaveChangesAsync();
+
+
+            return LocalRedirect("~/admin/About/testimonial");
+        }
+
+        public IActionResult DeleteTestimonial(int id)
+        {
+            Testimonial testimonial = context.Testimonials.FirstOrDefault(x=>x.Id==id);
+            if (testimonial == null)
+                return NotFound();
+            string folder = @"assets\img\about\";
+            FileExtension.Delete(webHost.WebRootPath, folder, testimonial.Image);
+            context.Testimonials.Remove(testimonial);
+            context.SaveChangesAsync();
+            return LocalRedirect("~/admin/About/testimonial");
+        }
 
         #endregion
 
