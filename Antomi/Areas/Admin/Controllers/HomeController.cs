@@ -18,7 +18,7 @@ namespace Antomi.Areas.Admin.Controllers
         private readonly AntomiDbContext context;
         private readonly IWebHostEnvironment webHost;
 
-        public HomeController(AntomiDbContext context,  IWebHostEnvironment webHost)
+        public HomeController(AntomiDbContext context, IWebHostEnvironment webHost)
         {
             this.context = context;
             this.webHost = webHost;
@@ -245,7 +245,7 @@ namespace Antomi.Areas.Admin.Controllers
         [HttpGet("{id}")]
         public async Task<JsonResult> EditMarka(int? id)
         {
-           
+
 
             if (id == null)
             {
@@ -320,19 +320,19 @@ namespace Antomi.Areas.Admin.Controllers
             return View(homeCategories);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult CreateHomeCategory(int id)
+        [HttpGet("")]
+        public IActionResult CreateHomeCategory()
         {
             ViewBag.Category = context.Categories.ToList();
-            HomeCategory homeCategory = context.HomeCategories.FirstOrDefault(x => x.Id == id);
-            if (homeCategory == null) return NotFound();
+       
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateHomeCategory(HomeCategory homeCategory)
         {
-            
+            ViewBag.Category = context.Categories.ToList();
+
             if (!ModelState.IsValid) return View(homeCategory);
             if (!homeCategory.Photo.IsImage())
             {
@@ -343,7 +343,7 @@ namespace Antomi.Areas.Admin.Controllers
             homeCategory.Image = homeCategory.Photo.SavaAsync(webHost.WebRootPath, folder).Result;
             context.HomeCategories.Add(homeCategory);
             await context.SaveChangesAsync();
-            return View();
+            return RedirectToAction(nameof(HomeCategoryPage), "About");
         }
 
         [HttpGet("{id}")]
@@ -353,7 +353,7 @@ namespace Antomi.Areas.Admin.Controllers
             if (homeCategory == null) return NotFound();
             string folder = @"assets\img\bg\";
             FileExtension.Delete(webHost.WebRootPath, folder, homeCategory.Image);
-            context.HomeCategories.Remove(homeCategory);
+            context.HomeCategories.Remove(homeCategory);    
             context.SaveChangesAsync();
             return LocalRedirect("~/Admin/Home/HomeCategoryPage/");
         }

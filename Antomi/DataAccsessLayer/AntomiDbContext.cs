@@ -40,6 +40,7 @@ namespace Antomi.DataAccsessLayer
         public DbSet<Testimonial> Testimonials { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<About> Abouts { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -71,6 +72,7 @@ namespace Antomi.DataAccsessLayer
             modelBuilder.ApplyConfiguration(new TestimonialConfiguration());
             modelBuilder.ApplyConfiguration(new AboutConfiguration());
             modelBuilder.ApplyConfiguration(new QuestionConfiguration());
+            modelBuilder.ApplyConfiguration(new NotificationConfiguration());
 
             modelBuilder.Entity<Marka>()
                .HasMany(c => c.Products)

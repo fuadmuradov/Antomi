@@ -31,6 +31,11 @@ namespace Antomi.Services
 
             return setting;
         }
+        public List<Notification> getNotificationList()
+        {
+            List<Notification> notifications = context.Notifications.ToList();
+            return notifications;
+        }
 
         public async Task<List<SubCategory>> ListSubCategory()
         {

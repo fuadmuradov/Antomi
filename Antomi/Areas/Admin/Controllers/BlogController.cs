@@ -4,6 +4,7 @@ using Antomi.Models.Entity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,8 @@ namespace Antomi.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            List<Blog> blogs = context.Blogs.Include(x => x.AppUser).Include(x => x.Category).Where(x => x.IsDeleted == false).ToList();
+            return View(blogs);
         }
 
         public IActionResult AddBlog()

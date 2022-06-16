@@ -1,4 +1,6 @@
-﻿<!doctype html>
+﻿@inject Antomi.Services.LayoutServices layoutService
+
+<!doctype html>
 <html lang="en">
 
 <!-- Mirrored from bhulua.thememinister.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 12 Oct 2019 13:06:42 GMT -->
@@ -80,75 +82,69 @@
                     <ul class="metismenu">
                         <li class="nav-label">Main Menu</li>
                         <li class="mm-active">
-                            <a class="has-arrow material-ripple" href="#">
+                            <a class="has-arrow material-ripple" asp-area="Admin" asp-controller="Home" asp-action="Category">
                                 <i class="typcn typcn-home-outline mr-2"></i>
                                 Home
                             </a>
                             <ul class="nav-second-level">
-                                <li><a asp-area="Admin" asp-controller="Home" asp-action="Index">Slider</a></li>
-                                <li><a asp-area="Admin" asp-controller="Home" asp-action="Create">Add Slider</a></li>
-                                <li><a asp-area="Admin" asp-controller="Home" asp-action="Notice">Notice</a></li>
-                                <li><a asp-area="Admin" asp-controller="Home" asp-action="NoticeSecond">Second part Notice</a></li>
+                                <li><a asp-area="Admin" asp-controller="Home" asp-action="Category">Category</a></li>
+                                <li><a asp-area="Admin" asp-controller="Home" asp-action="HomeCategoryPage">Home Section</a></li>
+                                <li><a asp-area="Admin" asp-controller="Home" asp-action="Marka">Marka</a></li>
+                                <li><a asp-area="Admin" asp-controller="Home" asp-action="Subcategory">SubCategory</a></li>
                             </ul>
                         </li>
                         <li>
-                            <a class="has-arrow material-ripple" href="#">
+                            <a class="has-arrow material-ripple" asp-area="Admin" asp-controller="About" asp-action="Index">
                                 <i class="typcn typcn-chart-pie-outline mr-2"></i>
                                 About
                             </a>
                             <ul class="nav-second-level">
-                                <li><a asp-area="Admin" asp-controller="Home" asp-action="About">About</a></li>
-                                <li><a asp-area="Admin" asp-controller="Testimonial" asp-action="Index">Testimonial</a></li>
-
+                                <li><a asp-area="Admin" asp-controller="About" asp-action="Index">About</a></li>
+                                <li><a asp-area="Admin" asp-controller="About" asp-action="Testimonial">Testimonial</a></li>
+                                <li><a asp-area="Admin" asp-controller="About" asp-action="QuestionPage">FAQ Question</a></li>
 
                             </ul>
                         </li>
                         <li>
-                            <a class="has-arrow material-ripple" href="#">
+                            <a class="has-arrow material-ripple" asp-area="Admin" asp-controller="Comment" asp-action="Index">
                                 <i class="typcn typcn-mail mr-2"></i>
-                                COURSE
+                                Comment
                             </a>
                             <ul class="nav-second-level">
-                                <li><a asp-area="Admin" asp-controller="Course" asp-action="CoursePage">Courses</a></li>
-                                <li><a asp-area="Admin" asp-controller="Course" asp-action="Createcourse">Add Course</a></li>
-                                <li><a asp-area="Admin" asp-controller="Course" asp-action="Category">Categories</a></li>
-
+                                <li><a asp-area="Admin" asp-controller="Comment" asp-action="Index">Comments</a></li>
                             </ul>
                         </li>
                         <li>
-                            <a class="has-arrow material-ripple" href="#">
+                            <a class="has-arrow material-ripple" asp-area="Admin" asp-controller="Blog" asp-action="Index">
                                 <i class="typcn typcn-archive mr-2"></i>
-                                Event
-                            </a>
-                            <ul class="nav-second-level">
-                                <li><a asp-area="Admin" asp-controller="Event" asp-action="Index">Event</a></li>
-                                <li><a asp-area="Admin" asp-controller="Event" asp-action="Createevent">Create Event</a></li>
-                                <li><a asp-area="Admin" asp-controller="Event" asp-action="Speaker">Speakers</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="has-arrow material-ripple" href="#">
-                                <i class="typcn typcn-clipboard mr-2"></i>
-                                Teacher
-                            </a>
-                            <ul class="nav-second-level">
-                                <li><a asp-area="Admin" asp-controller="Teacher" asp-action="Index">Teachers</a></li>
-                                <li><a asp-area="Admin" asp-controller="Teacher" asp-action="CreateTeacher">Create Teacher</a></li>
-
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="has-arrow material-ripple" href="#">
-                                <i class="typcn typcn-coffee mr-2"></i>
                                 Blog
                             </a>
                             <ul class="nav-second-level">
                                 <li><a asp-area="Admin" asp-controller="Blog" asp-action="Index">Blogs</a></li>
-                                <li><a asp-area="Admin" asp-controller="Blog" asp-action="CreateBlog">Add Blog</a></li>
+
                             </ul>
                         </li>
                         <li>
-                            <a class="has-arrow material-ripple" href="#">
+                            <a class="has-arrow material-ripple" asp-area="Admin" asp-controller="Discount" asp-action="Index">
+                                <i class="typcn typcn-clipboard mr-2"></i>
+                                Discount
+                            </a>
+                            <ul class="nav-second-level">
+                                <li><a asp-area="Admin" asp-controller="Discount" asp-action="Index">Discounts</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="has-arrow material-ripple" asp-area="Admin" asp-controller="Product" asp-action="Product">
+                                <i class="typcn typcn-coffee mr-2"></i>
+                                Product
+                            </a>
+                            <ul class="nav-second-level">
+                                <li><a asp-area="Admin" asp-controller="Product" asp-action="Product">Products</a></li>
+                                <li><a asp-area="Admin" asp-controller="Product" asp-action="CreateProduct">Create Product</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="has-arrow material-ripple" asp-area="Admin" asp-controller="Setting" asp-action="Index">
                                 <i class="typcn typcn-world-outline mr-2"></i>
                                 Settings
                             </a>
@@ -191,24 +187,22 @@
 
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <h6 class="notification-title">Notifications</h6>
-                                    <p class="notification-text">You have 13 unread notification</p>
+                                    <p class="notification-text">You have @layoutService.getNotificationList().Count unread notification</p>
                                     <div class="notification-list">
-
-                                        <div class="media new">
-                                            <div class="img-user"><img src="~/admin/assets/dist/img/avatar.png" alt=""></div>
-                                            <div class="media-body">
-                                                <h6><strong>King of the Rings</strong></h6>
-                                                <span>fuadmuradov@gmail.com</span>
-                                            </div>
-                                        </div><!--/.media -->
-                                        <div class="media new">
-                                            <div class="img-user"><img src="~/admin/assets/dist/img/avatar.png" alt=""></div>
-                                            <div class="media-body">
-                                                <h6><strong>King of the Rings</strong></h6>
-                                                <span>fuadmuradov@gmail.com</span>
-                                            </div>
-                                        </div><!--/.media -->
-
+                                        @{
+                                            int count = layoutService.getNotificationList().Count;
+                                            if (layoutService.getNotificationList().Count > 6) count = 6;
+                                        }
+                                        @for (int i = 0; i < count; i++)
+                                        {
+                                            <div class="media new">
+                                                <div class="img-user"><img src="~/admin/assets/dist/img/avatar.png" alt=""></div>
+                                                <div class="media-body">
+                                                    <h6><strong>@layoutService.getNotificationList()[i].Subject</strong></h6>
+                                                    <span>@layoutService.getNotificationList()[i].Email</span>
+                                                </div>
+                                            </div><!--/.media -->
+                                        }
 
 
                                     </div><!--/.notification -->

@@ -1,0 +1,77 @@
+﻿@model List<Notification>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!--Table-->
+<div class="card-body">
+    <div class=table-responsive>
+        <!--<table class="table table-sm table-nowrap card-table">-->
+        <label class="font-weight-600">Notification Information</label>
+        <table class="table display table-bordered table-striped table-hover bg-white m-0 card-table">
+            <thead>
+                <tr>
+                    <th>FullName</th>
+                    <th>Email</th>
+                    <th>Subject</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Email
+                        </td>
+                        @{ if (item.Subject.Length > 50)
+                            {
+                                <td  data-toggle="tooltip" title="@(item.Subject)">@item.Subject.Substring(0, 50) ...</td>
+                            }
+                            else
+                            {
+                                <td>@item.Subject</td>
+                            }
+                        }
+
+                        @{
+                            if (item.Message.Length > 40)
+                            {
+                                <td  data-toggle="tooltip" title="@(item.Message)">@item.Message.Substring(0, 40) ...</td>
+                            }
+                            else
+                            {
+                                <td >@item.Message</td>
+                            }
+                        }
+
+
+                        <td>
+                            <a asp-controller="Notification" asp-action="NotificationDelete" asp-area="Admin" asp-route-id="@item.Id" class="btn btn-danger-soft btn-sm"><i class="far fa-trash-alt"></i></a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!--End Table-->
+
+
+
+@section Script {
+
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+
+}

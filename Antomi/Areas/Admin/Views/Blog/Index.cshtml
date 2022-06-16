@@ -1,1 +1,81 @@
 ﻿
+@model List<Blog>
+<!--Table-->
+<div class="card-body">
+    <div class=table-responsive>
+        <!--<table class="table table-sm table-nowrap card-table">-->
+        <label class="font-weight-600">Blog Information</label>
+        <table class="table display table-bordered table-striped table-hover bg-white m-0 card-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th> Title </th>
+                    <th>Description</th>
+                    <th>Emphesis</th>
+                    <th>Date</th>
+                    <th>Writer</th>
+                    <th>Category</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        <div class="avatar-group">
+                            <a href="user_profile.html" class="avatar avatar-xs" data-toggle="tooltip" title="Melissa Ayre">
+                                <img src="~/assets/images/blog/@item.Image" class="avatar-img rounded-circle" alt="...">
+                            </a>
+
+                        </div>
+
+                    </td>
+                    @{ if (item.Title.Length > 30)
+                        {
+                            <td>@item.Title.Substring(0, 30) ...</td>
+                        }
+                        else
+                        {
+                            <td>@item.Title</td>
+                        }
+                    }
+
+
+                    @{ if (item.Description.Length > 50)
+                        {
+                            <td>@item.Description.Substring(0, 50) ...</td>
+                        }
+                        else
+                        {
+                            <td>@item.Description</td>
+                        }
+                    }
+
+                    @{ if (item.Emphasis.Length > 30)
+                        {
+                            <td>@item.Emphasis.Substring(0, 30) ...</td>
+                        }
+                        else
+                        {
+                            <td>@item.Emphasis</td>
+                        }
+                    }
+
+                  
+
+                    <td>@item.CreatedAt.ToString("yyyy-MM-dd")</td>
+                    <td>@item.AppUser.UserName</td>
+                    <td>@item.Category.Name</td>
+
+                    <td>
+                        <a href="\admin/Blog/DeleteBlog/@item.Id" class="btn btn-danger-soft btn-sm"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--End Table-->
