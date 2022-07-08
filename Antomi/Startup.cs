@@ -33,6 +33,8 @@ namespace Antomi
         {
            
             services.AddControllersWithViews();
+            services.AddHostedService<DiscountBackgroundService>();
+            services.AddScoped<IDiscountDelete, DiscountDelete>();
             services.AddControllers().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Category>());
             services.AddDbContext<AntomiDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("AntomiDefault"))
